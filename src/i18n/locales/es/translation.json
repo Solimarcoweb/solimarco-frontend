@@ -1,0 +1,10 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error"
+  },
+  "nav": {
+    "home": "Inicio",
+    "contact": "Contacto"
+  }
+}

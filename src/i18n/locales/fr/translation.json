@@ -1,0 +1,10 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite"
+  },
+  "nav": {
+    "home": "Accueil",
+    "contact": "Contact"
+  }
+}

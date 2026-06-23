@@ -54,3 +54,5 @@ storybook-static/
 .firebase/
 .tern-port
 .vscode-test
+
+*storybook.log

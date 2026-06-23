@@ -23,7 +23,7 @@ Nombres de paquetes/carpetas, clases, métodos, variables, archivos y rutas de l
 - Componentes, hooks, archivos y carpetas con nombres en inglés (`ReservationForm.tsx`, `useReservations.ts`).
 - Componentes pequeños y enfocados — si un componente supera ~150-200 líneas o mezcla demasiadas responsabilidades, se divide en subcomponentes.
 - Tipado estricto en TypeScript, nunca `any` salvo justificación explícita en comentario.
-- Lógica de negocio fuera del componente visual cuando sea posible (hooks personalizados en `features/x/hooks/`), componente se queda solo con presentación.
+- Lógica de negocio fuera del componente visual cuando sea posible (hooks personalizados en `modules/x/shared/`, ver estructura interna de módulo en la sección 10), componente se queda solo con presentación.
 
 **General:**
 - Comentarios explican el "por qué", no el "qué" (el código ya dice qué hace; el comentario aporta contexto, decisión de diseño o advertencia).
@@ -412,7 +412,7 @@ Tenant
 
 ### Cómo encaja con lo ya diseñado
 
-No es un cambio de arquitectura — el `web-frontend` (sección 10) sigue usando el mismo router y la misma estructura de `features/`; lo que cambia es **qué rutas se registran** según `tipo_sitio` y `modulos_activos` combinados. Una landing es, en la práctica, un subconjunto de rutas de lo que ya existe para "completo", no un sistema aparte que haya que mantener por separado.
+No es un cambio de arquitectura — el `web-frontend` (sección 10) sigue usando el mismo router y la misma estructura de `modules/`; lo que cambia es **qué rutas se registran** según `tipo_sitio` y `modulos_activos` combinados. Una landing es, en la práctica, un subconjunto de rutas de lo que ya existe para "completo", no un sistema aparte que haya que mantener por separado.
 
 ---
 
@@ -530,17 +530,30 @@ No es necesario backend adicional para la vista previa en sí — es estado loca
 
 ## 10. Frontend React — buenas prácticas (equivalente a tu enfoque en Angular)
 
-Confirmado: shared + features por dominio + core también es buena práctica en React. Diferencia clave: no existe el sistema de módulos del framework (no hay `NgModule` ni inyección de dependencias propia del framework) — es pura convención de carpetas. Mismo concepto que Angular standalone (14+, por defecto desde la 17), donde los `NgModule` tampoco son ya necesarios y la organización también pasa a ser por carpetas + componentes standalone + lazy loading por rutas.
+Confirmado: shared + modules por dominio + core también es buena práctica en React. Diferencia clave: no existe el sistema de módulos del framework (no hay `NgModule` ni inyección de dependencias propia del framework) — es pura convención de carpetas. Mismo concepto que Angular standalone (14+, por defecto desde la 17), donde los `NgModule` tampoco son ya necesarios y la organización también pasa a ser por carpetas + componentes standalone + lazy loading por rutas.
 
 ```
 src/
-  app/        → rutas, layout general, proveedores globales
-  shared/     → componentes reutilizables (tablas, botones, modales), hooks genéricos
-  features/   → equivalente a tus módulos de Angular
-    ventas/
-    reservas/
-    clientes/
-  core/       → cliente de API, manejo de auth, constantes globales
+  app/        → rutas, layout general, proveedores globales (i18n, router, helmet, auth)
+  shared/     → componentes reutilizables globales (tablas, botones, modales, SEO...), hooks genéricos
+  modules/    → equivalente a tus módulos de Angular, uno por dominio de negocio
+    reservations/
+    sales/
+    tracking/
+    legal/
+  core/       → cliente HTTP hacia el backend, manejo de auth/JWT, constantes globales
+  assets/     → imágenes, fuentes, iconos
+  i18n/       → configuración de i18next y archivos de traducción por idioma
+```
+
+**Estructura interna de cada módulo en `modules/`** (misma forma para todos, para que cualquier desarrollador encuentre las piezas en el mismo sitio sin importar el dominio):
+
+```
+modules/<nombre-del-modulo>/
+  components/   → componentes de presentación propios de ese módulo (no reutilizables fuera de él)
+  models/       → tipos/interfaces TypeScript del dominio del módulo
+  services/     → llamadas HTTP y lógica de negocio del módulo (usa el cliente de core/)
+  shared/       → piezas reutilizables solo dentro del propio módulo (no confundir con el shared/ global de la raíz)
 ```
 
 No se considera necesario micro-frontend: mismo argumento que con microservicios, añade complejidad de integración (module federation, versionado independiente) sin beneficio al volumen actual.
