@@ -556,6 +556,15 @@ modules/<nombre-del-modulo>/
   shared/       → piezas reutilizables solo dentro del propio módulo (no confundir con el shared/ global de la raíz)
 ```
 
+### Decisión de estilos y base de componentes (confirmada)
+
+Decisión tomada al evaluar shadcn/ui sobre el stack actual. Aplica distinto según el repo:
+
+- **`solimarco-frontend` (este repo, web pública): CSS Modules en exclusiva. Sin shadcn/ui, sin Tailwind.** Los bloques de plantilla (hero, servicios, galería, contacto...) se escriben con CSS Modules siguiendo `SKILL.md`. Motivo: este repo son plantillas de marketing diseñadas a medida, no UI densa de back-office; meter Tailwind solo para shadcn crearía dos sistemas de estilo en paralelo sin aportar valor real aquí.
+  - Cuando un bloque necesite un **primitivo complejo con accesibilidad** (modal, dropdown, tabs, popover, tooltip), se añade el primitivo **headless de Radix puntual** (`@radix-ui/react-*`) y se estila con CSS Modules — nunca se reescribe a mano la lógica de foco/teclado/a11y. Es "shadcn sin la capa Tailwind": se aprovecha la ingeniería de accesibilidad sin acoplarse a utilities.
+
+- **`solimarco-panel` (admin-panel, futuro): shadcn/ui + Tailwind.** Es el lugar correcto para esa combinación, porque el panel es UI densa de dashboard (tablas de clientes, wizard multi-paso, gestión de catálogo) — justo el caso de uso donde shadcn aporta. Esta decisión se materializa al arrancar ese repo, no en el frontend público.
+
 No se considera necesario micro-frontend: mismo argumento que con microservicios, añade complejidad de integración (module federation, versionado independiente) sin beneficio al volumen actual.
 
 ---
