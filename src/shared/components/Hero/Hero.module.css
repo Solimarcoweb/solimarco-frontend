@@ -1,0 +1,98 @@
+/* Mobile-first hero block. Base styles target mobile (single column);
+   the min-width breakpoint only scales typography/spacing up for desktop. */
+
+.hero {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 4rem 1.25rem;
+  overflow: hidden;
+}
+
+/* Dark overlay + light text only when a background image is present,
+   so the copy stays legible over a photo. */
+.hero.hasBackground {
+  background-size: cover;
+  background-position: center;
+}
+
+.hero.hasBackground::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 6, 13, 0.45), rgba(8, 6, 13, 0.65));
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 80rem; /* matches Tailwind max-w-7xl */
+  margin-inline: auto;
+  display: grid;
+  gap: 1.5rem;
+  justify-items: start;
+  text-align: left;
+}
+
+/* Hierarchy comes from weight + color, not raw size: a controlled clamp,
+   never a generic huge H1. */
+.title {
+  margin: 0;
+  max-width: 18ch;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--text-h);
+}
+
+.hero.hasBackground .title {
+  color: #fff;
+}
+
+.subtitle {
+  margin: 0;
+  max-width: 52ch;
+  font-weight: 400;
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.hero.hasBackground .subtitle {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  color: #fff;
+  background: var(--accent);
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.cta:hover {
+  background: color-mix(in srgb, var(--accent) 85%, #000);
+  box-shadow: var(--shadow);
+}
+
+.cta:active {
+  transform: translateY(1px);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+}
