@@ -1,9 +1,7 @@
 import { lazy, Suspense, type JSX, type LazyExoticComponent } from 'react'
 import { createBrowserRouter } from 'react-router'
 import { RouteFallback } from './RouteFallback'
-
-// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
-const HomePage = lazy(() => import('./pages/HomePage'))
+import TenantRouter from '../core/tenant/TenantRouter'
 // eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
 const ConstruccionPage = lazy(() => import('./pages/construccion/ConstruccionPage'))
 // eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
@@ -99,8 +97,10 @@ function withSuspense(Component: LazyExoticComponent<() => JSX.Element>) {
  */
 export const router = createBrowserRouter([
   {
-    path: '/',
-    element: withSuspense(HomePage),
+    // Splat required so descendant <Routes> inside TenantRouter can match sub-paths
+    // in the data-router context (React Router requires a /* parent for descendant Routes).
+    path: '/*',
+    element: <TenantRouter />,
   },
   {
     path: '/construccion',
