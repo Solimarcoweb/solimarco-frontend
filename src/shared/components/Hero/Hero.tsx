@@ -12,6 +12,8 @@ export interface HeroProps {
   ctaHref: string
   /** Optional full-bleed background image URL; adds an overlay and light text for legibility. */
   backgroundImage?: string
+  /** Optional business logo rendered above the main headline. */
+  logoUrl?: string
 }
 
 /**
@@ -26,7 +28,7 @@ export interface HeroProps {
  * @param props.backgroundImage - Optional background image URL; enables overlay + light text.
  * @returns The hero section element.
  */
-export function Hero({ title, subtitle, ctaLabel, ctaHref, backgroundImage }: HeroProps) {
+export function Hero({ title, subtitle, ctaLabel, ctaHref, backgroundImage, logoUrl }: HeroProps) {
   const hasBackground = backgroundImage !== undefined && backgroundImage !== ''
 
   const sectionClassName = hasBackground ? `${styles.hero} ${styles.hasBackground}` : styles.hero
@@ -38,6 +40,9 @@ export function Hero({ title, subtitle, ctaLabel, ctaHref, backgroundImage }: He
   return (
     <section className={sectionClassName} style={sectionStyle}>
       <div className={styles.container}>
+        {logoUrl && (
+          <img src={logoUrl} alt="" className={styles.logo} aria-hidden="true" />
+        )}
         <h1 className={styles.title}>{title}</h1>
         <p className={styles.subtitle}>{subtitle}</p>
         <a className={styles.cta} href={ctaHref}>

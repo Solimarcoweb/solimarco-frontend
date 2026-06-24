@@ -10,6 +10,7 @@ import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking
 import { SharedSeo, SharedJsonLd } from '../../../shared/seo'
 import { SUPPORTED_LOCALES } from '../../../i18n'
 import { applyTheme } from '../../../themes'
+import { useOptionalTenantConfig } from '../../../core/tenant/TenantContext'
 
 /** Tenant identifier for the construction/reform pilot (BM Construcción S.L.). */
 const TENANT_ID = 'bm-construccion'
@@ -106,6 +107,7 @@ const LOCAL_BUSINESS_SCHEMA: Record<string, unknown> = {
  */
 export default function ConstruccionPage() {
   const { i18n } = useTranslation()
+  const tenantConfig = useOptionalTenantConfig()
 
   // Force the trust-first `clasico` theme for this pilot page regardless of the
   // app-level default (AppProviders applies clasico by default; this keeps the
@@ -139,6 +141,7 @@ export default function ConstruccionPage() {
           subtitle="Más de 25 años transformando hogares y negocios en la isla"
           ctaLabel="Solicitar presupuesto"
           ctaHref="#presupuesto"
+          logoUrl={tenantConfig?.logoUrl}
         />
 
         <ProjectGallery items={PROJECTS} />

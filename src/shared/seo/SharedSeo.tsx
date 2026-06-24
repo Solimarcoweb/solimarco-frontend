@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async'
+import { useOptionalTenantConfig } from '../../core/tenant/TenantContext'
 
 export interface SharedSeoProps {
   /** Page title, rendered in `<title>` and used as the Open Graph title fallback. */
@@ -34,12 +35,14 @@ export function SharedSeo({
   ogImage,
   robots,
 }: SharedSeoProps) {
-  const resolvedOgDescription = ogDescription ?? description
+  const tenantConfig = useOptionalTenantConfig()
+  const effectiveDescription = description ?? tenantConfig?.businessDescription
+  const resolvedOgDescription = ogDescription ?? effectiveDescription
 
   return (
     <Helmet>
       <title>{title}</title>
-      {description && <meta name="description" content={description} />}
+      {effectiveDescription && <meta name="description" content={effectiveDescription} />}
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
       {robots && <meta name="robots" content={robots} />}
       <meta property="og:title" content={ogTitle ?? title} />

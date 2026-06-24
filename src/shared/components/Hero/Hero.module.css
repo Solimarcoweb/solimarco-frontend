@@ -96,3 +96,10 @@
   outline: 2px solid var(--accent-border);
   outline-offset: 2px;
 }
+
+.logo {
+  display: block;
+  max-height: 4rem;
+  width: auto;
+  object-fit: contain;
+}

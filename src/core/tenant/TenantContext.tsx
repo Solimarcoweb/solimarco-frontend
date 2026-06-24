@@ -3,6 +3,7 @@ import styles from './TenantContext.module.css'
 import { applyTheme } from '../../themes'
 import type { TenantConfig } from './tenantConfig'
 import { useTenant } from './useTenant'
+import { useTenantBranding } from './useTenantBranding'
 
 const TenantContext = createContext<TenantConfig | null>(null)
 
@@ -19,6 +20,17 @@ export function useTenantConfig(): TenantConfig {
   return ctx
 }
 
+/**
+ * Like `useTenantConfig` but returns `null` instead of throwing when called
+ * outside a `TenantProvider`. Intended for shared components (e.g. `SharedSeo`)
+ * that want to use tenant data as a fallback without requiring a provider.
+ *
+ * @returns The current tenant's configuration, or `null` if unavailable.
+ */
+export function useOptionalTenantConfig(): TenantConfig | null {
+  return useContext(TenantContext)
+}
+
 interface TenantProviderProps {
   children: ReactNode
 }
@@ -33,6 +45,9 @@ interface TenantProviderProps {
  */
 export function TenantProvider({ children }: TenantProviderProps) {
   const state = useTenant()
+  const config = state.status === 'success' ? state.config : null
+
+  useTenantBranding(config)
 
   useEffect(() => {
     if (state.status === 'success') {
