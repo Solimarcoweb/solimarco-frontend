@@ -50,6 +50,44 @@ describe('LegalPageView', () => {
     expect(await screen.findByText('BM Construcción S.L.')).toBeInTheDocument()
   })
 
+  it('strips <script> tags from the HTML before rendering', async () => {
+    getLegalPageMock.mockResolvedValue({
+      ...page,
+      content: '<p>Texto seguro</p><script>window.__pwned = true</script>',
+    })
+
+    const { container } = render(<LegalPageView tenantId="bm-construccion" slug="privacidad" />)
+
+    await screen.findByText('Texto seguro')
+    expect(container.querySelector('script')).toBeNull()
+    expect(container.innerHTML).not.toContain('__pwned')
+  })
+
+  it('strips inline event-handler attributes like onclick', async () => {
+    getLegalPageMock.mockResolvedValue({
+      ...page,
+      content: '<p onclick="alert(1)">Pulsa aquí</p>',
+    })
+
+    render(<LegalPageView tenantId="bm-construccion" slug="privacidad" />)
+
+    const paragraph = await screen.findByText('Pulsa aquí')
+    expect(paragraph).not.toHaveAttribute('onclick')
+  })
+
+  it('keeps whitelisted tags and attributes (links, emphasis)', async () => {
+    getLegalPageMock.mockResolvedValue({
+      ...page,
+      content: '<p>Ver <a href="https://example.com">aviso</a> y <strong>condiciones</strong>.</p>',
+    })
+
+    render(<LegalPageView tenantId="bm-construccion" slug="privacidad" />)
+
+    const link = await screen.findByRole('link', { name: 'aviso' })
+    expect(link).toHaveAttribute('href', 'https://example.com')
+    expect(screen.getByText('condiciones').tagName).toBe('STRONG')
+  })
+
   it('shows an error alert when the fetch fails', async () => {
     getLegalPageMock.mockRejectedValue(new Error('network down'))
 

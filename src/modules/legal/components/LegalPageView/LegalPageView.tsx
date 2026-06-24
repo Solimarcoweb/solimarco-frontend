@@ -1,7 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import DOMPurify from 'dompurify'
 import styles from './LegalPageView.module.css'
 import type { LegalPage } from '../../models/legal'
 import { getLegalPage } from '../../services/legalService'
+
+/**
+ * Sanitisation whitelist for legal page bodies. The content is trusted (it
+ * comes from our own backend), but we sanitise as defense-in-depth so a
+ * compromised/misconfigured backend can never inject scripts or event handlers.
+ * Only the inline/block tags legal copy needs are allowed; `a` keeps just the
+ * href and safe linking attributes.
+ */
+const SANITIZE_CONFIG = {
+  ALLOWED_TAGS: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'strong', 'em', 'br'],
+  ALLOWED_ATTR: ['href', 'target', 'rel'],
+}
 
 export interface LegalPageViewProps {
   /** Tenant the legal page belongs to. */
@@ -30,8 +43,9 @@ function formatUpdatedAt(isoDate: string): string {
 /**
  * Renders a tenant's published legal page (privacy, cookies, legal notice...).
  * Loads the page through `legalService` and handles the loading, error and
- * success states. The HTML body comes from our own backend (not user input),
- * so it is injected with `dangerouslySetInnerHTML` by design.
+ * success states. The HTML body comes from our own backend (not user input);
+ * it is injected with `dangerouslySetInnerHTML` but sanitised with DOMPurify
+ * first (see `SANITIZE_CONFIG`) as defense-in-depth.
  *
  * @param props.tenantId - Tenant the legal page belongs to.
  * @param props.slug - Legal page slug to load.
@@ -69,6 +83,14 @@ export function LegalPageView({ tenantId, slug }: LegalPageViewProps) {
     }
   }, [tenantId, slug])
 
+  // Sanitise once per content change, not on every render. Computed
+  // unconditionally (before the early returns) to respect the rules of hooks.
+  const rawContent = state.status === 'success' ? state.page.content : ''
+  const sanitizedContent = useMemo(
+    () => DOMPurify.sanitize(rawContent, SANITIZE_CONFIG),
+    [rawContent],
+  )
+
   if (state.status === 'loading') {
     return (
       <main className={styles.page}>
@@ -96,8 +118,8 @@ export function LegalPageView({ tenantId, slug }: LegalPageViewProps) {
       <article className={styles.document}>
         <h1 className={styles.title}>{page.title}</h1>
         <p className={styles.updated}>Última actualización: {formatUpdatedAt(page.updatedAt)}</p>
-        {/* Trusted HTML from our own backend; never user-generated content. */}
-        <div className={styles.content} dangerouslySetInnerHTML={{ __html: page.content }} />
+        {/* Trusted HTML from our own backend, sanitised with DOMPurify as defense-in-depth. */}
+        <div className={styles.content} dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
       </article>
     </main>
   )
