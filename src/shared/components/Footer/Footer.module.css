@@ -1,0 +1,98 @@
+/* Mobile-first footer block. Base styles target mobile (single column);
+   the min-width breakpoint splits the contact + legal sections into columns. */
+
+.footer {
+  box-sizing: border-box;
+  padding: 3rem 1.25rem 2rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  text-align: left;
+}
+
+.container {
+  width: 100%;
+  max-width: 80rem; /* matches Tailwind max-w-7xl */
+  margin-inline: auto;
+  display: grid;
+  gap: 2.5rem;
+  /* Single column on mobile; the asymmetry (wider contact column) is
+     introduced only from the desktop breakpoint. */
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .container {
+    grid-template-columns: 2fr 1fr;
+    gap: 4rem;
+  }
+}
+
+.businessName {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-h);
+}
+
+.address {
+  display: grid;
+  gap: 0.5rem;
+  font-style: normal; /* reset the default italic of <address> */
+}
+
+.addressLine {
+  max-width: 36ch;
+  line-height: 1.5;
+}
+
+.contactLink,
+.legalLink {
+  width: fit-content;
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.contactLink {
+  font-weight: 500;
+}
+
+.contactLink:hover,
+.legalLink:hover {
+  color: var(--accent);
+}
+
+.contactLink:focus-visible,
+.legalLink:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.legalHeading {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-h);
+}
+
+.legalList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.copyright {
+  max-width: 80rem;
+  margin: 2.5rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text);
+}
