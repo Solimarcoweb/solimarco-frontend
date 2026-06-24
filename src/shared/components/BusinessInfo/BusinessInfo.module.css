@@ -1,0 +1,115 @@
+/* Business info block. Mobile-first single column; two columns (hours +
+   contact) from the tablet breakpoint. Consumes the active theme tokens. */
+
+.info {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: var(--spacing-section) 1.25rem;
+  text-align: left;
+}
+
+.title {
+  margin: 0 0 1.75rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.colTitle {
+  margin: 0 0 1rem;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.hours {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.hoursRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-bg-alt);
+  color: var(--color-text);
+}
+
+.day {
+  font-weight: 600;
+}
+
+.range {
+  color: var(--color-text-muted);
+}
+
+.closed {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.address {
+  display: grid;
+  gap: 0.5rem;
+  font-style: normal; /* reset the default italic of <address> */
+}
+
+.addressLine {
+  margin: 0;
+  max-width: 34ch;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.contactLink {
+  width: fit-content;
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.contactLink:hover {
+  color: var(--color-accent);
+}
+
+.contactLink:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.mapFigure {
+  margin: 2.5rem 0 0;
+}
+
+.map {
+  display: block;
+  width: 100%;
+  /* Fixed ratio avoids layout shift (CLS) while the map image loads. */
+  aspect-ratio: 16 / 6;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
