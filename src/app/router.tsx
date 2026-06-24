@@ -36,6 +36,18 @@ const MecanicoServiciosPage = lazy(() => import('./pages/mecanico-multi/Mecanico
 const MecanicoCitaPage = lazy(() => import('./pages/mecanico-multi/MecanicoCitaPage'))
 // eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
 const MecanicoContactoPage = lazy(() => import('./pages/mecanico-multi/MecanicoContactoPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const TiendaLandingPage = lazy(() => import('./pages/tienda-landing/TiendaLandingPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const TiendaLayout = lazy(() => import('./pages/tienda-multi/TiendaLayout'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const TiendaHomePage = lazy(() => import('./pages/tienda-multi/TiendaHomePage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const TiendaProductosPage = lazy(() => import('./pages/tienda-multi/TiendaProductosPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const TiendaCarritoPage = lazy(() => import('./pages/tienda-multi/TiendaCarritoPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const TiendaContactoPage = lazy(() => import('./pages/tienda-multi/TiendaContactoPage'))
 
 function withSuspense(Component: LazyExoticComponent<() => JSX.Element>) {
   return (
@@ -84,6 +96,20 @@ export const router = createBrowserRouter([
       { path: 'servicios', element: withSuspense(MecanicoServiciosPage) },
       { path: 'cita', element: withSuspense(MecanicoCitaPage) },
       { path: 'contacto', element: withSuspense(MecanicoContactoPage) },
+    ],
+  },
+  {
+    path: '/tienda',
+    element: withSuspense(TiendaLandingPage),
+  },
+  {
+    path: '/tienda-multi',
+    element: withSuspense(TiendaLayout),
+    children: [
+      { index: true, element: withSuspense(TiendaHomePage) },
+      { path: 'productos', element: withSuspense(TiendaProductosPage) },
+      { path: 'carrito', element: withSuspense(TiendaCarritoPage) },
+      { path: 'contacto', element: withSuspense(TiendaContactoPage) },
     ],
   },
 ])

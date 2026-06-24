@@ -1,0 +1,27 @@
+/* Tienda landing page shell. Fresco theme (vivid, rounded). Mobile-first. */
+
+.header {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 1rem 1.25rem;
+}
+
+.brand {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+}
+
+.cartSection {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: var(--spacing-section) 1.25rem;
+}

@@ -1,0 +1,65 @@
+/* Shared page layout helpers for the tienda multi-page site. Fresco theme. Mobile-first. */
+
+.page {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: var(--spacing-section) 1.25rem;
+}
+
+.title {
+  margin: 0 0 1rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.intro {
+  max-width: 60ch;
+  margin: 0 0 2.5rem;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+}
+
+/* ── Home highlights ──────────────────────────────────────── */
+
+.highlights {
+  padding-block: var(--spacing-section);
+}
+
+.ctaWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.9rem 2rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.cta:hover {
+  opacity: 0.85;
+}
+
+.cta:active {
+  transform: scale(0.97);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
