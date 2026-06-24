@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { HelmetProvider } from 'react-helmet-async'
+import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
+import { testI18n } from '../../../test-utils'
 import GenericoLayout from './GenericoLayout'
 import GenericoHomePage from './GenericoHomePage'
 import GenericoServiciosPage from './GenericoServiciosPage'
@@ -15,16 +17,18 @@ vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({
 function renderAt(path: string) {
   return render(
     <HelmetProvider>
-      <MemoryRouter initialEntries={[path]}>
-        <Routes>
-          <Route path="/generico-multi" element={<GenericoLayout />}>
-            <Route index element={<GenericoHomePage />} />
-            <Route path="servicios" element={<GenericoServiciosPage />} />
-            <Route path="presupuesto" element={<GenericoPresupuestoPage />} />
-            <Route path="contacto" element={<GenericoContactoPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>
+      <I18nextProvider i18n={testI18n}>
+        <MemoryRouter initialEntries={[path]}>
+          <Routes>
+            <Route path="/generico-multi" element={<GenericoLayout />}>
+              <Route index element={<GenericoHomePage />} />
+              <Route path="servicios" element={<GenericoServiciosPage />} />
+              <Route path="presupuesto" element={<GenericoPresupuestoPage />} />
+              <Route path="contacto" element={<GenericoContactoPage />} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+      </I18nextProvider>
     </HelmetProvider>,
   )
 }

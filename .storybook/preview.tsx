@@ -1,4 +1,9 @@
 import type { Preview } from '@storybook/react-vite'
+import { I18nextProvider } from 'react-i18next'
+import { createI18nInstance } from '../src/i18n/config'
+
+/** Storybook-wide i18n instance — Spanish so story labels match the app defaults. */
+const storybookI18n = createI18nInstance('es')
 
 const preview: Preview = {
   parameters: {
@@ -16,6 +21,14 @@ const preview: Preview = {
       test: 'todo',
     },
   },
+
+  decorators: [
+    (Story) => (
+      <I18nextProvider i18n={storybookI18n}>
+        <Story />
+      </I18nextProvider>
+    ),
+  ],
 }
 
 export default preview

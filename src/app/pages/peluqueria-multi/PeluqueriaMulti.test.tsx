@@ -1,7 +1,9 @@
 import { render, screen, within } from '@testing-library/react'
 import { HelmetProvider } from 'react-helmet-async'
+import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
+import { testI18n } from '../../../test-utils'
 import PeluqueriaLayout from './PeluqueriaLayout'
 import PeluqueriaHomePage from './PeluqueriaHomePage'
 import PeluqueriaServiciosPage from './PeluqueriaServiciosPage'
@@ -15,16 +17,18 @@ vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({
 function renderAt(path: string) {
   return render(
     <HelmetProvider>
-      <MemoryRouter initialEntries={[path]}>
-        <Routes>
-          <Route path="/peluqueria-multi" element={<PeluqueriaLayout />}>
-            <Route index element={<PeluqueriaHomePage />} />
-            <Route path="servicios" element={<PeluqueriaServiciosPage />} />
-            <Route path="cita" element={<PeluqueriaCitaPage />} />
-            <Route path="contacto" element={<PeluqueriaContactoPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>
+      <I18nextProvider i18n={testI18n}>
+        <MemoryRouter initialEntries={[path]}>
+          <Routes>
+            <Route path="/peluqueria-multi" element={<PeluqueriaLayout />}>
+              <Route index element={<PeluqueriaHomePage />} />
+              <Route path="servicios" element={<PeluqueriaServiciosPage />} />
+              <Route path="cita" element={<PeluqueriaCitaPage />} />
+              <Route path="contacto" element={<PeluqueriaContactoPage />} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+      </I18nextProvider>
     </HelmetProvider>,
   )
 }

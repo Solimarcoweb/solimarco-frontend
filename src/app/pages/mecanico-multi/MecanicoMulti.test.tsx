@@ -1,7 +1,9 @@
 import { render, screen, within } from '@testing-library/react'
 import { HelmetProvider } from 'react-helmet-async'
+import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
+import { testI18n } from '../../../test-utils'
 import MecanicoLayout from './MecanicoLayout'
 import MecanicoHomePage from './MecanicoHomePage'
 import MecanicoServiciosPage from './MecanicoServiciosPage'
@@ -15,16 +17,18 @@ vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({
 function renderAt(path: string) {
   return render(
     <HelmetProvider>
-      <MemoryRouter initialEntries={[path]}>
-        <Routes>
-          <Route path="/mecanico-multi" element={<MecanicoLayout />}>
-            <Route index element={<MecanicoHomePage />} />
-            <Route path="servicios" element={<MecanicoServiciosPage />} />
-            <Route path="cita" element={<MecanicoCitaPage />} />
-            <Route path="contacto" element={<MecanicoContactoPage />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>
+      <I18nextProvider i18n={testI18n}>
+        <MemoryRouter initialEntries={[path]}>
+          <Routes>
+            <Route path="/mecanico-multi" element={<MecanicoLayout />}>
+              <Route index element={<MecanicoHomePage />} />
+              <Route path="servicios" element={<MecanicoServiciosPage />} />
+              <Route path="cita" element={<MecanicoCitaPage />} />
+              <Route path="contacto" element={<MecanicoContactoPage />} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+      </I18nextProvider>
     </HelmetProvider>,
   )
 }

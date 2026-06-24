@@ -1,6 +1,20 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import App from './App'
+
+vi.mock('../core/tenant/useTenant', () => ({
+  useTenant: vi.fn().mockReturnValue({
+    status: 'success',
+    config: {
+      tenantId: 'demo',
+      businessName: 'Demo',
+      themeName: 'clasico',
+      pageType: 'landing',
+      sector: 'generico',
+      locale: 'es',
+    },
+  }),
+}))
 
 describe('App', () => {
   it('mounts the providers and renders the home route', async () => {

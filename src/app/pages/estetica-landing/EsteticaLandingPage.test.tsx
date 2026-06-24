@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import { HelmetProvider } from 'react-helmet-async'
+import { I18nextProvider } from 'react-i18next'
 import { describe, expect, it, vi } from 'vitest'
+import { testI18n } from '../../../test-utils'
 import EsteticaLandingPage from './EsteticaLandingPage'
 
 vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({
@@ -10,7 +12,9 @@ vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({
 function renderPage() {
   return render(
     <HelmetProvider>
-      <EsteticaLandingPage />
+      <I18nextProvider i18n={testI18n}>
+        <EsteticaLandingPage />
+      </I18nextProvider>
     </HelmetProvider>,
   )
 }
