@@ -1,6 +1,6 @@
 # SKILL — Reglas de diseño validadas (solimarco-frontend)
 
-Reglas de diseño de interfaz validadas (adaptadas de `taste-skill`) para el stack real de este repo: **React 19 + TypeScript + Tailwind / CSS nativo**. Sin GSAP, sin Framer Motion, sin Phosphor Icons.
+Reglas de diseño de interfaz validadas (adaptadas de `taste-skill`) para el stack real de este repo: **React 19 + TypeScript + CSS Modules**. Sin Tailwind, sin GSAP, sin Framer Motion, sin Phosphor Icons.
 
 Estas reglas aplican a las **plantillas por sector y componentes públicos** que ve el cliente final (hero, servicios, galería, contacto, catálogo). Son criterio de diseño obligatorio salvo justificación explícita en el PR.
 
@@ -8,16 +8,16 @@ Estas reglas aplican a las **plantillas por sector y componentes públicos** que
 
 ## 1. Tipografía
 
-- Jerarquía con **peso y color**, no con tamaño bruto. Un título manda por contraste de peso (`font-semibold` / `font-bold`) y color, no por ser enorme.
-- **Sin H1 gigante genérico** (evitar el patrón `text-6xl/7xl` por defecto en cada hero).
+- Jerarquía con **peso y color**, no con tamaño bruto. Un título manda por contraste de peso (`font-weight: 600` / `font-weight: 700`) y color, no por ser enorme.
+- **Sin H1 gigante genérico** (evitar el `font-size` desmedido por defecto en cada hero, p. ej. `3.75rem`/`4.5rem`+). Preferir un `clamp()` controlado.
 - **Serif solo para editorial / lujo** (boutique, estética premium). Para todo lo demás (dashboards, paneles, UI funcional), sans-serif.
 
 ## 2. Layout
 
 - **CSS Grid** sobre flex-math (no calcular anchos a mano con flex cuando Grid lo resuelve declarativo).
-- En heroes usar **`min-h-[100dvh]`**, nunca `h-screen` (evita el salto por la barra de navegador en móvil).
-- Ancho de contenedor con **`max-w-7xl mx-auto`** (más padding lateral responsive).
-- **Layouts asimétricos siempre con fallback `single-column` en móvil** (`<768px`). La asimetría es para desktop; en móvil colapsa a una columna.
+- En heroes usar **`min-height: 100dvh`**, nunca `height: 100vh` (evita el salto por la barra de navegador en móvil).
+- Ancho de contenedor con **`max-width: 80rem` + `margin-inline: auto`** (más `padding` lateral responsive).
+- **Layouts asimétricos siempre con fallback a una sola columna en móvil** (por debajo de `768px`). La asimetría es para desktop; en móvil colapsa a una columna con `grid-template-columns: 1fr`.
 
 ## 3. Componentes
 
@@ -37,7 +37,7 @@ Estas reglas aplican a las **plantillas por sector y componentes públicos** que
 
 ## 6. Responsive
 
-- **Mobile-first obligatorio**: estilos base para móvil, breakpoints (`md:`, `lg:`) para ampliar.
+- **Mobile-first obligatorio**: estilos base para móvil, breakpoints (`@media (min-width: 768px)`, `@media (min-width: 1024px)`) para ampliar.
 - **Sin scroll horizontal** en ningún breakpoint.
 
 ## 7. Fuera del scope de este skill
@@ -53,4 +53,4 @@ Para esos casos, no forzar estas reglas — usar el patrón adecuado a la densid
 
 ---
 
-**Stack de referencia:** React 19, TypeScript, Tailwind / CSS nativo. Iconos: librería ligera a definir (no Phosphor). Animación: solo CSS.
+**Stack de referencia:** React 19, TypeScript, CSS Modules. Iconos: librería ligera a definir (no Phosphor). Animación: solo CSS.
