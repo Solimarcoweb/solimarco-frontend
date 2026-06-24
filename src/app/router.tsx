@@ -72,6 +72,18 @@ const PeluqueriaServiciosPage = lazy(() => import('./pages/peluqueria-multi/Pelu
 const PeluqueriaCitaPage = lazy(() => import('./pages/peluqueria-multi/PeluqueriaCitaPage'))
 // eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
 const PeluqueriaContactoPage = lazy(() => import('./pages/peluqueria-multi/PeluqueriaContactoPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const GenericoLandingPage = lazy(() => import('./pages/generico-landing/GenericoLandingPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const GenericoLayout = lazy(() => import('./pages/generico-multi/GenericoLayout'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const GenericoHomePage = lazy(() => import('./pages/generico-multi/GenericoHomePage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const GenericoServiciosPage = lazy(() => import('./pages/generico-multi/GenericoServiciosPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const GenericoPresupuestoPage = lazy(() => import('./pages/generico-multi/GenericoPresupuestoPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const GenericoContactoPage = lazy(() => import('./pages/generico-multi/GenericoContactoPage'))
 
 function withSuspense(Component: LazyExoticComponent<() => JSX.Element>) {
   return (
@@ -162,6 +174,20 @@ export const router = createBrowserRouter([
       { path: 'servicios', element: withSuspense(PeluqueriaServiciosPage) },
       { path: 'cita', element: withSuspense(PeluqueriaCitaPage) },
       { path: 'contacto', element: withSuspense(PeluqueriaContactoPage) },
+    ],
+  },
+  {
+    path: '/generico',
+    element: withSuspense(GenericoLandingPage),
+  },
+  {
+    path: '/generico-multi',
+    element: withSuspense(GenericoLayout),
+    children: [
+      { index: true, element: withSuspense(GenericoHomePage) },
+      { path: 'servicios', element: withSuspense(GenericoServiciosPage) },
+      { path: 'presupuesto', element: withSuspense(GenericoPresupuestoPage) },
+      { path: 'contacto', element: withSuspense(GenericoContactoPage) },
     ],
   },
 ])
