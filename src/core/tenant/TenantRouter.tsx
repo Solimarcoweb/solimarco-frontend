@@ -2,6 +2,7 @@ import { lazy, Suspense, type JSX } from 'react'
 import { Route, Routes } from 'react-router'
 import { RouteFallback } from '../../app/RouteFallback'
 import { useTenantConfig } from './TenantContext'
+import type { TenantConfig } from './tenantConfig'
 
 // ─── Construcción ────────────────────────────────────────────────────────────
 // eslint-disable-next-line react-refresh/only-export-components
@@ -216,28 +217,28 @@ function GenericoMulti(): JSX.Element {
   )
 }
 
-function resolveContent(sector: string, pageType: string): JSX.Element {
+function resolveContent(sector: string, pageType: TenantConfig['pageType']): JSX.Element {
   switch (sector) {
     case 'construccion':
       return <ConstruccionPage />
 
     case 'restaurante':
-      return pageType === 'multipage' ? <RestauranteMulti /> : <RestauranteLandingPage />
+      return pageType === 'multi' ? <RestauranteMulti /> : <RestauranteLandingPage />
 
     case 'mecanico':
-      return pageType === 'multipage' ? <MecanicoMulti /> : <MecanicoLandingPage />
+      return pageType === 'multi' ? <MecanicoMulti /> : <MecanicoLandingPage />
 
     case 'tienda':
-      return pageType === 'multipage' ? <TiendaMulti /> : <TiendaLandingPage />
+      return pageType === 'multi' ? <TiendaMulti /> : <TiendaLandingPage />
 
     case 'estetica':
-      return pageType === 'multipage' ? <EsteticaMulti /> : <EsteticaLandingPage />
+      return pageType === 'multi' ? <EsteticaMulti /> : <EsteticaLandingPage />
 
     case 'peluqueria':
-      return pageType === 'multipage' ? <PeluqueriaMulti /> : <PeluqueriaLandingPage />
+      return pageType === 'multi' ? <PeluqueriaMulti /> : <PeluqueriaLandingPage />
 
     case 'generico':
-      return pageType === 'multipage' ? <GenericoMulti /> : <GenericoLandingPage />
+      return pageType === 'multi' ? <GenericoMulti /> : <GenericoLandingPage />
 
     default:
       return <GenericoLandingPage />
@@ -247,7 +248,7 @@ function resolveContent(sector: string, pageType: string): JSX.Element {
 /**
  * Reads the resolved tenant configuration from context and renders the
  * correct page tree: a single landing page for `pageType === 'landing'`,
- * or a nested `<Routes>` layout with sub-pages for `pageType === 'multipage'`.
+ * or a nested `<Routes>` layout with sub-pages for `pageType === 'multi'`.
  *
  * Must be mounted under a splat route (`path: '/*'`) so that descendant
  * `<Routes>` can match sub-paths in the data-router context.
