@@ -19,5 +19,10 @@ Identidad: tonos tierra, terracota y barro, formas redondeadas, cercanía. Secto
 - **Cards**: `--radius-md/lg` (14–22px), `--shadow-md` suave y cálida. Pueden agruparse pero con tamaños orgánicos, no rejilla fría.
 - **Botones**: relleno terracota, esquinas redondeadas, `:active` con `scale`.
 
+## Rendimiento de fuentes (`font-display: swap`)
+- El tema usa por defecto **stacks de fuentes del sistema** (`--font-heading` serif tipo Iowan/Georgia, `--font-body` system-ui): no hay descarga de fuente web, así que `font-display` **no tiene efecto** y no hay que añadir nada.
+- Aplica `font-display: swap` **solo si** un tenant concreto necesita una **fuente web descargada vía `@font-face`** (una serif de marca, p. ej.): en ese caso el `@font-face` debe llevar `font-display: swap` para evitar texto invisible (FOIT) y proteger el LCP.
+- No metas una fuente web "para que se vea más bonito" sin necesidad real: añade una petición de red y **empeora Core Web Vitals**. Calidez = serif del sistema + acento + foto, no una fuente externa.
+
 ## Prohibido
 - Fondo casi-blanco neutro frío. Esquinas en pico (rompe la calidez). Acento azul/neón. Estética minimalista fría. Texto gris claro (mantén el marrón profundo para el contraste).
