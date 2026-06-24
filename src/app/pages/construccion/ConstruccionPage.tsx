@@ -74,10 +74,14 @@ const PROJECTS: ProjectItem[] = [
 const SEO_DESCRIPTION =
   'Más de 25 años de obra nueva y reformas integrales en Tenerife. Solicita presupuesto sin compromiso a BM Construcción S.L.'
 
-/** schema.org LocalBusiness structured data for BM Construcción S.L. */
+/**
+ * schema.org structured data for BM Construcción S.L.
+ * Uses `GeneralContractor`, a specific subtype of `LocalBusiness`, for more
+ * accurate construction-sector signals to search engines.
+ */
 const LOCAL_BUSINESS_SCHEMA: Record<string, unknown> = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': 'GeneralContractor',
   name: BUSINESS.name,
   description: SEO_DESCRIPTION,
   url: PAGE_URL,
