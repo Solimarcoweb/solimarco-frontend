@@ -1,0 +1,166 @@
+/* Mobile-first catalog. Base layout is a single column; the breakpoints turn
+   each category into an asymmetric grid where the first product is featured
+   larger, avoiding a row of identical cards. */
+
+.catalog {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 4rem 1.25rem;
+  display: grid;
+  gap: 3.5rem;
+}
+
+.group {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.category {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+
+.product {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.product:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.media {
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem 1.25rem;
+}
+
+.name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-h);
+}
+
+.description {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.meta {
+  margin: 0.25rem 0 0;
+}
+
+.price {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.unit {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.lowStock {
+  align-self: start;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b25e00;
+}
+
+.addButton {
+  margin-top: 0.5rem;
+  padding: 0.7rem 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.addButton:hover {
+  background: color-mix(in srgb, var(--accent) 85%, #000);
+  box-shadow: var(--shadow);
+}
+
+.addButton:active {
+  transform: translateY(1px);
+}
+
+.addButton:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: dense;
+  }
+
+  /* The featured product spans the full row width on tablet. */
+  .product.featured {
+    grid-column: span 2;
+  }
+
+  .product.featured .media {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* On desktop the featured product becomes a 2x2 block among smaller cards. */
+  .product.featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
