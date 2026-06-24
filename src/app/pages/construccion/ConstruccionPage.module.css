@@ -1,0 +1,38 @@
+/* Construction pilot page shell. Mobile-first; consumes the active theme
+   tokens (clasico) so the header and budget section stay on-brand. */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 1rem 1.25rem;
+}
+
+/* Serif brand mark, trust-first per SKILL-tema-clasico.md. */
+.brand {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.budget {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+  padding: var(--spacing-section) 1.25rem;
+}
+
+.budgetHeading {
+  margin: 0 0 1.5rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  font-weight: 600;
+  color: var(--color-primary);
+}
