@@ -1,0 +1,62 @@
+/* Shared restaurant layout shell. Mobile-first; the header wraps on small
+   screens and lays out in a row from the tablet breakpoint. Calido theme. */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 1rem 1.25rem;
+}
+
+.brand {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.nav {
+  flex: 1 1 auto;
+}
+
+.navList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navLink {
+  display: inline-flex;
+  padding: 0.35rem 0.25rem;
+  color: var(--color-text);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.navLink:hover {
+  color: var(--color-accent);
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Active route: accent underline, matching the trust-first calmness of calido. */
+.navLinkActive {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-accent);
+}

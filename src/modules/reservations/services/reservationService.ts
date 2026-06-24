@@ -1,5 +1,5 @@
 import { apiClient } from '../../../core/http/apiClient'
-import type { BudgetFormData } from '../models/reservation'
+import type { BudgetFormData, TableReservationData } from '../models/reservation'
 
 /**
  * Backend response for a created reservation/lead.
@@ -22,5 +22,24 @@ export function submitBudgetRequest(data: BudgetFormData): Promise<ReservationRe
   return apiClient<ReservationResponse>('/api/reservations', {
     method: 'POST',
     body: data,
+  })
+}
+
+/**
+ * Sends a table reservation to the backend as a new reservation, scoped to the
+ * tenant. Reuses the shared `/api/reservations` endpoint.
+ *
+ * @param tenantId - Tenant the reservation belongs to.
+ * @param data - Validated table reservation data.
+ * @returns The created reservation reference.
+ * @throws {import('../../../core/http/apiClient').ApiError} When the backend responds with a non-2xx status.
+ */
+export function submitTableReservation(
+  tenantId: string,
+  data: TableReservationData,
+): Promise<ReservationResponse> {
+  return apiClient<ReservationResponse>('/api/reservations', {
+    method: 'POST',
+    body: { tenantId, ...data },
   })
 }

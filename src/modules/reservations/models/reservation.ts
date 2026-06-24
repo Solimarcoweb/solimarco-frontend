@@ -13,5 +13,23 @@ export interface BudgetFormData {
   preferredDate?: string
 }
 
+/** Generic lifecycle of an async form submission. */
+export type SubmissionState = 'idle' | 'submitting' | 'success' | 'error'
+
 /** Lifecycle of the budget form submission. */
-export type BudgetFormState = 'idle' | 'submitting' | 'success' | 'error'
+export type BudgetFormState = SubmissionState
+
+/** Shape of the data collected by the table reservation form. */
+export interface TableReservationData {
+  name: string
+  email: string
+  phone: string
+  /** Reservation date, ISO `yyyy-mm-dd`. */
+  date: string
+  /** Reservation time, 24h `HH:MM`. */
+  time: string
+  /** Number of guests (1–20). */
+  guests: number
+  /** Optional free-text notes (allergies, occasion...). */
+  notes?: string
+}
