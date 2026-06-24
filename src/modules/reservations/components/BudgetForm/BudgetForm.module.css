@@ -1,0 +1,124 @@
+/* Mobile-first budget form: single column on every breakpoint (a form reads
+   best stacked); width is capped and centered so it never spans too wide. */
+
+.form {
+  width: 100%;
+  max-width: 36rem;
+  margin-inline: auto;
+  box-sizing: border-box;
+  display: grid;
+  gap: 1.25rem;
+  padding: 2rem 1.25rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-h);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--text);
+}
+
+.control {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  color: var(--text-h);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.control:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.control[aria-invalid='true'] {
+  border-color: #c0322b;
+}
+
+textarea.control {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #c0322b;
+}
+
+.errorBanner {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  font-size: 0.95rem;
+  color: #7a1f1a;
+  background: #fdecea;
+  border: 1px solid #f3c0bb;
+  border-radius: 0.5rem;
+}
+
+.submit {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.submit:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 85%, #000);
+  box-shadow: var(--shadow);
+}
+
+.submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submit:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+}
+
+.submit:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.successTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.successText {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.55;
+}

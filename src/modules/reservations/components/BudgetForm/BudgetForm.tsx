@@ -1,0 +1,225 @@
+import { useId, useState, type FormEvent, type ReactNode } from 'react'
+import styles from './BudgetForm.module.css'
+import type { BudgetFormData, BudgetFormState, ServiceType } from '../../models/reservation'
+import { submitBudgetRequest } from '../../services/reservationService'
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
+  { value: 'obra-nueva', label: 'Obra nueva' },
+  { value: 'reforma-integral', label: 'Reforma integral' },
+  { value: 'reforma-parcial', label: 'Reforma parcial' },
+  { value: 'otro', label: 'Otro' },
+]
+
+const INITIAL_DATA: BudgetFormData = {
+  name: '',
+  phone: '',
+  email: '',
+  serviceType: 'obra-nueva',
+  description: '',
+  preferredDate: '',
+}
+
+type FieldErrors = Partial<Record<keyof BudgetFormData, string>>
+
+export interface BudgetFormProps {
+  /**
+   * Submit handler. Defaults to POSTing to `/api/reservations` via the
+   * reservation service; injectable so tests/stories can drive the lifecycle
+   * without hitting the network.
+   */
+  onSubmit?: (data: BudgetFormData) => Promise<unknown>
+}
+
+/** Returns the ARIA wiring for a control given its id and current error. */
+function describedBy(id: string, error: string | undefined) {
+  return error ? ({ 'aria-invalid': true, 'aria-describedby': `${id}-error` } as const) : {}
+}
+
+interface FieldProps {
+  id: string
+  label: string
+  error?: string
+  optional?: boolean
+  children: ReactNode
+}
+
+/** Label + control + error wrapper, keeping the a11y markup consistent per field. */
+function Field({ id, label, error, optional, children }: FieldProps) {
+  return (
+    <div className={styles.field}>
+      <label htmlFor={id} className={styles.label}>
+        {label}
+        {optional && <span className={styles.optional}> (opcional)</span>}
+      </label>
+      {children}
+      {error && (
+        <p id={`${id}-error`} className={styles.error} role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  )
+}
+
+/**
+ * Structured budget request form for the construction/reform sector.
+ * Manages its own field/validation state and submission lifecycle
+ * (idle → submitting → success | error) with no form library.
+ *
+ * @param props.onSubmit - Submit handler; defaults to the reservation service.
+ * @returns The form, or a confirmation panel once submitted successfully.
+ */
+export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) {
+  const baseId = useId()
+  const [data, setData] = useState<BudgetFormData>(INITIAL_DATA)
+  const [errors, setErrors] = useState<FieldErrors>({})
+  const [state, setState] = useState<BudgetFormState>('idle')
+
+  const fieldId = (name: keyof BudgetFormData) => `${baseId}-${name}`
+
+  function updateField<K extends keyof BudgetFormData>(field: K, value: BudgetFormData[K]) {
+    setData((prev) => ({ ...prev, [field]: value }))
+  }
+
+  function validate(values: BudgetFormData): FieldErrors {
+    const next: FieldErrors = {}
+    if (!values.name.trim()) next.name = 'Indica tu nombre.'
+    if (!values.phone.trim()) next.phone = 'Indica un teléfono de contacto.'
+    if (!values.email.trim()) next.email = 'Indica tu email.'
+    else if (!EMAIL_PATTERN.test(values.email)) next.email = 'El email no tiene un formato válido.'
+    if (!values.description.trim()) next.description = 'Cuéntanos brevemente tu proyecto.'
+    return next
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const nextErrors = validate(data)
+    setErrors(nextErrors)
+    if (Object.keys(nextErrors).length > 0) {
+      return
+    }
+
+    setState('submitting')
+    const payload: BudgetFormData = {
+      ...data,
+      preferredDate: data.preferredDate?.trim() ? data.preferredDate : undefined,
+    }
+    try {
+      await onSubmit(payload)
+      setState('success')
+    } catch {
+      setState('error')
+    }
+  }
+
+  if (state === 'success') {
+    return (
+      <section className={styles.form} role="status" aria-live="polite">
+        <h3 className={styles.successTitle}>¡Solicitud enviada!</h3>
+        <p className={styles.successText}>
+          Hemos recibido tu solicitud de presupuesto. Te contactaremos lo antes posible.
+        </p>
+      </section>
+    )
+  }
+
+  const isSubmitting = state === 'submitting'
+
+  return (
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit}
+      aria-label="Formulario de solicitud de presupuesto"
+      noValidate
+    >
+      <Field id={fieldId('name')} label="Nombre" error={errors.name}>
+        <input
+          id={fieldId('name')}
+          className={styles.control}
+          type="text"
+          autoComplete="name"
+          value={data.name}
+          onChange={(event) => updateField('name', event.target.value)}
+          {...describedBy(fieldId('name'), errors.name)}
+        />
+      </Field>
+
+      <Field id={fieldId('phone')} label="Teléfono" error={errors.phone}>
+        <input
+          id={fieldId('phone')}
+          className={styles.control}
+          type="tel"
+          autoComplete="tel"
+          value={data.phone}
+          onChange={(event) => updateField('phone', event.target.value)}
+          {...describedBy(fieldId('phone'), errors.phone)}
+        />
+      </Field>
+
+      <Field id={fieldId('email')} label="Email" error={errors.email}>
+        <input
+          id={fieldId('email')}
+          className={styles.control}
+          type="email"
+          autoComplete="email"
+          value={data.email}
+          onChange={(event) => updateField('email', event.target.value)}
+          {...describedBy(fieldId('email'), errors.email)}
+        />
+      </Field>
+
+      <Field id={fieldId('serviceType')} label="Tipo de servicio">
+        <select
+          id={fieldId('serviceType')}
+          className={styles.control}
+          value={data.serviceType}
+          // Options are constrained to ServiceType values, so the cast is safe.
+          onChange={(event) => updateField('serviceType', event.target.value as ServiceType)}
+        >
+          {SERVICE_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      <Field
+        id={fieldId('description')}
+        label="Descripción del proyecto"
+        error={errors.description}
+      >
+        <textarea
+          id={fieldId('description')}
+          className={styles.control}
+          rows={4}
+          value={data.description}
+          onChange={(event) => updateField('description', event.target.value)}
+          {...describedBy(fieldId('description'), errors.description)}
+        />
+      </Field>
+
+      <Field id={fieldId('preferredDate')} label="Fecha preferida" optional>
+        <input
+          id={fieldId('preferredDate')}
+          className={styles.control}
+          type="date"
+          value={data.preferredDate ?? ''}
+          onChange={(event) => updateField('preferredDate', event.target.value)}
+        />
+      </Field>
+
+      {state === 'error' && (
+        <p className={styles.errorBanner} role="alert">
+          No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos.
+        </p>
+      )}
+
+      <button type="submit" className={styles.submit} disabled={isSubmitting}>
+        {isSubmitting ? 'Enviando…' : 'Solicitar presupuesto'}
+      </button>
+    </form>
+  )
+}
