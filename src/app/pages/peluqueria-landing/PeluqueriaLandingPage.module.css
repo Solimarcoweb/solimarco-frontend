@@ -1,0 +1,38 @@
+/* Peluqueria landing page shell. Mediterraneo theme (sea blues, light, air). Mobile-first. */
+
+.header {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 1rem 1.25rem;
+}
+
+.brand {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+}
+
+.formSection {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: var(--spacing-section) 1.25rem;
+  background: var(--color-bg-alt);
+}
+
+.formHeading {
+  margin: 0 0 2rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  text-align: center;
+}

@@ -60,6 +60,18 @@ const EsteticaTratamientosPage = lazy(() => import('./pages/estetica-multi/Estet
 const EsteticaCitaPage = lazy(() => import('./pages/estetica-multi/EsteticaCitaPage'))
 // eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
 const EsteticaContactoPage = lazy(() => import('./pages/estetica-multi/EsteticaContactoPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const PeluqueriaLandingPage = lazy(() => import('./pages/peluqueria-landing/PeluqueriaLandingPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const PeluqueriaLayout = lazy(() => import('./pages/peluqueria-multi/PeluqueriaLayout'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const PeluqueriaHomePage = lazy(() => import('./pages/peluqueria-multi/PeluqueriaHomePage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const PeluqueriaServiciosPage = lazy(() => import('./pages/peluqueria-multi/PeluqueriaServiciosPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const PeluqueriaCitaPage = lazy(() => import('./pages/peluqueria-multi/PeluqueriaCitaPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const PeluqueriaContactoPage = lazy(() => import('./pages/peluqueria-multi/PeluqueriaContactoPage'))
 
 function withSuspense(Component: LazyExoticComponent<() => JSX.Element>) {
   return (
@@ -136,6 +148,20 @@ export const router = createBrowserRouter([
       { path: 'tratamientos', element: withSuspense(EsteticaTratamientosPage) },
       { path: 'cita', element: withSuspense(EsteticaCitaPage) },
       { path: 'contacto', element: withSuspense(EsteticaContactoPage) },
+    ],
+  },
+  {
+    path: '/peluqueria',
+    element: withSuspense(PeluqueriaLandingPage),
+  },
+  {
+    path: '/peluqueria-multi',
+    element: withSuspense(PeluqueriaLayout),
+    children: [
+      { index: true, element: withSuspense(PeluqueriaHomePage) },
+      { path: 'servicios', element: withSuspense(PeluqueriaServiciosPage) },
+      { path: 'cita', element: withSuspense(PeluqueriaCitaPage) },
+      { path: 'contacto', element: withSuspense(PeluqueriaContactoPage) },
     ],
   },
 ])
