@@ -1,0 +1,38 @@
+/* Estetica landing page shell. Editorial theme (serif, paper, generous air). Mobile-first. */
+
+.header {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 1.25rem 1.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 25%, transparent);
+}
+
+.brand {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+.formSection {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: var(--spacing-section) 1.25rem;
+}
+
+.formHeading {
+  margin: 0 0 2.5rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  font-weight: 400;
+  color: var(--color-text);
+  letter-spacing: -0.015em;
+  text-align: center;
+}

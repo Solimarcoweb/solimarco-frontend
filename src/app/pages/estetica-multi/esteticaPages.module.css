@@ -1,0 +1,75 @@
+/* Shared page layout helpers for the estetica multi-page site. Editorial theme. Mobile-first. */
+
+.page {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: var(--spacing-section) 1.25rem 0;
+}
+
+.title {
+  margin: 0 0 1rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4.5vw, 2.75rem);
+  font-weight: 400;
+  color: var(--color-text);
+  letter-spacing: -0.015em;
+}
+
+.intro {
+  max-width: 68ch;
+  margin: 0 0 2.5rem;
+  font-family: var(--font-body);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+/* ── Home highlights ──────────────────────────────────────── */
+
+.highlights {
+  padding-block: var(--spacing-section);
+}
+
+.ctaWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+/* Editorial CTA: link-style with accent underline, no filled button. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0;
+  color: var(--color-accent);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-accent);
+  transition:
+    opacity 0.15s ease,
+    gap 0.15s ease;
+}
+
+.cta:hover {
+  opacity: 0.75;
+  gap: 0.65rem;
+}
+
+.cta:active {
+  opacity: 0.6;
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ── Cita / form wrap ─────────────────────────────────────── */
+
+.formWrap {
+  margin-top: 2rem;
+}

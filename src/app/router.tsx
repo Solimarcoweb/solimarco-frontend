@@ -48,6 +48,18 @@ const TiendaProductosPage = lazy(() => import('./pages/tienda-multi/TiendaProduc
 const TiendaCarritoPage = lazy(() => import('./pages/tienda-multi/TiendaCarritoPage'))
 // eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
 const TiendaContactoPage = lazy(() => import('./pages/tienda-multi/TiendaContactoPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const EsteticaLandingPage = lazy(() => import('./pages/estetica-landing/EsteticaLandingPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const EsteticaLayout = lazy(() => import('./pages/estetica-multi/EsteticaLayout'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const EsteticaHomePage = lazy(() => import('./pages/estetica-multi/EsteticaHomePage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const EsteticaTratamientosPage = lazy(() => import('./pages/estetica-multi/EsteticaTratamientosPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const EsteticaCitaPage = lazy(() => import('./pages/estetica-multi/EsteticaCitaPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const EsteticaContactoPage = lazy(() => import('./pages/estetica-multi/EsteticaContactoPage'))
 
 function withSuspense(Component: LazyExoticComponent<() => JSX.Element>) {
   return (
@@ -110,6 +122,20 @@ export const router = createBrowserRouter([
       { path: 'productos', element: withSuspense(TiendaProductosPage) },
       { path: 'carrito', element: withSuspense(TiendaCarritoPage) },
       { path: 'contacto', element: withSuspense(TiendaContactoPage) },
+    ],
+  },
+  {
+    path: '/estetica',
+    element: withSuspense(EsteticaLandingPage),
+  },
+  {
+    path: '/estetica-multi',
+    element: withSuspense(EsteticaLayout),
+    children: [
+      { index: true, element: withSuspense(EsteticaHomePage) },
+      { path: 'tratamientos', element: withSuspense(EsteticaTratamientosPage) },
+      { path: 'cita', element: withSuspense(EsteticaCitaPage) },
+      { path: 'contacto', element: withSuspense(EsteticaContactoPage) },
     ],
   },
 ])
