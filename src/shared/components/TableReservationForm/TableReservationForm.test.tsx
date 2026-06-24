@@ -1,5 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { renderWithI18n } from '../../../test-utils'
 import { TableReservationForm } from './TableReservationForm'
 
 /** Returns a `yyyy-mm-dd` date `days` in the future. */
@@ -18,14 +19,14 @@ function fillRequired(date: string) {
 
 describe('TableReservationForm', () => {
   it('renders the reservation form', () => {
-    render(<TableReservationForm tenantId="demo-el-drago" />)
+    renderWithI18n(<TableReservationForm tenantId="demo-el-drago" />)
 
     expect(screen.getByRole('button', { name: 'Reservar mesa' })).toBeInTheDocument()
   })
 
   it('rejects a past date and does not submit', () => {
     const onSubmit = vi.fn()
-    render(<TableReservationForm tenantId="demo-el-drago" onSubmit={onSubmit} />)
+    renderWithI18n(<TableReservationForm tenantId="demo-el-drago" onSubmit={onSubmit} />)
 
     fillRequired('2020-01-01')
     fireEvent.click(screen.getByRole('button', { name: 'Reservar mesa' }))
@@ -36,7 +37,7 @@ describe('TableReservationForm', () => {
 
   it('rejects an out-of-range guest count', () => {
     const onSubmit = vi.fn()
-    render(<TableReservationForm tenantId="demo-el-drago" onSubmit={onSubmit} />)
+    renderWithI18n(<TableReservationForm tenantId="demo-el-drago" onSubmit={onSubmit} />)
 
     fillRequired(futureDate())
     fireEvent.change(screen.getByLabelText('Comensales'), { target: { value: '25' } })
@@ -48,7 +49,7 @@ describe('TableReservationForm', () => {
 
   it('submits valid data and shows the confirmation', async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined)
-    render(<TableReservationForm tenantId="demo-el-drago" onSubmit={onSubmit} />)
+    renderWithI18n(<TableReservationForm tenantId="demo-el-drago" onSubmit={onSubmit} />)
 
     fillRequired(futureDate())
     fireEvent.click(screen.getByRole('button', { name: 'Reservar mesa' }))

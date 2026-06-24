@@ -6,5 +6,103 @@
   "nav": {
     "home": "Inicio",
     "contact": "Contacto"
+  },
+  "forms": {
+    "common": {
+      "optional": "(opcional)",
+      "submitting": "Enviando…"
+    },
+    "budget": {
+      "ariaLabel": "Formulario de solicitud de presupuesto",
+      "fields": {
+        "name": "Nombre",
+        "phone": "Teléfono",
+        "email": "Email",
+        "serviceType": "Tipo de servicio",
+        "description": "Descripción del proyecto",
+        "preferredDate": "Fecha preferida"
+      },
+      "serviceOptions": {
+        "obraNueva": "Obra nueva",
+        "reformaIntegral": "Reforma integral",
+        "reformaParcial": "Reforma parcial",
+        "otro": "Otro"
+      },
+      "errors": {
+        "nameRequired": "Indica tu nombre.",
+        "phoneRequired": "Indica un teléfono de contacto.",
+        "emailRequired": "Indica tu email.",
+        "emailInvalid": "El email no tiene un formato válido.",
+        "descriptionRequired": "Cuéntanos brevemente tu proyecto.",
+        "sendFailed": "No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos."
+      },
+      "submit": "Solicitar presupuesto",
+      "success": {
+        "title": "¡Solicitud enviada!",
+        "text": "Hemos recibido tu solicitud de presupuesto. Te contactaremos lo antes posible."
+      }
+    },
+    "reservation": {
+      "ariaLabel": "Formulario de reserva de mesa",
+      "fields": {
+        "name": "Nombre",
+        "email": "Email",
+        "phone": "Teléfono",
+        "date": "Fecha",
+        "time": "Hora",
+        "guests": "Comensales",
+        "notes": "Notas"
+      },
+      "errors": {
+        "nameRequired": "Indica tu nombre.",
+        "emailRequired": "Indica tu email.",
+        "emailInvalid": "El email no tiene un formato válido.",
+        "phoneRequired": "Indica un teléfono de contacto.",
+        "dateRequired": "Elige una fecha.",
+        "datePast": "La fecha no puede ser pasada.",
+        "timeRequired": "Elige una hora.",
+        "guestsRange": "Indica entre {{min}} y {{max}} comensales.",
+        "sendFailed": "No hemos podido enviar tu reserva. Inténtalo de nuevo en unos minutos."
+      },
+      "submit": "Reservar mesa",
+      "success": {
+        "title": "¡Reserva solicitada!",
+        "text": "Hemos recibido tu reserva. Te confirmaremos la mesa por email lo antes posible."
+      }
+    },
+    "appointment": {
+      "ariaLabel": "Formulario de cita previa",
+      "fields": {
+        "name": "Nombre",
+        "phone": "Teléfono",
+        "email": "Email",
+        "service": "Servicio",
+        "servicePlaceholder": "— Selecciona un servicio —",
+        "preferredDate": "Fecha preferida",
+        "preferredTime": "Hora preferida",
+        "vehicleBrand": "Marca del vehículo",
+        "vehicleBrandPlaceholder": "p. ej. Toyota",
+        "vehicleModel": "Modelo",
+        "vehicleModelPlaceholder": "p. ej. Yaris",
+        "notes": "Notas adicionales",
+        "notesPlaceholder": "Describe brevemente la avería o lo que necesitas."
+      },
+      "errors": {
+        "nameRequired": "Indica tu nombre.",
+        "phoneRequired": "Indica un teléfono de contacto.",
+        "emailRequired": "Indica tu email.",
+        "emailInvalid": "El email no tiene un formato válido.",
+        "serviceRequired": "Selecciona un servicio.",
+        "dateRequired": "Elige una fecha preferida.",
+        "datePast": "La fecha no puede ser pasada.",
+        "timeRequired": "Elige una hora preferida.",
+        "sendFailed": "No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos."
+      },
+      "submit": "Solicitar cita",
+      "success": {
+        "title": "¡Cita solicitada!",
+        "text": "Hemos recibido tu solicitud. Te confirmaremos la cita por teléfono o email lo antes posible."
+      }
+    }
   }
 }

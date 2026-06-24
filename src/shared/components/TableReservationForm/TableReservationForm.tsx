@@ -1,4 +1,5 @@
 import { useId, useState, type FormEvent, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './TableReservationForm.module.css'
 import type { SubmissionState, TableReservationData } from '../../../modules/reservations/models/reservation'
 import { submitTableReservation } from '../../../modules/reservations/services/reservationService'
@@ -55,11 +56,12 @@ interface FieldProps {
 
 /** Label + control + error wrapper, keeping the a11y markup consistent per field. */
 function Field({ id, label, error, optional, children }: FieldProps) {
+  const { t } = useTranslation()
   return (
     <div className={styles.field}>
       <label htmlFor={id} className={styles.label}>
         {label}
-        {optional && <span className={styles.optional}> (opcional)</span>}
+        {optional && <span className={styles.optional}> {t('forms.common.optional')}</span>}
       </label>
       {children}
       {error && (
@@ -82,6 +84,7 @@ function Field({ id, label, error, optional, children }: FieldProps) {
  * @returns The form, or a confirmation panel once submitted successfully.
  */
 export function TableReservationForm({ tenantId, onSubmit }: TableReservationFormProps) {
+  const { t } = useTranslation()
   const baseId = useId()
   const [data, setData] = useState<TableReservationData>(INITIAL_DATA)
   const [errors, setErrors] = useState<FieldErrors>({})
@@ -95,15 +98,15 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
 
   function validate(values: TableReservationData): FieldErrors {
     const next: FieldErrors = {}
-    if (!values.name.trim()) next.name = 'Indica tu nombre.'
-    if (!values.email.trim()) next.email = 'Indica tu email.'
-    else if (!EMAIL_PATTERN.test(values.email)) next.email = 'El email no tiene un formato válido.'
-    if (!values.phone.trim()) next.phone = 'Indica un teléfono de contacto.'
-    if (!values.date) next.date = 'Elige una fecha.'
-    else if (values.date < todayIso()) next.date = 'La fecha no puede ser pasada.'
-    if (!values.time) next.time = 'Elige una hora.'
+    if (!values.name.trim()) next.name = t('forms.reservation.errors.nameRequired')
+    if (!values.email.trim()) next.email = t('forms.reservation.errors.emailRequired')
+    else if (!EMAIL_PATTERN.test(values.email)) next.email = t('forms.reservation.errors.emailInvalid')
+    if (!values.phone.trim()) next.phone = t('forms.reservation.errors.phoneRequired')
+    if (!values.date) next.date = t('forms.reservation.errors.dateRequired')
+    else if (values.date < todayIso()) next.date = t('forms.reservation.errors.datePast')
+    if (!values.time) next.time = t('forms.reservation.errors.timeRequired')
     if (!Number.isInteger(values.guests) || values.guests < MIN_GUESTS || values.guests > MAX_GUESTS) {
-      next.guests = `Indica entre ${MIN_GUESTS} y ${MAX_GUESTS} comensales.`
+      next.guests = t('forms.reservation.errors.guestsRange', { min: MIN_GUESTS, max: MAX_GUESTS })
     }
     return next
   }
@@ -137,10 +140,8 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
   if (state === 'success') {
     return (
       <section className={styles.form} role="status" aria-live="polite">
-        <h3 className={styles.successTitle}>¡Reserva solicitada!</h3>
-        <p className={styles.successText}>
-          Hemos recibido tu reserva. Te confirmaremos la mesa por email lo antes posible.
-        </p>
+        <h3 className={styles.successTitle}>{t('forms.reservation.success.title')}</h3>
+        <p className={styles.successText}>{t('forms.reservation.success.text')}</p>
       </section>
     )
   }
@@ -151,10 +152,10 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
     <form
       className={styles.form}
       onSubmit={handleSubmit}
-      aria-label="Formulario de reserva de mesa"
+      aria-label={t('forms.reservation.ariaLabel')}
       noValidate
     >
-      <Field id={fieldId('name')} label="Nombre" error={errors.name}>
+      <Field id={fieldId('name')} label={t('forms.reservation.fields.name')} error={errors.name}>
         <input
           id={fieldId('name')}
           className={styles.control}
@@ -166,7 +167,7 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
         />
       </Field>
 
-      <Field id={fieldId('email')} label="Email" error={errors.email}>
+      <Field id={fieldId('email')} label={t('forms.reservation.fields.email')} error={errors.email}>
         <input
           id={fieldId('email')}
           className={styles.control}
@@ -178,7 +179,7 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
         />
       </Field>
 
-      <Field id={fieldId('phone')} label="Teléfono" error={errors.phone}>
+      <Field id={fieldId('phone')} label={t('forms.reservation.fields.phone')} error={errors.phone}>
         <input
           id={fieldId('phone')}
           className={styles.control}
@@ -191,7 +192,7 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
       </Field>
 
       <div className={styles.row}>
-        <Field id={fieldId('date')} label="Fecha" error={errors.date}>
+        <Field id={fieldId('date')} label={t('forms.reservation.fields.date')} error={errors.date}>
           <input
             id={fieldId('date')}
             className={styles.control}
@@ -203,7 +204,7 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
           />
         </Field>
 
-        <Field id={fieldId('time')} label="Hora" error={errors.time}>
+        <Field id={fieldId('time')} label={t('forms.reservation.fields.time')} error={errors.time}>
           <input
             id={fieldId('time')}
             className={styles.control}
@@ -214,7 +215,7 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
           />
         </Field>
 
-        <Field id={fieldId('guests')} label="Comensales" error={errors.guests}>
+        <Field id={fieldId('guests')} label={t('forms.reservation.fields.guests')} error={errors.guests}>
           <input
             id={fieldId('guests')}
             className={styles.control}
@@ -228,7 +229,7 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
         </Field>
       </div>
 
-      <Field id={fieldId('notes')} label="Notas" optional>
+      <Field id={fieldId('notes')} label={t('forms.reservation.fields.notes')} optional>
         <textarea
           id={fieldId('notes')}
           className={styles.control}
@@ -240,12 +241,12 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
 
       {state === 'error' && (
         <p className={styles.errorBanner} role="alert">
-          No hemos podido enviar tu reserva. Inténtalo de nuevo en unos minutos.
+          {t('forms.reservation.errors.sendFailed')}
         </p>
       )}
 
       <button type="submit" className={styles.submit} disabled={isSubmitting}>
-        {isSubmitting ? 'Enviando…' : 'Reservar mesa'}
+        {isSubmitting ? t('forms.common.submitting') : t('forms.reservation.submit')}
       </button>
     </form>
   )

@@ -1,5 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { renderWithI18n } from '../../../test-utils'
 import { AppointmentForm } from './AppointmentForm'
 import type { Service } from '../ServicesList'
 
@@ -24,7 +25,7 @@ function fillRequired(serviceId = 'cambio-aceite', date = futureDate()) {
 
 describe('AppointmentForm', () => {
   it('renders the form with required fields', () => {
-    render(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} />)
+    renderWithI18n(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} />)
 
     expect(screen.getByRole('button', { name: 'Solicitar cita' })).toBeInTheDocument()
     expect(screen.getByLabelText('Nombre')).toBeInTheDocument()
@@ -36,7 +37,7 @@ describe('AppointmentForm', () => {
   })
 
   it('populates the service selector from props', () => {
-    render(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} />)
+    renderWithI18n(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} />)
 
     expect(screen.getByRole('option', { name: 'Cambio de aceite y filtros' })).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'Frenos y suspensión' })).toBeInTheDocument()
@@ -44,7 +45,7 @@ describe('AppointmentForm', () => {
 
   it('shows validation errors when submitted empty', () => {
     const onSubmit = vi.fn()
-    render(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
+    renderWithI18n(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Solicitar cita' }))
 
@@ -57,7 +58,7 @@ describe('AppointmentForm', () => {
 
   it('rejects an invalid email', () => {
     const onSubmit = vi.fn()
-    render(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
+    renderWithI18n(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
 
     fillRequired()
     fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'not-an-email' } })
@@ -69,7 +70,7 @@ describe('AppointmentForm', () => {
 
   it('rejects a past date', () => {
     const onSubmit = vi.fn()
-    render(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
+    renderWithI18n(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
 
     fillRequired('cambio-aceite', '2020-01-01')
     fireEvent.click(screen.getByRole('button', { name: 'Solicitar cita' }))
@@ -80,7 +81,7 @@ describe('AppointmentForm', () => {
 
   it('submits valid data and shows the confirmation', async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined)
-    render(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
+    renderWithI18n(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
 
     fillRequired()
     fireEvent.click(screen.getByRole('button', { name: 'Solicitar cita' }))
@@ -98,7 +99,7 @@ describe('AppointmentForm', () => {
 
   it('shows an error banner when submission fails', async () => {
     const onSubmit = vi.fn().mockRejectedValue(new Error('network'))
-    render(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
+    renderWithI18n(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
 
     fillRequired()
     fireEvent.click(screen.getByRole('button', { name: 'Solicitar cita' }))

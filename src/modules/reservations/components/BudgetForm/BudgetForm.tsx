@@ -1,15 +1,17 @@
 import { useId, useState, type FormEvent, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './BudgetForm.module.css'
 import type { BudgetFormData, BudgetFormState, ServiceType } from '../../models/reservation'
 import { submitBudgetRequest } from '../../services/reservationService'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
-  { value: 'obra-nueva', label: 'Obra nueva' },
-  { value: 'reforma-integral', label: 'Reforma integral' },
-  { value: 'reforma-parcial', label: 'Reforma parcial' },
-  { value: 'otro', label: 'Otro' },
+/** Translation key paired with its ServiceType value. */
+const SERVICE_OPTION_KEYS: { value: ServiceType; key: string }[] = [
+  { value: 'obra-nueva', key: 'forms.budget.serviceOptions.obraNueva' },
+  { value: 'reforma-integral', key: 'forms.budget.serviceOptions.reformaIntegral' },
+  { value: 'reforma-parcial', key: 'forms.budget.serviceOptions.reformaParcial' },
+  { value: 'otro', key: 'forms.budget.serviceOptions.otro' },
 ]
 
 const INITIAL_DATA: BudgetFormData = {
@@ -47,11 +49,12 @@ interface FieldProps {
 
 /** Label + control + error wrapper, keeping the a11y markup consistent per field. */
 function Field({ id, label, error, optional, children }: FieldProps) {
+  const { t } = useTranslation()
   return (
     <div className={styles.field}>
       <label htmlFor={id} className={styles.label}>
         {label}
-        {optional && <span className={styles.optional}> (opcional)</span>}
+        {optional && <span className={styles.optional}> {t('forms.common.optional')}</span>}
       </label>
       {children}
       {error && (
@@ -72,6 +75,7 @@ function Field({ id, label, error, optional, children }: FieldProps) {
  * @returns The form, or a confirmation panel once submitted successfully.
  */
 export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) {
+  const { t } = useTranslation()
   const baseId = useId()
   const [data, setData] = useState<BudgetFormData>(INITIAL_DATA)
   const [errors, setErrors] = useState<FieldErrors>({})
@@ -85,11 +89,11 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
 
   function validate(values: BudgetFormData): FieldErrors {
     const next: FieldErrors = {}
-    if (!values.name.trim()) next.name = 'Indica tu nombre.'
-    if (!values.phone.trim()) next.phone = 'Indica un teléfono de contacto.'
-    if (!values.email.trim()) next.email = 'Indica tu email.'
-    else if (!EMAIL_PATTERN.test(values.email)) next.email = 'El email no tiene un formato válido.'
-    if (!values.description.trim()) next.description = 'Cuéntanos brevemente tu proyecto.'
+    if (!values.name.trim()) next.name = t('forms.budget.errors.nameRequired')
+    if (!values.phone.trim()) next.phone = t('forms.budget.errors.phoneRequired')
+    if (!values.email.trim()) next.email = t('forms.budget.errors.emailRequired')
+    else if (!EMAIL_PATTERN.test(values.email)) next.email = t('forms.budget.errors.emailInvalid')
+    if (!values.description.trim()) next.description = t('forms.budget.errors.descriptionRequired')
     return next
   }
 
@@ -117,10 +121,8 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
   if (state === 'success') {
     return (
       <section className={styles.form} role="status" aria-live="polite">
-        <h3 className={styles.successTitle}>¡Solicitud enviada!</h3>
-        <p className={styles.successText}>
-          Hemos recibido tu solicitud de presupuesto. Te contactaremos lo antes posible.
-        </p>
+        <h3 className={styles.successTitle}>{t('forms.budget.success.title')}</h3>
+        <p className={styles.successText}>{t('forms.budget.success.text')}</p>
       </section>
     )
   }
@@ -131,10 +133,10 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
     <form
       className={styles.form}
       onSubmit={handleSubmit}
-      aria-label="Formulario de solicitud de presupuesto"
+      aria-label={t('forms.budget.ariaLabel')}
       noValidate
     >
-      <Field id={fieldId('name')} label="Nombre" error={errors.name}>
+      <Field id={fieldId('name')} label={t('forms.budget.fields.name')} error={errors.name}>
         <input
           id={fieldId('name')}
           className={styles.control}
@@ -146,7 +148,7 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
         />
       </Field>
 
-      <Field id={fieldId('phone')} label="Teléfono" error={errors.phone}>
+      <Field id={fieldId('phone')} label={t('forms.budget.fields.phone')} error={errors.phone}>
         <input
           id={fieldId('phone')}
           className={styles.control}
@@ -158,7 +160,7 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
         />
       </Field>
 
-      <Field id={fieldId('email')} label="Email" error={errors.email}>
+      <Field id={fieldId('email')} label={t('forms.budget.fields.email')} error={errors.email}>
         <input
           id={fieldId('email')}
           className={styles.control}
@@ -170,7 +172,7 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
         />
       </Field>
 
-      <Field id={fieldId('serviceType')} label="Tipo de servicio">
+      <Field id={fieldId('serviceType')} label={t('forms.budget.fields.serviceType')}>
         <select
           id={fieldId('serviceType')}
           className={styles.control}
@@ -178,9 +180,9 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
           // Options are constrained to ServiceType values, so the cast is safe.
           onChange={(event) => updateField('serviceType', event.target.value as ServiceType)}
         >
-          {SERVICE_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
+          {SERVICE_OPTION_KEYS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {t(opt.key)}
             </option>
           ))}
         </select>
@@ -188,7 +190,7 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
 
       <Field
         id={fieldId('description')}
-        label="Descripción del proyecto"
+        label={t('forms.budget.fields.description')}
         error={errors.description}
       >
         <textarea
@@ -201,7 +203,7 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
         />
       </Field>
 
-      <Field id={fieldId('preferredDate')} label="Fecha preferida" optional>
+      <Field id={fieldId('preferredDate')} label={t('forms.budget.fields.preferredDate')} optional>
         <input
           id={fieldId('preferredDate')}
           className={styles.control}
@@ -213,12 +215,12 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
 
       {state === 'error' && (
         <p className={styles.errorBanner} role="alert">
-          No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos.
+          {t('forms.budget.errors.sendFailed')}
         </p>
       )}
 
       <button type="submit" className={styles.submit} disabled={isSubmitting}>
-        {isSubmitting ? 'Enviando…' : 'Solicitar presupuesto'}
+        {isSubmitting ? t('forms.common.submitting') : t('forms.budget.submit')}
       </button>
     </form>
   )

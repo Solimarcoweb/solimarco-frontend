@@ -6,5 +6,103 @@
   "nav": {
     "home": "Home",
     "contact": "Contact"
+  },
+  "forms": {
+    "common": {
+      "optional": "(optional)",
+      "submitting": "Sending…"
+    },
+    "budget": {
+      "ariaLabel": "Budget request form",
+      "fields": {
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "serviceType": "Service type",
+        "description": "Project description",
+        "preferredDate": "Preferred date"
+      },
+      "serviceOptions": {
+        "obraNueva": "New build",
+        "reformaIntegral": "Full renovation",
+        "reformaParcial": "Partial renovation",
+        "otro": "Other"
+      },
+      "errors": {
+        "nameRequired": "Please enter your name.",
+        "phoneRequired": "Please enter a contact phone number.",
+        "emailRequired": "Please enter your email.",
+        "emailInvalid": "The email address is not valid.",
+        "descriptionRequired": "Please briefly describe your project.",
+        "sendFailed": "We couldn't send your request. Please try again in a few minutes."
+      },
+      "submit": "Request a quote",
+      "success": {
+        "title": "Request sent!",
+        "text": "We've received your budget request. We'll get back to you as soon as possible."
+      }
+    },
+    "reservation": {
+      "ariaLabel": "Table reservation form",
+      "fields": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "date": "Date",
+        "time": "Time",
+        "guests": "Guests",
+        "notes": "Notes"
+      },
+      "errors": {
+        "nameRequired": "Please enter your name.",
+        "emailRequired": "Please enter your email.",
+        "emailInvalid": "The email address is not valid.",
+        "phoneRequired": "Please enter a contact phone number.",
+        "dateRequired": "Please choose a date.",
+        "datePast": "The date cannot be in the past.",
+        "timeRequired": "Please choose a time.",
+        "guestsRange": "Please enter between {{min}} and {{max}} guests.",
+        "sendFailed": "We couldn't send your reservation. Please try again in a few minutes."
+      },
+      "submit": "Book a table",
+      "success": {
+        "title": "Reservation requested!",
+        "text": "We've received your reservation. We'll confirm your table by email as soon as possible."
+      }
+    },
+    "appointment": {
+      "ariaLabel": "Appointment request form",
+      "fields": {
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "service": "Service",
+        "servicePlaceholder": "— Select a service —",
+        "preferredDate": "Preferred date",
+        "preferredTime": "Preferred time",
+        "vehicleBrand": "Vehicle make",
+        "vehicleBrandPlaceholder": "e.g. Toyota",
+        "vehicleModel": "Model",
+        "vehicleModelPlaceholder": "e.g. Yaris",
+        "notes": "Additional notes",
+        "notesPlaceholder": "Briefly describe the issue or what you need."
+      },
+      "errors": {
+        "nameRequired": "Please enter your name.",
+        "phoneRequired": "Please enter a contact phone number.",
+        "emailRequired": "Please enter your email.",
+        "emailInvalid": "The email address is not valid.",
+        "serviceRequired": "Please select a service.",
+        "dateRequired": "Please choose a preferred date.",
+        "datePast": "The date cannot be in the past.",
+        "timeRequired": "Please choose a preferred time.",
+        "sendFailed": "We couldn't send your request. Please try again in a few minutes."
+      },
+      "submit": "Request appointment",
+      "success": {
+        "title": "Appointment requested!",
+        "text": "We've received your request. We'll confirm your appointment by phone or email as soon as possible."
+      }
+    }
   }
 }

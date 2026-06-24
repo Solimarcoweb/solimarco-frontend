@@ -1,4 +1,5 @@
 import { useId, useState, type FormEvent, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './AppointmentForm.module.css'
 import type { AppointmentData, SubmissionState } from '../../../modules/reservations/models/reservation'
 import { submitAppointment } from '../../../modules/reservations/services/reservationService'
@@ -55,11 +56,12 @@ interface FieldProps {
 
 /** Consistent label + control + inline error wrapper. */
 function Field({ id, label, error, optional, children }: FieldProps) {
+  const { t } = useTranslation()
   return (
     <div className={styles.field}>
       <label htmlFor={id} className={styles.label}>
         {label}
-        {optional && <span className={styles.optional}> (opcional)</span>}
+        {optional && <span className={styles.optional}> {t('forms.common.optional')}</span>}
       </label>
       {children}
       {error && (
@@ -83,6 +85,7 @@ function Field({ id, label, error, optional, children }: FieldProps) {
  * @returns The form, or a confirmation panel after a successful submission.
  */
 export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFormProps) {
+  const { t } = useTranslation()
   const baseId = useId()
   const [data, setData] = useState<AppointmentData>(INITIAL_DATA)
   const [errors, setErrors] = useState<FieldErrors>({})
@@ -96,14 +99,14 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
 
   function validate(values: AppointmentData): FieldErrors {
     const next: FieldErrors = {}
-    if (!values.name.trim()) next.name = 'Indica tu nombre.'
-    if (!values.phone.trim()) next.phone = 'Indica un teléfono de contacto.'
-    if (!values.email.trim()) next.email = 'Indica tu email.'
-    else if (!EMAIL_PATTERN.test(values.email)) next.email = 'El email no tiene un formato válido.'
-    if (!values.serviceId) next.serviceId = 'Selecciona un servicio.'
-    if (!values.preferredDate) next.preferredDate = 'Elige una fecha preferida.'
-    else if (values.preferredDate < todayIso()) next.preferredDate = 'La fecha no puede ser pasada.'
-    if (!values.preferredTime) next.preferredTime = 'Elige una hora preferida.'
+    if (!values.name.trim()) next.name = t('forms.appointment.errors.nameRequired')
+    if (!values.phone.trim()) next.phone = t('forms.appointment.errors.phoneRequired')
+    if (!values.email.trim()) next.email = t('forms.appointment.errors.emailRequired')
+    else if (!EMAIL_PATTERN.test(values.email)) next.email = t('forms.appointment.errors.emailInvalid')
+    if (!values.serviceId) next.serviceId = t('forms.appointment.errors.serviceRequired')
+    if (!values.preferredDate) next.preferredDate = t('forms.appointment.errors.dateRequired')
+    else if (values.preferredDate < todayIso()) next.preferredDate = t('forms.appointment.errors.datePast')
+    if (!values.preferredTime) next.preferredTime = t('forms.appointment.errors.timeRequired')
     return next
   }
 
@@ -136,10 +139,8 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
   if (state === 'success') {
     return (
       <section className={styles.form} role="status" aria-live="polite">
-        <h3 className={styles.successTitle}>¡Cita solicitada!</h3>
-        <p className={styles.successText}>
-          Hemos recibido tu solicitud. Te confirmaremos la cita por teléfono o email lo antes posible.
-        </p>
+        <h3 className={styles.successTitle}>{t('forms.appointment.success.title')}</h3>
+        <p className={styles.successText}>{t('forms.appointment.success.text')}</p>
       </section>
     )
   }
@@ -150,10 +151,10 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
     <form
       className={styles.form}
       onSubmit={handleSubmit}
-      aria-label="Formulario de cita previa"
+      aria-label={t('forms.appointment.ariaLabel')}
       noValidate
     >
-      <Field id={fieldId('name')} label="Nombre" error={errors.name}>
+      <Field id={fieldId('name')} label={t('forms.appointment.fields.name')} error={errors.name}>
         <input
           id={fieldId('name')}
           className={styles.control}
@@ -165,7 +166,7 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
         />
       </Field>
 
-      <Field id={fieldId('phone')} label="Teléfono" error={errors.phone}>
+      <Field id={fieldId('phone')} label={t('forms.appointment.fields.phone')} error={errors.phone}>
         <input
           id={fieldId('phone')}
           className={styles.control}
@@ -177,7 +178,7 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
         />
       </Field>
 
-      <Field id={fieldId('email')} label="Email" error={errors.email}>
+      <Field id={fieldId('email')} label={t('forms.appointment.fields.email')} error={errors.email}>
         <input
           id={fieldId('email')}
           className={styles.control}
@@ -189,7 +190,7 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
         />
       </Field>
 
-      <Field id={fieldId('serviceId')} label="Servicio" error={errors.serviceId}>
+      <Field id={fieldId('serviceId')} label={t('forms.appointment.fields.service')} error={errors.serviceId}>
         <select
           id={fieldId('serviceId')}
           className={styles.control}
@@ -197,7 +198,7 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
           onChange={(e) => updateField('serviceId', e.target.value)}
           {...describedBy(fieldId('serviceId'), errors.serviceId)}
         >
-          <option value="">— Selecciona un servicio —</option>
+          <option value="">{t('forms.appointment.fields.servicePlaceholder')}</option>
           {services.map((svc) => (
             <option key={svc.id} value={svc.id}>
               {svc.name}
@@ -207,7 +208,7 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
       </Field>
 
       <div className={styles.row}>
-        <Field id={fieldId('preferredDate')} label="Fecha preferida" error={errors.preferredDate}>
+        <Field id={fieldId('preferredDate')} label={t('forms.appointment.fields.preferredDate')} error={errors.preferredDate}>
           <input
             id={fieldId('preferredDate')}
             className={styles.control}
@@ -219,7 +220,7 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
           />
         </Field>
 
-        <Field id={fieldId('preferredTime')} label="Hora preferida" error={errors.preferredTime}>
+        <Field id={fieldId('preferredTime')} label={t('forms.appointment.fields.preferredTime')} error={errors.preferredTime}>
           <input
             id={fieldId('preferredTime')}
             className={styles.control}
@@ -232,37 +233,37 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
       </div>
 
       <div className={styles.row}>
-        <Field id={fieldId('vehicleBrand')} label="Marca del vehículo" optional>
+        <Field id={fieldId('vehicleBrand')} label={t('forms.appointment.fields.vehicleBrand')} optional>
           <input
             id={fieldId('vehicleBrand')}
             className={styles.control}
             type="text"
             autoComplete="off"
-            placeholder="p. ej. Toyota"
+            placeholder={t('forms.appointment.fields.vehicleBrandPlaceholder')}
             value={data.vehicleBrand ?? ''}
             onChange={(e) => updateField('vehicleBrand', e.target.value)}
           />
         </Field>
 
-        <Field id={fieldId('vehicleModel')} label="Modelo" optional>
+        <Field id={fieldId('vehicleModel')} label={t('forms.appointment.fields.vehicleModel')} optional>
           <input
             id={fieldId('vehicleModel')}
             className={styles.control}
             type="text"
             autoComplete="off"
-            placeholder="p. ej. Yaris"
+            placeholder={t('forms.appointment.fields.vehicleModelPlaceholder')}
             value={data.vehicleModel ?? ''}
             onChange={(e) => updateField('vehicleModel', e.target.value)}
           />
         </Field>
       </div>
 
-      <Field id={fieldId('notes')} label="Notas adicionales" optional>
+      <Field id={fieldId('notes')} label={t('forms.appointment.fields.notes')} optional>
         <textarea
           id={fieldId('notes')}
           className={styles.control}
           rows={3}
-          placeholder="Describe brevemente la avería o lo que necesitas."
+          placeholder={t('forms.appointment.fields.notesPlaceholder')}
           value={data.notes ?? ''}
           onChange={(e) => updateField('notes', e.target.value)}
         />
@@ -270,12 +271,12 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
 
       {state === 'error' && (
         <p className={styles.errorBanner} role="alert">
-          No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos.
+          {t('forms.appointment.errors.sendFailed')}
         </p>
       )}
 
       <button type="submit" className={styles.submit} disabled={isSubmitting}>
-        {isSubmitting ? 'Enviando…' : 'Solicitar cita'}
+        {isSubmitting ? t('forms.common.submitting') : t('forms.appointment.submit')}
       </button>
     </form>
   )

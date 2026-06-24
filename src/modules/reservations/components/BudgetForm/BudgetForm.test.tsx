@@ -1,5 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { renderWithI18n } from '../../../../test-utils'
 import { BudgetForm } from './BudgetForm'
 
 /** Fills every required field with valid data using the given email. */
@@ -14,7 +15,7 @@ function fillValidFields(email = 'maria@example.com') {
 
 describe('BudgetForm', () => {
   it('renders all the form fields', () => {
-    render(<BudgetForm />)
+    renderWithI18n(<BudgetForm />)
 
     expect(screen.getByLabelText('Nombre')).toBeInTheDocument()
     expect(screen.getByLabelText('Teléfono')).toBeInTheDocument()
@@ -27,7 +28,7 @@ describe('BudgetForm', () => {
 
   it('blocks submission and shows an error when the email is invalid', () => {
     const onSubmit = vi.fn()
-    render(<BudgetForm onSubmit={onSubmit} />)
+    renderWithI18n(<BudgetForm onSubmit={onSubmit} />)
 
     fillValidFields('no-es-un-email')
     fireEvent.click(screen.getByRole('button', { name: 'Solicitar presupuesto' }))
@@ -38,7 +39,7 @@ describe('BudgetForm', () => {
 
   it('shows the confirmation panel after a successful submission', async () => {
     const onSubmit = vi.fn().mockResolvedValue({ id: 'lead-1', status: 'pendiente' })
-    render(<BudgetForm onSubmit={onSubmit} />)
+    renderWithI18n(<BudgetForm onSubmit={onSubmit} />)
 
     fillValidFields()
     fireEvent.click(screen.getByRole('button', { name: 'Solicitar presupuesto' }))
