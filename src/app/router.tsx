@@ -24,6 +24,18 @@ const RestauranteReservasPage = lazy(
 const RestauranteContactoPage = lazy(
   () => import('./pages/restaurante-multi/RestauranteContactoPage'),
 )
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const MecanicoLandingPage = lazy(() => import('./pages/mecanico-landing/MecanicoLandingPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const MecanicoLayout = lazy(() => import('./pages/mecanico-multi/MecanicoLayout'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const MecanicoHomePage = lazy(() => import('./pages/mecanico-multi/MecanicoHomePage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const MecanicoServiciosPage = lazy(() => import('./pages/mecanico-multi/MecanicoServiciosPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const MecanicoCitaPage = lazy(() => import('./pages/mecanico-multi/MecanicoCitaPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const MecanicoContactoPage = lazy(() => import('./pages/mecanico-multi/MecanicoContactoPage'))
 
 function withSuspense(Component: LazyExoticComponent<() => JSX.Element>) {
   return (
@@ -58,6 +70,20 @@ export const router = createBrowserRouter([
       { path: 'carta', element: withSuspense(RestauranteCartaPage) },
       { path: 'reservas', element: withSuspense(RestauranteReservasPage) },
       { path: 'contacto', element: withSuspense(RestauranteContactoPage) },
+    ],
+  },
+  {
+    path: '/mecanico',
+    element: withSuspense(MecanicoLandingPage),
+  },
+  {
+    path: '/mecanico-multi',
+    element: withSuspense(MecanicoLayout),
+    children: [
+      { index: true, element: withSuspense(MecanicoHomePage) },
+      { path: 'servicios', element: withSuspense(MecanicoServiciosPage) },
+      { path: 'cita', element: withSuspense(MecanicoCitaPage) },
+      { path: 'contacto', element: withSuspense(MecanicoContactoPage) },
     ],
   },
 ])

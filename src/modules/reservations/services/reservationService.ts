@@ -1,5 +1,5 @@
 import { apiClient } from '../../../core/http/apiClient'
-import type { BudgetFormData, TableReservationData } from '../models/reservation'
+import type { AppointmentData, BudgetFormData, TableReservationData } from '../models/reservation'
 
 /**
  * Backend response for a created reservation/lead.
@@ -37,6 +37,24 @@ export function submitBudgetRequest(data: BudgetFormData): Promise<ReservationRe
 export function submitTableReservation(
   tenantId: string,
   data: TableReservationData,
+): Promise<ReservationResponse> {
+  return apiClient<ReservationResponse>('/api/reservations', {
+    method: 'POST',
+    body: { tenantId, ...data },
+  })
+}
+
+/**
+ * Sends a mechanic appointment request to the backend, scoped to the tenant.
+ *
+ * @param tenantId - Tenant the appointment belongs to.
+ * @param data - Validated appointment data.
+ * @returns The created reservation reference.
+ * @throws {import('../../../core/http/apiClient').ApiError} When the backend responds with a non-2xx status.
+ */
+export function submitAppointment(
+  tenantId: string,
+  data: AppointmentData,
 ): Promise<ReservationResponse> {
   return apiClient<ReservationResponse>('/api/reservations', {
     method: 'POST',

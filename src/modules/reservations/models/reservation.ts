@@ -16,6 +16,25 @@ export interface BudgetFormData {
 /** Generic lifecycle of an async form submission. */
 export type SubmissionState = 'idle' | 'submitting' | 'success' | 'error'
 
+/** Shape of the data collected by the mechanic appointment form. */
+export interface AppointmentData {
+  name: string
+  phone: string
+  email: string
+  /** ID of the selected service. */
+  serviceId: string
+  /** Preferred appointment date, ISO `yyyy-mm-dd`. */
+  preferredDate: string
+  /** Preferred appointment time, 24h `HH:MM`. */
+  preferredTime: string
+  /** Optional vehicle brand (e.g. "Toyota"). */
+  vehicleBrand?: string
+  /** Optional vehicle model (e.g. "Yaris"). */
+  vehicleModel?: string
+  /** Optional free-text notes. */
+  notes?: string
+}
+
 /** Lifecycle of the budget form submission. */
 export type BudgetFormState = SubmissionState
 
