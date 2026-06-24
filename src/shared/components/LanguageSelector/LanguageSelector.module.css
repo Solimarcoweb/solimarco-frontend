@@ -1,0 +1,57 @@
+/* Mobile-first language switcher. A compact inline group of locale buttons;
+   base styles target touch targets on mobile and scale down spacing is not
+   needed since the control stays small at every breakpoint. */
+
+.selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--bg);
+}
+
+.option {
+  appearance: none;
+  min-width: 2.75rem; /* comfortable touch target on mobile */
+  padding: 0.45rem 0.6rem;
+  border: none;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.option:hover {
+  color: var(--text-h);
+  background: var(--accent-bg);
+}
+
+.option:active {
+  transform: translateY(1px);
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+}
+
+/* Active locale stands out with the accent color + filled background,
+   not just a subtle weight change, so it reads at a glance. */
+.active {
+  color: #fff;
+  background: var(--accent);
+}
+
+.active:hover {
+  color: #fff;
+  background: color-mix(in srgb, var(--accent) 85%, #000);
+}
