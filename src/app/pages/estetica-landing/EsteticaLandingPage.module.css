@@ -1,6 +1,13 @@
 /* Estetica landing page shell. Editorial theme (serif, paper, generous air). Mobile-first. */
 
+/* Overlaid on top of the full-height Hero so it does not push the hero down
+   and break its vertical centering. The hero shows a dark background image, so
+   the header text is light and the bottom divider is dropped over the photo. */
 .header {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -8,14 +15,13 @@
   max-width: 80rem;
   margin-inline: auto;
   padding: 1.25rem 1.25rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 25%, transparent);
 }
 
 .brand {
   font-family: var(--font-heading);
   font-size: 1.2rem;
   font-weight: 400;
-  color: var(--color-text);
+  color: #fff;
   letter-spacing: -0.01em;
 }
 

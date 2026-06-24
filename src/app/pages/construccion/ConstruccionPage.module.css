@@ -1,7 +1,14 @@
 /* Construction pilot page shell. Mobile-first; consumes the active theme
    tokens (clasico) so the header and budget section stay on-brand. */
 
+/* Overlaid on top of the full-height Hero so it does not push the hero down
+   and break its vertical centering. The hero is light here (no background
+   image), so the header keeps the theme's dark text colors. */
 .header {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -1,7 +1,14 @@
 /* Restaurant landing shell. Mobile-first; consumes the active theme tokens
    (calido) so the header and menu section stay warm and rounded. */
 
+/* Overlaid on top of the full-height Hero so it does not push the hero down
+   and break its vertical centering. The hero shows a dark background image, so
+   the header text is light for legibility over the photo. */
 .header {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,7 +24,7 @@
   font-family: var(--font-heading);
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: #fff;
 }
 
 .menuSection {

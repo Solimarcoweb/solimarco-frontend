@@ -1,6 +1,13 @@
 /* Mecanico landing page shell. Urbano theme (dark, neon accent). Mobile-first. */
 
+/* Overlaid on top of the full-height Hero so it does not push the hero down
+   and break its vertical centering. The brand already uses the bright neon
+   accent, legible over the dark hero image, so no color override is needed. */
 .header {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   box-sizing: border-box;

@@ -1,6 +1,13 @@
 /* Tienda landing page shell. Fresco theme (vivid, rounded). Mobile-first. */
 
+/* Overlaid on top of the full-height Hero so it does not push the hero down
+   and break its vertical centering. The hero shows a dark background image, so
+   the header text is light for legibility over the photo. */
 .header {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -14,7 +21,7 @@
   font-family: var(--font-heading);
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: #fff;
   letter-spacing: -0.01em;
 }
 
