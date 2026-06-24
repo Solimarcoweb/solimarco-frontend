@@ -1,0 +1,27 @@
+/* Theme: calido — earth tones, organic warmth, rounded shapes.
+   Terracotta + clay + sand. Warmth carried by accent and type, with a
+   genuinely warm (not AI-default cream) surface anchored by a deep brown ink. */
+
+:root,
+[data-theme='calido'] {
+  --color-primary: #8a4b2f;
+  --color-secondary: #b07a4f;
+  --color-accent: #c2683a;
+
+  --color-bg: #faf3ea;
+  --color-bg-alt: #f0e3d2;
+  --color-text: #2c211a;
+  --color-text-muted: #6b5848;
+
+  --font-heading: 'Iowan Old Style', Georgia, 'Palatino Linotype', serif;
+  --font-body: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+
+  --shadow-sm: 0 1px 3px rgba(44, 33, 26, 0.08);
+  --shadow-md: 0 10px 26px rgba(44, 33, 26, 0.12);
+
+  --spacing-section: clamp(3.5rem, 8vw, 7rem);
+}

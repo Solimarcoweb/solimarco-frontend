@@ -1,0 +1,27 @@
+/* Theme: urbano — dark surface, high contrast, neon accent. Night-city energy.
+   Dark by identity (no light variant); follows the high-contrast discipline of
+   SKILL-taste.md and the legibility floor of SKILL-impeccable.md. */
+
+:root,
+[data-theme='urbano'] {
+  --color-primary: #f4f4f5;
+  --color-secondary: #a1a1aa;
+  --color-accent: #d4f23a;
+
+  --color-bg: #0e0e11;
+  --color-bg-alt: #18181d;
+  --color-text: #f4f4f5;
+  --color-text-muted: #a1a1aa;
+
+  --font-heading: 'Archivo', 'Helvetica Neue', system-ui, Arial, sans-serif;
+  --font-body: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.7);
+
+  --spacing-section: clamp(3.5rem, 8vw, 7rem);
+}

@@ -1,0 +1,45 @@
+/* Theme: mediterraneo — sea blues, whites and natural light. Tuned for the
+   Canary/Tenerife coastal feel: deep-sea ink, ocean-blue primary, warm sun
+   ochre accent over a luminous near-white sky surface.
+   Supports prefers-color-scheme: dark (night by the sea). */
+
+:root,
+[data-theme='mediterraneo'] {
+  --color-primary: #1c7fb8;
+  --color-secondary: #4ba3c7;
+  --color-accent: #e0922f;
+
+  --color-bg: #f4fbff;
+  --color-bg-alt: #e2f2fb;
+  --color-text: #0d2b3e;
+  --color-text-muted: #3c6478;
+
+  --font-heading: 'Avenir Next', 'Segoe UI', system-ui, Helvetica, Arial, sans-serif;
+  --font-body: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  --shadow-sm: 0 1px 3px rgba(13, 43, 62, 0.08);
+  --shadow-md: 0 10px 26px rgba(28, 127, 184, 0.16);
+
+  --spacing-section: clamp(3.5rem, 8vw, 7rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root,
+  [data-theme='mediterraneo'] {
+    --color-primary: #5bb6e0;
+    --color-secondary: #7cc6e2;
+    --color-accent: #f0ad4e;
+
+    --color-bg: #08202e;
+    --color-bg-alt: #0e2c3d;
+    --color-text: #e6f4fb;
+    --color-text-muted: #9cc2d4;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 10px 26px rgba(0, 0, 0, 0.6);
+  }
+}

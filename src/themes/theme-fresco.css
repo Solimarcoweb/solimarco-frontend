@@ -1,0 +1,45 @@
+/* Theme: fresco — vivid, young, playful. Emerald + amber + pink, very rounded.
+   Energetic accent palette over a bright mint-white surface with a deep-green
+   ink that keeps body text well above the contrast floor.
+   Supports prefers-color-scheme: dark. */
+
+:root,
+[data-theme='fresco'] {
+  --color-primary: #0f9d6b;
+  --color-secondary: #f59e0b;
+  --color-accent: #ec4899;
+
+  --color-bg: #f6fffb;
+  --color-bg-alt: #e7fbf1;
+  --color-text: #0f2a20;
+  --color-text-muted: #3f6b58;
+
+  --font-heading: 'Nunito', 'Segoe UI', system-ui, Helvetica, Arial, sans-serif;
+  --font-body: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+
+  --shadow-sm: 0 2px 6px rgba(15, 42, 32, 0.08);
+  --shadow-md: 0 12px 28px rgba(15, 157, 107, 0.18);
+
+  --spacing-section: clamp(3rem, 7vw, 6rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root,
+  [data-theme='fresco'] {
+    --color-primary: #34d399;
+    --color-secondary: #fbbf24;
+    --color-accent: #f472b6;
+
+    --color-bg: #0a1f17;
+    --color-bg-alt: #102a20;
+    --color-text: #ecfdf5;
+    --color-text-muted: #9fd6bf;
+
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.6);
+  }
+}
