@@ -5,7 +5,7 @@
 .gallery {
   width: 100%;
   box-sizing: border-box;
-  padding: 4rem 1.25rem;
+  padding: var(--spacing-section) 1.25rem;
 }
 
 .grid {
@@ -27,7 +27,7 @@
   overflow: hidden;
   border-radius: 0.75rem;
   aspect-ratio: 4 / 3;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-md);
 }
 
 .image {
@@ -54,7 +54,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--accent);
+  color: var(--color-accent);
 }
 
 /* Hierarchy from weight + color, not raw size. */
@@ -63,7 +63,7 @@
   font-size: clamp(1.25rem, 2.5vw, 1.75rem);
   font-weight: 700;
   line-height: 1.2;
-  color: var(--text-h);
+  color: var(--color-text);
 }
 
 .description {
@@ -71,7 +71,7 @@
   max-width: 48ch;
   font-size: 1rem;
   line-height: 1.55;
-  color: var(--text);
+  color: var(--color-text-muted);
 }
 
 @media (min-width: 768px) {

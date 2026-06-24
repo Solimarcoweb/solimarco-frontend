@@ -43,6 +43,23 @@ export const themeLoaders: Record<ThemeName, () => Promise<unknown>> = {
   mediterraneo: () => import('./theme-mediterraneo.css'),
 }
 
+/**
+ * Each theme's `--color-bg` value, mirrored here so `applyTheme` can paint the
+ * document background synchronously — before the async CSS bundle resolves —
+ * and avoid a flash of white (FOUC) on first render. Must stay in sync with the
+ * `--color-bg` token of the matching `theme-*.css` file.
+ */
+export const THEME_BACKGROUNDS: Record<ThemeName, string> = {
+  editorial: '#fbfaf7',
+  moderno: '#ffffff',
+  minimalista: '#ffffff',
+  calido: '#faf3ea',
+  urbano: '#0e0e11',
+  fresco: '#f6fffb',
+  clasico: '#f8f6f1',
+  mediterraneo: '#f4fbff',
+}
+
 /** Type guard: narrows an arbitrary string to a known `ThemeName`. */
 export function isThemeName(name: string): name is ThemeName {
   return (THEME_NAMES as readonly string[]).includes(name)
@@ -59,6 +76,11 @@ export function applyTheme(themeName: string): void {
   const resolved: ThemeName = isThemeName(themeName) ? themeName : FALLBACK_THEME
 
   document.documentElement.setAttribute('data-theme', resolved)
+
+  // Paint the theme background on <html> synchronously so there is no flash of
+  // white while the (async) CSS bundle is still loading. Once the bundle
+  // resolves, the stylesheet's `body { background: var(--color-bg) }` takes over.
+  document.documentElement.style.backgroundColor = THEME_BACKGROUNDS[resolved]
 
   // Fire-and-forget: the CSS bundle styles the document once it resolves; the
   // data-theme attribute is already in place as the immediate fallback hook.

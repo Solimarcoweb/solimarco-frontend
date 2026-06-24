@@ -45,7 +45,7 @@
   font-size: clamp(2rem, 5vw, 3.25rem);
   line-height: 1.1;
   letter-spacing: -0.01em;
-  color: var(--text-h);
+  color: var(--color-text);
 }
 
 .hero.hasBackground .title {
@@ -58,7 +58,7 @@
   font-weight: 400;
   font-size: clamp(1rem, 2.2vw, 1.25rem);
   line-height: 1.5;
-  color: var(--text);
+  color: var(--color-text-muted);
 }
 
 .hero.hasBackground .subtitle {
@@ -76,7 +76,7 @@
   font-size: 1rem;
   text-decoration: none;
   color: #fff;
-  background: var(--accent);
+  background: var(--color-accent);
   transition:
     transform 0.15s ease,
     background-color 0.15s ease,
@@ -84,8 +84,8 @@
 }
 
 .cta:hover {
-  background: color-mix(in srgb, var(--accent) 85%, #000);
-  box-shadow: var(--shadow);
+  background: color-mix(in srgb, var(--color-accent) 85%, #000);
+  box-shadow: var(--shadow-md);
 }
 
 .cta:active {
@@ -93,7 +93,7 @@
 }
 
 .cta:focus-visible {
-  outline: 2px solid var(--accent-border);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
