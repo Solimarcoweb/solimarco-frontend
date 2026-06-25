@@ -87,6 +87,12 @@ vi.mock('../../app/pages/generico-multi/GenericoHomePage', () => ({
   default: () => <div data-testid="page-generico-home" />,
 }))
 
+// ── Global legal route stub ──────────────────────────────────────────────────
+
+vi.mock('../../modules/legal/components/LegalPageRoute/LegalPageRoute', () => ({
+  default: () => <div data-testid="legal-route" />,
+}))
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 function config(sector: string, pageType: TenantConfig['pageType']): TenantConfig {
@@ -215,5 +221,24 @@ describe('TenantRouter — multi-page (layout + index route)', () => {
       expect(screen.getByTestId('layout-generico')).toBeInTheDocument()
       expect(screen.getByTestId('page-generico-home')).toBeInTheDocument()
     })
+  })
+})
+
+describe('TenantRouter — global legal route', () => {
+  it('renders LegalPageRoute for /legal/:slug regardless of sector', async () => {
+    mockUseTenantConfig.mockReturnValue(config('construccion', 'landing'))
+    renderRouter('/legal/privacidad')
+
+    await waitFor(() => expect(screen.getByTestId('legal-route')).toBeInTheDocument())
+  })
+
+  it('still renders the sector page on the root path', async () => {
+    mockUseTenantConfig.mockReturnValue(config('construccion', 'landing'))
+    renderRouter('/')
+
+    await waitFor(() =>
+      expect(screen.getByTestId('page-construccion-landing')).toBeInTheDocument(),
+    )
+    expect(screen.queryByTestId('legal-route')).toBeNull()
   })
 })

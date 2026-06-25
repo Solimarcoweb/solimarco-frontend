@@ -1,0 +1,27 @@
+/* 404 panel for an unknown legal slug. Centered, theme-driven. */
+
+.notFound {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 40rem;
+  margin-inline: auto;
+  padding: var(--spacing-section) 1.25rem;
+  text-align: center;
+}
+
+.code {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 10vw, 5rem);
+  color: var(--color-primary);
+}
+
+.message {
+  margin: 0 0 2rem;
+  color: var(--color-text-muted);
+}
+
+.homeLink {
+  color: var(--color-accent);
+  text-decoration: underline;
+}

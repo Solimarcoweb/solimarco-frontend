@@ -136,6 +136,11 @@ const GenericoContactoPage = lazy(
   () => import('../../app/pages/generico-multi/GenericoContactoPage'),
 )
 
+// Global legal route, shared by every sector (not sector-specific).
+const LegalPageRoute = lazy(
+  () => import('../../modules/legal/components/LegalPageRoute/LegalPageRoute'),
+)
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Inline Routes element for each multi-page sector. */
@@ -247,8 +252,9 @@ function resolveContent(sector: string, pageType: TenantConfig['pageType']): JSX
 
 /**
  * Reads the resolved tenant configuration from context and renders the
- * correct page tree: a single landing page for `pageType === 'landing'`,
- * or a nested `<Routes>` layout with sub-pages for `pageType === 'multi'`.
+ * correct page tree: the global `/legal/:slug` route (shared by every sector)
+ * first, then a single landing page for `pageType === 'landing'` or a nested
+ * `<Routes>` layout with sub-pages for `pageType === 'multi'` as the fallback.
  *
  * Must be mounted under a splat route (`path: '/*'`) so that descendant
  * `<Routes>` can match sub-paths in the data-router context.
@@ -258,7 +264,10 @@ export default function TenantRouter(): JSX.Element {
 
   return (
     <Suspense fallback={<RouteFallback />}>
-      {resolveContent(sector, pageType)}
+      <Routes>
+        <Route path="legal/:slug" element={<LegalPageRoute />} />
+        <Route path="*" element={resolveContent(sector, pageType)} />
+      </Routes>
     </Suspense>
   )
 }
