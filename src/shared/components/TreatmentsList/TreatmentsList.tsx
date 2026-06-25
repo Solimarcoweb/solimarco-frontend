@@ -1,4 +1,9 @@
+import { useRef } from 'react'
 import styles from './TreatmentsList.module.css'
+import { useScrollAnimation } from '../../hooks/useScrollAnimation'
+
+/** Stagger delay (ms) for the item at `index`: 0 / 80 / 160, then capped. */
+const staggerDelay = (index: number) => Math.min(index, 2) * 80
 
 /** A single treatment or aesthetic service. */
 export interface Treatment {
@@ -24,8 +29,14 @@ export interface TreatmentsListProps {
 
 /** Featured treatment: wide card with optional image, shown first in each category group. */
 function FeaturedTreatment({ treatment }: { treatment: Treatment }) {
+  const ref = useRef<HTMLElement>(null)
+  useScrollAnimation(ref)
   return (
-    <article className={styles.featured} aria-labelledby={`tr-${treatment.id}`}>
+    <article
+      ref={ref}
+      className={`${styles.featured} animate-on-scroll`}
+      aria-labelledby={`tr-${treatment.id}`}
+    >
       {treatment.imageUrl && (
         <img
           className={styles.featuredImage}
@@ -57,9 +68,11 @@ function FeaturedTreatment({ treatment }: { treatment: Treatment }) {
 }
 
 /** Secondary treatment: compact row with hairline divider — editorial list style. */
-function TreatmentRow({ treatment }: { treatment: Treatment }) {
+function TreatmentRow({ treatment, index }: { treatment: Treatment; index: number }) {
+  const ref = useRef<HTMLLIElement>(null)
+  useScrollAnimation(ref, staggerDelay(index))
   return (
-    <li className={styles.row} aria-labelledby={`tr-${treatment.id}`}>
+    <li ref={ref} className={`${styles.row} animate-on-scroll`} aria-labelledby={`tr-${treatment.id}`}>
       <div className={styles.rowMain}>
         <h3 id={`tr-${treatment.id}`} className={styles.rowName}>
           {treatment.name}
@@ -118,8 +131,8 @@ export function TreatmentsList({ treatments, heading = 'Tratamientos' }: Treatme
             {first && <FeaturedTreatment treatment={first} />}
             {rest.length > 0 && (
               <ul className={styles.list} role="list">
-                {rest.map((t) => (
-                  <TreatmentRow key={t.id} treatment={t} />
+                {rest.map((t, index) => (
+                  <TreatmentRow key={t.id} treatment={t} index={index} />
                 ))}
               </ul>
             )}

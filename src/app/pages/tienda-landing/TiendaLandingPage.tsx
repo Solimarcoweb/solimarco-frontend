@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import styles from './TiendaLandingPage.module.css'
 import { Hero } from '../../../shared/components/Hero'
+import { Reveal } from '../../../shared/components/Reveal'
 import { BusinessInfo } from '../../../shared/components/BusinessInfo'
 import { Footer } from '../../../shared/components/Footer'
 import { SharedSeo, SharedJsonLd } from '../../../shared/seo'
@@ -60,14 +61,16 @@ export default function TiendaLandingPage() {
           <ProductCatalog products={PRODUCTS} onAddToCart={addToCart} />
         </section>
 
-        <section className={styles.cartSection} aria-label="Carrito de compra">
-          <Cart
-            items={items}
-            tenantId={TIENDA_TENANT_ID}
-            onUpdateQuantity={updateQuantity}
-            onRemove={removeItem}
-          />
-        </section>
+        <Reveal>
+          <section className={styles.cartSection} aria-label="Carrito de compra">
+            <Cart
+              items={items}
+              tenantId={TIENDA_TENANT_ID}
+              onUpdateQuantity={updateQuantity}
+              onRemove={removeItem}
+            />
+          </section>
+        </Reveal>
 
         <BusinessInfo
           className={styles.sectionAlt}

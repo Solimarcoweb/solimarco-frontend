@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import styles from './PeluqueriaLandingPage.module.css'
 import { Hero } from '../../../shared/components/Hero'
+import { Reveal } from '../../../shared/components/Reveal'
 import { ServicesList } from '../../../shared/components/ServicesList'
 import { AppointmentForm } from '../../../shared/components/AppointmentForm'
 import { BusinessInfo } from '../../../shared/components/BusinessInfo'
@@ -58,12 +59,14 @@ export default function PeluqueriaLandingPage() {
           <ServicesList services={SERVICES} heading="Nuestros servicios" />
         </section>
 
-        <section className={styles.formSection} aria-labelledby="cita-heading">
-          <h2 id="cita-heading" className={styles.formHeading}>
-            Pide tu cita
-          </h2>
-          <AppointmentForm tenantId={PELUQUERIA_TENANT_ID} services={APPOINTMENT_SERVICES} />
-        </section>
+        <Reveal>
+          <section className={styles.formSection} aria-labelledby="cita-heading">
+            <h2 id="cita-heading" className={styles.formHeading}>
+              Pide tu cita
+            </h2>
+            <AppointmentForm tenantId={PELUQUERIA_TENANT_ID} services={APPOINTMENT_SERVICES} />
+          </section>
+        </Reveal>
 
         <BusinessInfo
           className={styles.sectionAlt}

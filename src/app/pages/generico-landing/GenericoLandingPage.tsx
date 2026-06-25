@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import styles from './GenericoLandingPage.module.css'
 import { Hero } from '../../../shared/components/Hero'
+import { Reveal } from '../../../shared/components/Reveal'
 import { ServicesList } from '../../../shared/components/ServicesList'
 import { BusinessInfo } from '../../../shared/components/BusinessInfo'
 import { Footer } from '../../../shared/components/Footer'
@@ -58,17 +59,19 @@ export default function GenericoLandingPage() {
           <ServicesList services={SERVICES} heading="Nuestros servicios" />
         </section>
 
-        <section className={styles.formSection} aria-labelledby="presupuesto-heading">
-          <div className={styles.formInner}>
-            <h2 id="presupuesto-heading" className={styles.formHeading}>
-              Solicitar presupuesto
-            </h2>
-            <p className={styles.formIntro}>
-              Sin compromiso. Te respondemos en menos de 24 horas laborables.
-            </p>
-            <BudgetForm tenantId={GENERICO_TENANT_ID} />
-          </div>
-        </section>
+        <Reveal>
+          <section className={styles.formSection} aria-labelledby="presupuesto-heading">
+            <div className={styles.formInner}>
+              <h2 id="presupuesto-heading" className={styles.formHeading}>
+                Solicitar presupuesto
+              </h2>
+              <p className={styles.formIntro}>
+                Sin compromiso. Te respondemos en menos de 24 horas laborables.
+              </p>
+              <BudgetForm tenantId={GENERICO_TENANT_ID} />
+            </div>
+          </section>
+        </Reveal>
 
         <BusinessInfo
           className={styles.sectionAlt}

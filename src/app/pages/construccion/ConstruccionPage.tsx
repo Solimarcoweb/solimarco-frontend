@@ -119,12 +119,10 @@ export default function ConstruccionPage() {
 
   usePageTracking(TENANT_ID)
 
-  // Scroll-reveal: the Hero is already in view, so only the budget section and
-  // the footer fade in as the visitor scrolls down.
+  // Scroll-reveal: the Hero is already in view, so the budget section fades in
+  // as the visitor scrolls down (the gallery items and footer self-reveal).
   const budgetRef = useRef<HTMLElement>(null)
   useScrollAnimation(budgetRef)
-  const footerRef = useRef<HTMLDivElement>(null)
-  useScrollAnimation(footerRef)
 
   return (
     <>
@@ -167,16 +165,14 @@ export default function ConstruccionPage() {
         </section>
       </main>
 
-      <div ref={footerRef} className="animate-on-scroll">
-        <Footer
-          className={styles.sectionAlt}
-          businessName={BUSINESS.name}
-          address={BUSINESS.address}
-          phone={BUSINESS.phone}
-          email={BUSINESS.email}
-          legalLinks={LEGAL_LINKS}
-        />
-      </div>
+      <Footer
+        className={styles.sectionAlt}
+        businessName={BUSINESS.name}
+        address={BUSINESS.address}
+        phone={BUSINESS.phone}
+        email={BUSINESS.email}
+        legalLinks={LEGAL_LINKS}
+      />
     </>
   )
 }

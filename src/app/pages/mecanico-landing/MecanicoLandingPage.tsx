@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import styles from './MecanicoLandingPage.module.css'
 import { Hero } from '../../../shared/components/Hero'
+import { Reveal } from '../../../shared/components/Reveal'
 import { ServicesList } from '../../../shared/components/ServicesList'
 import { AppointmentForm } from '../../../shared/components/AppointmentForm'
 import { BusinessInfo } from '../../../shared/components/BusinessInfo'
@@ -55,12 +56,14 @@ export default function MecanicoLandingPage() {
 
         <ServicesList className={styles.sectionAlt} services={SERVICES} />
 
-        <section id="cita" className={styles.formSection} aria-labelledby="cita-heading">
-          <h2 id="cita-heading" className={styles.formHeading}>
-            Pide tu cita
-          </h2>
-          <AppointmentForm tenantId={MECANICO_TENANT_ID} services={SERVICES} />
-        </section>
+        <Reveal>
+          <section id="cita" className={styles.formSection} aria-labelledby="cita-heading">
+            <h2 id="cita-heading" className={styles.formHeading}>
+              Pide tu cita
+            </h2>
+            <AppointmentForm tenantId={MECANICO_TENANT_ID} services={SERVICES} />
+          </section>
+        </Reveal>
 
         <BusinessInfo
           className={styles.sectionAlt}

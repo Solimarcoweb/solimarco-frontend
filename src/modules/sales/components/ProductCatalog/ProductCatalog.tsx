@@ -1,6 +1,11 @@
+import { useRef } from 'react'
 import styles from './ProductCatalog.module.css'
 import type { ProductItem } from '../../models/product'
 import { formatPrice } from '../../shared/formatPrice'
+import { useScrollAnimation } from '../../../../shared/hooks/useScrollAnimation'
+
+/** Stagger delay (ms) for the item at `index`: 0 / 80 / 160, then capped. */
+const staggerDelay = (index: number) => Math.min(index, 2) * 80
 
 export interface ProductCatalogProps {
   /** Products to display, grouped by their `category`. */
@@ -15,15 +20,20 @@ interface ProductCardProps {
   product: ProductItem
   /** Whether this is the featured (larger) card in its category grid. */
   featured: boolean
+  /** Position within its category grid, used for the stagger delay. */
+  index: number
   onAddToCart: (product: ProductItem) => void
 }
 
 /** Single product card with image, price and add-to-cart action. */
-function ProductCard({ product, featured, onAddToCart }: ProductCardProps) {
+function ProductCard({ product, featured, index, onAddToCart }: ProductCardProps) {
   const isLowStock = typeof product.stock === 'number' && product.stock <= LOW_STOCK_THRESHOLD
+  const ref = useRef<HTMLLIElement>(null)
+  useScrollAnimation(ref, staggerDelay(index))
 
+  const base = featured ? `${styles.product} ${styles.featured}` : styles.product
   return (
-    <li className={featured ? `${styles.product} ${styles.featured}` : styles.product}>
+    <li ref={ref} className={`${base} animate-on-scroll`}>
       {product.imageUrl && (
         <figure className={styles.media}>
           <img className={styles.image} src={product.imageUrl} alt={product.name} loading="lazy" />
@@ -84,6 +94,7 @@ export function ProductCatalog({ products, onAddToCart }: ProductCatalogProps) {
                 key={product.id}
                 product={product}
                 featured={index === 0}
+                index={index}
                 onAddToCart={onAddToCart}
               />
             ))}

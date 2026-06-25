@@ -1,4 +1,9 @@
+import { useRef } from 'react'
 import styles from './Menu.module.css'
+import { useScrollAnimation } from '../../hooks/useScrollAnimation'
+
+/** Stagger delay (ms) for the item at `index`: 0 / 80 / 160, then capped. */
+const staggerDelay = (index: number) => Math.min(index, 2) * 80
 
 /** A single dish/product shown in the menu. */
 export interface MenuItem {
@@ -42,9 +47,11 @@ function sectionId(categoryId: string): string {
 }
 
 /** Single menu item card with optional image, price and allergens. */
-function MenuItemCard({ item }: { item: MenuItem }) {
+function MenuItemCard({ item, index }: { item: MenuItem; index: number }) {
+  const ref = useRef<HTMLLIElement>(null)
+  useScrollAnimation(ref, staggerDelay(index))
   return (
-    <li className={styles.item}>
+    <li ref={ref} className={`${styles.item} animate-on-scroll`}>
       {item.imageUrl && (
         <figure className={styles.media}>
           <img
@@ -110,8 +117,8 @@ export function Menu({ categories }: MenuProps) {
             {category.name}
           </h3>
           <ul className={styles.grid}>
-            {category.items.map((item) => (
-              <MenuItemCard key={item.id} item={item} />
+            {category.items.map((item, index) => (
+              <MenuItemCard key={item.id} item={item} index={index} />
             ))}
           </ul>
         </section>

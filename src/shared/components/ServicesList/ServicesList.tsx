@@ -1,4 +1,9 @@
+import { useRef } from 'react'
 import styles from './ServicesList.module.css'
+import { useScrollAnimation } from '../../hooks/useScrollAnimation'
+
+/** Stagger delay (ms) for the item at `index`: 0 / 80 / 160, then capped. */
+const staggerDelay = (index: number) => Math.min(index, 2) * 80
 
 /** A single service offered by the business. */
 export interface Service {
@@ -24,8 +29,14 @@ export interface ServicesListProps {
 
 /** Renders one featured card (first item) in a wide layout, the rest in a 2-col grid below. */
 function FeaturedCard({ service }: { service: Service }) {
+  const ref = useRef<HTMLElement>(null)
+  useScrollAnimation(ref)
   return (
-    <article className={styles.featured} aria-labelledby={`svc-${service.id}`}>
+    <article
+      ref={ref}
+      className={`${styles.featured} animate-on-scroll`}
+      aria-labelledby={`svc-${service.id}`}
+    >
       {service.imageUrl && (
         <img
           className={styles.featuredImage}
@@ -51,9 +62,15 @@ function FeaturedCard({ service }: { service: Service }) {
 }
 
 /** Renders a compact service card for the secondary grid. */
-function ServiceCard({ service }: { service: Service }) {
+function ServiceCard({ service, index }: { service: Service; index: number }) {
+  const ref = useRef<HTMLElement>(null)
+  useScrollAnimation(ref, staggerDelay(index))
   return (
-    <article className={styles.card} aria-labelledby={`svc-${service.id}`}>
+    <article
+      ref={ref}
+      className={`${styles.card} animate-on-scroll`}
+      aria-labelledby={`svc-${service.id}`}
+    >
       {service.imageUrl && (
         <img
           className={styles.cardImage}
@@ -106,9 +123,9 @@ export function ServicesList({
 
       {rest.length > 0 && (
         <ul className={styles.grid} role="list">
-          {rest.map((service) => (
+          {rest.map((service, index) => (
             <li key={service.id}>
-              <ServiceCard service={service} />
+              <ServiceCard service={service} index={index} />
             </li>
           ))}
         </ul>

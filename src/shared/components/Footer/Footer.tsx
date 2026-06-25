@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import styles from './Footer.module.css'
+import { useScrollAnimation } from '../../hooks/useScrollAnimation'
 
 /** A single legal link shown in the footer (privacy, cookies, legal notice...). */
 export interface LegalLink {
@@ -47,9 +49,12 @@ function toTelHref(phone: string): string {
  */
 export function Footer({ businessName, address, phone, email, legalLinks, className }: FooterProps) {
   const currentYear = new Date().getFullYear()
+  const ref = useRef<HTMLElement>(null)
+  useScrollAnimation(ref)
+  const rootClass = ['animate-on-scroll', styles.footer, className].filter(Boolean).join(' ')
 
   return (
-    <footer className={className ? `${styles.footer} ${className}` : styles.footer}>
+    <footer ref={ref} className={rootClass}>
       <div className={styles.container}>
         <section className={styles.contact} aria-labelledby="footer-business-name">
           <h2 id="footer-business-name" className={styles.businessName}>
