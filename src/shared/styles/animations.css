@@ -1,0 +1,27 @@
+/* Scroll-reveal animation, per SKILL-emilkowalski.md.
+   Global utility classes (not a CSS Module): the element starts hidden and
+   slightly lowered, then fades up when JS adds `.visible` (see
+   shared/hooks/useScrollAnimation). Only transform/opacity are animated.
+
+   Reduced motion: no animation — the content is shown immediately. */
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

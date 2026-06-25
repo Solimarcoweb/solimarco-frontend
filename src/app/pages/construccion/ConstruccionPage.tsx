@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from './ConstruccionPage.module.css'
+import { useScrollAnimation } from '../../../shared/hooks/useScrollAnimation'
 import { Hero } from '../../../shared/components/Hero'
 import { LanguageSelector } from '../../../shared/components/LanguageSelector'
 import { ProjectGallery, type ProjectItem } from '../../../shared/components/ProjectGallery'
@@ -118,6 +119,13 @@ export default function ConstruccionPage() {
 
   usePageTracking(TENANT_ID)
 
+  // Scroll-reveal: the Hero is already in view, so only the budget section and
+  // the footer fade in as the visitor scrolls down.
+  const budgetRef = useRef<HTMLElement>(null)
+  useScrollAnimation(budgetRef)
+  const footerRef = useRef<HTMLDivElement>(null)
+  useScrollAnimation(footerRef)
+
   return (
     <>
       <SharedSeo
@@ -146,7 +154,12 @@ export default function ConstruccionPage() {
 
         <ProjectGallery className={styles.sectionAlt} items={PROJECTS} />
 
-        <section id="presupuesto" className={styles.budget} aria-labelledby="budget-heading">
+        <section
+          ref={budgetRef}
+          id="presupuesto"
+          className={`${styles.budget} animate-on-scroll`}
+          aria-labelledby="budget-heading"
+        >
           <h2 id="budget-heading" className={styles.budgetHeading}>
             Solicita tu presupuesto
           </h2>
@@ -154,14 +167,16 @@ export default function ConstruccionPage() {
         </section>
       </main>
 
-      <Footer
-        className={styles.sectionAlt}
-        businessName={BUSINESS.name}
-        address={BUSINESS.address}
-        phone={BUSINESS.phone}
-        email={BUSINESS.email}
-        legalLinks={LEGAL_LINKS}
-      />
+      <div ref={footerRef} className="animate-on-scroll">
+        <Footer
+          className={styles.sectionAlt}
+          businessName={BUSINESS.name}
+          address={BUSINESS.address}
+          phone={BUSINESS.phone}
+          email={BUSINESS.email}
+          legalLinks={LEGAL_LINKS}
+        />
+      </div>
     </>
   )
 }
