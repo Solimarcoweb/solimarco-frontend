@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import styles from './BudgetForm.module.css'
 import type { BudgetFormData, BudgetFormState, ServiceType } from '../../models/reservation'
 import { submitBudgetRequest } from '../../services/reservationService'
+import { RateLimitError } from '../../../../core/http/apiClient'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -84,6 +85,8 @@ export function BudgetForm({ tenantId, onSubmit }: BudgetFormProps) {
   const [data, setData] = useState<BudgetFormData>(INITIAL_DATA)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [state, setState] = useState<BudgetFormState>('idle')
+  // Seconds to wait after a 429; null means the last error was not a rate limit.
+  const [retryAfter, setRetryAfter] = useState<number | null>(null)
 
   const fieldId = (name: keyof BudgetFormData) => `${baseId}-${name}`
 
@@ -117,7 +120,8 @@ export function BudgetForm({ tenantId, onSubmit }: BudgetFormProps) {
     try {
       await submit(payload)
       setState('success')
-    } catch {
+    } catch (error) {
+      setRetryAfter(error instanceof RateLimitError ? error.retryAfter : null)
       setState('error')
     }
   }
@@ -219,7 +223,9 @@ export function BudgetForm({ tenantId, onSubmit }: BudgetFormProps) {
 
       {state === 'error' && (
         <p className={styles.errorBanner} role="alert">
-          {t('forms.budget.errors.sendFailed')}
+          {retryAfter !== null
+            ? t('forms.common.rateLimited', { seconds: retryAfter })
+            : t('forms.budget.errors.sendFailed')}
         </p>
       )}
 

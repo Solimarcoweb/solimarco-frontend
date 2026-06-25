@@ -1,6 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { renderWithI18n } from '../../../test-utils'
+import { RateLimitError } from '../../../core/http/apiClient'
 import { TableReservationForm } from './TableReservationForm'
 
 /** Returns a `yyyy-mm-dd` date `days` in the future. */
@@ -59,5 +60,15 @@ describe('TableReservationForm', () => {
       expect.objectContaining({ name: 'María Pérez', guests: 2, date: futureDate() }),
     )
     expect(await screen.findByRole('status')).toHaveTextContent(/reserva solicitada/i)
+  })
+
+  it('shows a rate-limit message with the retry seconds on a 429', async () => {
+    const onSubmit = vi.fn().mockRejectedValue(new RateLimitError(45, 'rate limited'))
+    renderWithI18n(<TableReservationForm tenantId="demo-el-drago" onSubmit={onSubmit} />)
+
+    fillRequired(futureDate())
+    fireEvent.click(screen.getByRole('button', { name: 'Reservar mesa' }))
+
+    expect(await screen.findByText(/espera 45 segundos/i)).toBeInTheDocument()
   })
 })

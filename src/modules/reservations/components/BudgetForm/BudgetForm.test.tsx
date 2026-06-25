@@ -1,6 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { renderWithI18n } from '../../../../test-utils'
+import { RateLimitError } from '../../../../core/http/apiClient'
 import { BudgetForm } from './BudgetForm'
 
 /** Fills every required field with valid data using the given email. */
@@ -48,5 +49,15 @@ describe('BudgetForm', () => {
       expect.objectContaining({ email: 'maria@example.com', serviceType: 'obra-nueva' }),
     )
     expect(await screen.findByText(/solicitud enviada/i)).toBeInTheDocument()
+  })
+
+  it('shows a rate-limit message with the retry seconds on a 429', async () => {
+    const onSubmit = vi.fn().mockRejectedValue(new RateLimitError(30, 'rate limited'))
+    renderWithI18n(<BudgetForm tenantId="bm-construccion" onSubmit={onSubmit} />)
+
+    fillValidFields()
+    fireEvent.click(screen.getByRole('button', { name: 'Solicitar presupuesto' }))
+
+    expect(await screen.findByText(/espera 30 segundos/i)).toBeInTheDocument()
   })
 })

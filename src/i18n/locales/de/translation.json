@@ -10,7 +10,8 @@
   "forms": {
     "common": {
       "optional": "(optional)",
-      "submitting": "Sending…"
+      "submitting": "Sending…",
+      "rateLimited": "Zu viele Anfragen. Bitte warte {{seconds}} Sekunden, bevor du es erneut versuchst."
     },
     "budget": {
       "ariaLabel": "Budget request form",

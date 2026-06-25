@@ -10,7 +10,8 @@
   "forms": {
     "common": {
       "optional": "(opcional)",
-      "submitting": "Enviando…"
+      "submitting": "Enviando…",
+      "rateLimited": "Demasiadas peticiones. Por favor espera {{seconds}} segundos antes de intentarlo de nuevo."
     },
     "budget": {
       "ariaLabel": "Formulario de solicitud de presupuesto",

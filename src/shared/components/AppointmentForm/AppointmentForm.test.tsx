@@ -1,6 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { renderWithI18n } from '../../../test-utils'
+import { RateLimitError } from '../../../core/http/apiClient'
 import { AppointmentForm } from './AppointmentForm'
 import type { Service } from '../ServicesList'
 
@@ -106,5 +107,15 @@ describe('AppointmentForm', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/no hemos podido/i)
     expect(screen.getByRole('button', { name: 'Solicitar cita' })).toBeInTheDocument()
+  })
+
+  it('shows a rate-limit message with the retry seconds on a 429', async () => {
+    const onSubmit = vi.fn().mockRejectedValue(new RateLimitError(20, 'rate limited'))
+    renderWithI18n(<AppointmentForm tenantId="demo-el-teide" services={SERVICES} onSubmit={onSubmit} />)
+
+    fillRequired()
+    fireEvent.click(screen.getByRole('button', { name: 'Solicitar cita' }))
+
+    expect(await screen.findByText(/espera 20 segundos/i)).toBeInTheDocument()
   })
 })

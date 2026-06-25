@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import styles from './TableReservationForm.module.css'
 import type { SubmissionState, TableReservationData } from '../../../modules/reservations/models/reservation'
 import { submitTableReservation } from '../../../modules/reservations/services/reservationService'
+import { RateLimitError } from '../../../core/http/apiClient'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -89,6 +90,8 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
   const [data, setData] = useState<TableReservationData>(INITIAL_DATA)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [state, setState] = useState<SubmissionState>('idle')
+  // Seconds to wait after a 429; null means the last error was not a rate limit.
+  const [retryAfter, setRetryAfter] = useState<number | null>(null)
 
   const fieldId = (name: keyof TableReservationData) => `${baseId}-${name}`
 
@@ -132,7 +135,8 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
         await submitTableReservation(tenantId, payload)
       }
       setState('success')
-    } catch {
+    } catch (error) {
+      setRetryAfter(error instanceof RateLimitError ? error.retryAfter : null)
       setState('error')
     }
   }
@@ -241,7 +245,9 @@ export function TableReservationForm({ tenantId, onSubmit }: TableReservationFor
 
       {state === 'error' && (
         <p className={styles.errorBanner} role="alert">
-          {t('forms.reservation.errors.sendFailed')}
+          {retryAfter !== null
+            ? t('forms.common.rateLimited', { seconds: retryAfter })
+            : t('forms.reservation.errors.sendFailed')}
         </p>
       )}
 

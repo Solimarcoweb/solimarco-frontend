@@ -58,6 +58,19 @@ describe('trackPageView', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
+  it('ignores a 429 response from the fetch fallback (best-effort)', () => {
+    // Tracking does not go through apiClient, never inspects the response status
+    // and never throws, so a 429 (with Retry-After) is silently ignored.
+    vi.stubGlobal('navigator', {})
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(new Response(null, { status: 429, headers: { 'Retry-After': '60' } }))
+    vi.stubGlobal('fetch', fetchMock)
+
+    expect(() => trackPageView(event)).not.toThrow()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
   it('never throws when the transport fails', () => {
     vi.stubGlobal('navigator', {
       sendBeacon: vi.fn(() => {

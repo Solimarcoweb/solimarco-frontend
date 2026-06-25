@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import styles from './AppointmentForm.module.css'
 import type { AppointmentData, SubmissionState } from '../../../modules/reservations/models/reservation'
 import { submitAppointment } from '../../../modules/reservations/services/reservationService'
+import { RateLimitError } from '../../../core/http/apiClient'
 import type { Service } from '../ServicesList'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -90,6 +91,8 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
   const [data, setData] = useState<AppointmentData>(INITIAL_DATA)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [state, setState] = useState<SubmissionState>('idle')
+  // Seconds to wait after a 429; null means the last error was not a rate limit.
+  const [retryAfter, setRetryAfter] = useState<number | null>(null)
 
   const fieldId = (name: keyof AppointmentData) => `${baseId}-${name}`
 
@@ -131,7 +134,8 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
         await submitAppointment(tenantId, payload)
       }
       setState('success')
-    } catch {
+    } catch (error) {
+      setRetryAfter(error instanceof RateLimitError ? error.retryAfter : null)
       setState('error')
     }
   }
@@ -271,7 +275,9 @@ export function AppointmentForm({ tenantId, services, onSubmit }: AppointmentFor
 
       {state === 'error' && (
         <p className={styles.errorBanner} role="alert">
-          {t('forms.appointment.errors.sendFailed')}
+          {retryAfter !== null
+            ? t('forms.common.rateLimited', { seconds: retryAfter })
+            : t('forms.appointment.errors.sendFailed')}
         </p>
       )}
 
