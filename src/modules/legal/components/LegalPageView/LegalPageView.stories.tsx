@@ -5,8 +5,9 @@ import { LegalPageView } from './LegalPageView'
 /** Sample published content for the three typical legal pages of a tenant. */
 const PAGES = {
   privacidad: {
-    slug: 'privacidad',
-    title: 'Política de privacidad',
+    id: 'legal-privacidad',
+    tenantId: 'bm-construccion',
+    type: 'POLITICA_PRIVACIDAD',
     content: `
       <p>En BM Construcción S.L. tratamos los datos que nos facilitas con la
       única finalidad de gestionar tu solicitud de presupuesto o pedido.</p>
@@ -20,11 +21,14 @@ const PAGES = {
       <p>Puedes ejercer tus derechos escribiendo a
       <a href="mailto:info@bmconstruccionsl.com">info@bmconstruccionsl.com</a>.</p>
     `,
-    updatedAt: '2026-03-14T09:00:00Z',
+    version: 3,
+    publishedAt: '2026-03-14T09:00:00Z',
+    active: true,
   },
   cookies: {
-    slug: 'cookies',
-    title: 'Política de cookies',
+    id: 'legal-cookies',
+    tenantId: 'bm-construccion',
+    type: 'COOKIES',
     content: `
       <p>Este sitio usa cookies técnicas necesarias para su funcionamiento y,
       con tu consentimiento, cookies de medición de audiencia.</p>
@@ -34,18 +38,23 @@ const PAGES = {
         <li><strong>Analíticas:</strong> nos ayudan a entender qué contenido interesa más.</li>
       </ul>
     `,
-    updatedAt: '2026-02-02T10:30:00Z',
+    version: 1,
+    publishedAt: '2026-02-02T10:30:00Z',
+    active: true,
   },
   'aviso-legal': {
-    slug: 'aviso-legal',
-    title: 'Aviso legal',
+    id: 'legal-aviso',
+    tenantId: 'bm-construccion',
+    type: 'AVISO_LEGAL',
     content: `
       <p>En cumplimiento de la Ley 34/2002 (LSSI-CE), se informa de los datos
       identificativos del titular de este sitio web.</p>
       <h2>Titular</h2>
       <p>BM Construcción S.L. — NIF B-38XXXXXX — La Laguna, Tenerife.</p>
     `,
-    updatedAt: '2026-01-20T08:15:00Z',
+    version: 1,
+    publishedAt: '2026-01-20T08:15:00Z',
+    active: true,
   },
 } satisfies Record<string, LegalPage>
 
@@ -82,9 +91,10 @@ type Story = StoryObj<typeof meta>
 
 /** Builds a story for one legal slug, stubbing the backend response for it. */
 function legalStory(slug: keyof typeof PAGES): Story {
+  const page = PAGES[slug]
   return {
-    args: { tenantId: 'bm-construccion', slug },
-    beforeEach: () => stubLegalFetch(PAGES[slug]),
+    args: { tenantSlug: 'bm-construccion', type: page.type },
+    beforeEach: () => stubLegalFetch(page),
   }
 }
 
