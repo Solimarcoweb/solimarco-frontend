@@ -10,6 +10,7 @@ import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking
 import { applyTheme } from '../../../themes'
 import {
   BUSINESS,
+  GENERICO_TENANT_ID,
   HOURS,
   LEGAL_LINKS,
   LOCAL_BUSINESS_SCHEMA,
@@ -29,7 +30,7 @@ export default function GenericoLandingPage() {
     applyTheme('clasico')
   }, [])
 
-  usePageTracking('demo-generico')
+  usePageTracking(GENERICO_TENANT_ID)
 
   return (
     <>
@@ -65,7 +66,7 @@ export default function GenericoLandingPage() {
             <p className={styles.formIntro}>
               Sin compromiso. Te respondemos en menos de 24 horas laborables.
             </p>
-            <BudgetForm />
+            <BudgetForm tenantId={GENERICO_TENANT_ID} />
           </div>
         </section>
 

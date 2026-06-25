@@ -26,6 +26,8 @@ const INITIAL_DATA: BudgetFormData = {
 type FieldErrors = Partial<Record<keyof BudgetFormData, string>>
 
 export interface BudgetFormProps {
+  /** Tenant slug the lead belongs to; forwarded to the reservation service. */
+  tenantId: string
   /**
    * Submit handler. Defaults to POSTing to `/api/reservations` via the
    * reservation service; injectable so tests/stories can drive the lifecycle
@@ -71,10 +73,12 @@ function Field({ id, label, error, optional, children }: FieldProps) {
  * Manages its own field/validation state and submission lifecycle
  * (idle → submitting → success | error) with no form library.
  *
+ * @param props.tenantId - Tenant slug the lead belongs to.
  * @param props.onSubmit - Submit handler; defaults to the reservation service.
  * @returns The form, or a confirmation panel once submitted successfully.
  */
-export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) {
+export function BudgetForm({ tenantId, onSubmit }: BudgetFormProps) {
+  const submit = onSubmit ?? ((data: BudgetFormData) => submitBudgetRequest(tenantId, data))
   const { t } = useTranslation()
   const baseId = useId()
   const [data, setData] = useState<BudgetFormData>(INITIAL_DATA)
@@ -111,7 +115,7 @@ export function BudgetForm({ onSubmit = submitBudgetRequest }: BudgetFormProps) 
       preferredDate: data.preferredDate?.trim() ? data.preferredDate : undefined,
     }
     try {
-      await onSubmit(payload)
+      await submit(payload)
       setState('success')
     } catch {
       setState('error')

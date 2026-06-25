@@ -23,7 +23,7 @@ export default function GenericoPresupuestoPage() {
             Cuéntanos tu proyecto y te responderemos en menos de 24 horas con un presupuesto
             personalizado y sin compromiso.
           </p>
-          <BudgetForm />
+          <BudgetForm tenantId={GENERICO_TENANT_ID} />
         </div>
       </section>
     </>

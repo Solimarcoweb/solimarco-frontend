@@ -9,6 +9,7 @@ const meta = {
     layout: 'padded',
   },
   args: {
+    tenantId: 'bm-construccion',
     onSubmit: fn(async () => ({ id: 'lead-1', status: 'pendiente' })),
   },
 } satisfies Meta<typeof BudgetForm>

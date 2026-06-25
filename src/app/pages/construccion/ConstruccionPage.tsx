@@ -150,7 +150,7 @@ export default function ConstruccionPage() {
           <h2 id="budget-heading" className={styles.budgetHeading}>
             Solicita tu presupuesto
           </h2>
-          <BudgetForm />
+          <BudgetForm tenantId={TENANT_ID} />
         </section>
       </main>
 
