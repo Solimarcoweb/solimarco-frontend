@@ -18,9 +18,12 @@ export interface CartItem extends ProductItem {
   quantity: number
 }
 
-/** Payload submitted to the backend when placing an order. */
+/**
+ * UI-shaped order payload collected by the cart. The tenant slug is passed
+ * separately to the sales service (not carried here); the service maps this to
+ * the backend's `/api/orders` contract.
+ */
 export interface OrderData {
-  tenantId: string
   items: CartItem[]
   customerName: string
   customerEmail: string

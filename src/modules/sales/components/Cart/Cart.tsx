@@ -106,8 +106,9 @@ export function Cart({
   tenantId,
   onUpdateQuantity,
   onRemove,
-  onSubmit = submitOrder,
+  onSubmit,
 }: CartProps) {
+  const submit = onSubmit ?? ((order: OrderData) => submitOrder(tenantId, order))
   const baseId = useId()
   const [customer, setCustomer] = useState<CustomerData>(INITIAL_CUSTOMER)
   const [errors, setErrors] = useState<CustomerErrors>({})
@@ -140,9 +141,9 @@ export function Cart({
     }
 
     setState('submitting')
-    const order: OrderData = { tenantId, items, ...customer }
+    const order: OrderData = { items, ...customer }
     try {
-      await onSubmit(order)
+      await submit(order)
       setState('success')
     } catch {
       setState('error')

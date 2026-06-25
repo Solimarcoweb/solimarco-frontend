@@ -70,15 +70,14 @@ describe('Cart', () => {
     fireEvent.change(screen.getByLabelText('Teléfono'), { target: { value: '600123456' } })
     fireEvent.click(screen.getByRole('button', { name: 'Finalizar pedido' }))
 
-    expect(onSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        tenantId: 'bm-construccion',
-        items,
-        customerName: 'María Hernández',
-        customerEmail: 'maria@example.com',
-        customerPhone: '600123456',
-      }),
-    )
+    // Cart hands the service the UI-shaped order; the tenant slug is applied by
+    // the sales service, not carried in the order object.
+    expect(onSubmit).toHaveBeenCalledWith({
+      items,
+      customerName: 'María Hernández',
+      customerEmail: 'maria@example.com',
+      customerPhone: '600123456',
+    })
     expect(await screen.findByText(/pedido realizado/i)).toBeInTheDocument()
   })
 
