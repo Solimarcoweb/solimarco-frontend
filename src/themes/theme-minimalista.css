@@ -7,6 +7,7 @@
   --color-primary: #18181b;
   --color-secondary: #71717a;
   --color-accent: #27272a;
+  --color-accent-text: #ffffff;
 
   --color-bg: #ffffff;
   --color-bg-alt: #fafafa;
@@ -34,6 +35,7 @@
     --color-primary: #f4f4f5;
     --color-secondary: #a1a1aa;
     --color-accent: #d4d4d8;
+    --color-accent-text: #111827;
 
     --color-bg: #101012;
     --color-bg-alt: #17171a;
