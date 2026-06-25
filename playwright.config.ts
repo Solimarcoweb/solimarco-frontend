@@ -9,6 +9,9 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
+    // Make scroll-reveal animations deterministic: the .animate-on-scroll
+    // content is shown instantly under reduced motion (see animations.css).
+    reducedMotion: 'reduce',
   },
   projects: [
     {
