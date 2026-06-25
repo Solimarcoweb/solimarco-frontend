@@ -32,3 +32,8 @@
   margin-inline: auto;
   padding: var(--spacing-section) 1.25rem;
 }
+
+/* Alternating section background, for visual separation between sections. */
+.sectionAlt {
+  background: var(--color-bg-alt);
+}

@@ -42,3 +42,8 @@
   letter-spacing: -0.015em;
   text-align: center;
 }
+
+/* Alternating section background, for visual separation between sections. */
+.sectionAlt {
+  background: var(--color-bg-alt);
+}

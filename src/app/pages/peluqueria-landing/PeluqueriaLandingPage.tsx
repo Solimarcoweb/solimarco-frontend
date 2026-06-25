@@ -54,7 +54,7 @@ export default function PeluqueriaLandingPage() {
           backgroundImage="https://picsum.photos/seed/brisa-atlantica-hero/1600/900"
         />
 
-        <section id="servicios" aria-label="Servicios de peluquería">
+        <section id="servicios" className={styles.sectionAlt} aria-label="Servicios de peluquería">
           <ServicesList services={SERVICES} heading="Nuestros servicios" />
         </section>
 
@@ -66,6 +66,7 @@ export default function PeluqueriaLandingPage() {
         </section>
 
         <BusinessInfo
+          className={styles.sectionAlt}
           address={BUSINESS.address}
           phone={BUSINESS.phone}
           email={BUSINESS.email}

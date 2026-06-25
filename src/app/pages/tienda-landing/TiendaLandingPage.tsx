@@ -56,7 +56,7 @@ export default function TiendaLandingPage() {
           backgroundImage="https://picsum.photos/seed/rincon-canario-hero/1600/900"
         />
 
-        <section id="tienda" aria-label="Catálogo de productos">
+        <section id="tienda" className={styles.sectionAlt} aria-label="Catálogo de productos">
           <ProductCatalog products={PRODUCTS} onAddToCart={addToCart} />
         </section>
 
@@ -70,6 +70,7 @@ export default function TiendaLandingPage() {
         </section>
 
         <BusinessInfo
+          className={styles.sectionAlt}
           address={BUSINESS.address}
           phone={BUSINESS.phone}
           email={BUSINESS.email}

@@ -1,11 +1,13 @@
 /* Mobile-first footer block. Base styles target mobile (single column);
    the min-width breakpoint splits the contact + legal sections into columns. */
 
+/* No own background: it inherits the page background (var(--color-bg)) so a
+   page can override it (e.g. an alternating .sectionAlt background) without a
+   same-specificity conflict. */
 .footer {
   box-sizing: border-box;
   padding: 3rem 1.25rem 2rem;
   border-top: 1px solid var(--color-bg-alt);
-  background: var(--color-bg);
   color: var(--color-text-muted);
   text-align: left;
 }

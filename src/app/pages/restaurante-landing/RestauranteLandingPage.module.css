@@ -42,3 +42,8 @@
   font-weight: 600;
   color: var(--color-primary);
 }
+
+/* Alternating section background, for visual separation between sections. */
+.sectionAlt {
+  background: var(--color-bg-alt);
+}

@@ -18,6 +18,8 @@ export interface ServicesListProps {
   services: Service[]
   /** Optional section heading override. */
   heading?: string
+  /** Extra class for the root `<section>` (e.g. an alternating background). */
+  className?: string
 }
 
 /** Renders one featured card (first item) in a wide layout, the rest in a 2-col grid below. */
@@ -84,11 +86,18 @@ function ServiceCard({ service }: { service: Service }) {
  * @param props.heading - Optional section heading (default: "Nuestros servicios").
  * @returns A labelled section listing all services.
  */
-export function ServicesList({ services, heading = 'Nuestros servicios' }: ServicesListProps) {
+export function ServicesList({
+  services,
+  heading = 'Nuestros servicios',
+  className,
+}: ServicesListProps) {
   const [first, ...rest] = services
 
   return (
-    <section className={styles.section} aria-labelledby="services-heading">
+    <section
+      className={className ? `${styles.section} ${className}` : styles.section}
+      aria-labelledby="services-heading"
+    >
       <h2 id="services-heading" className={styles.heading}>
         {heading}
       </h2>

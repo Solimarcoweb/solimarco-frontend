@@ -186,7 +186,11 @@ export default function RestauranteLandingPage() {
           backgroundImage="https://picsum.photos/seed/pasteleria-la-isla/1600/900"
         />
 
-        <section id="carta" className={styles.menuSection} aria-labelledby="carta-heading">
+        <section
+          id="carta"
+          className={`${styles.menuSection} ${styles.sectionAlt}`}
+          aria-labelledby="carta-heading"
+        >
           <h2 id="carta-heading" className={styles.menuHeading}>
             Nuestra carta
           </h2>
@@ -203,6 +207,7 @@ export default function RestauranteLandingPage() {
       </main>
 
       <Footer
+        className={styles.sectionAlt}
         businessName={BUSINESS.name}
         address={BUSINESS.address}
         phone={BUSINESS.phone}

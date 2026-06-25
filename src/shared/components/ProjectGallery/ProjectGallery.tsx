@@ -16,6 +16,8 @@ export interface ProjectItem {
 export interface ProjectGalleryProps {
   /** Projects to display. Rendered in order as an alternating zig-zag. */
   items: ProjectItem[]
+  /** Extra class for the root `<section>` (e.g. an alternating background). */
+  className?: string
 }
 
 /**
@@ -26,9 +28,9 @@ export interface ProjectGalleryProps {
  * @param props.items - Projects to display, in order.
  * @returns The gallery section element.
  */
-export function ProjectGallery({ items }: ProjectGalleryProps) {
+export function ProjectGallery({ items, className }: ProjectGalleryProps) {
   return (
-    <section className={styles.gallery}>
+    <section className={className ? `${styles.gallery} ${className}` : styles.gallery}>
       <ul className={styles.grid}>
         {items.map((item) => (
           <li key={item.id} className={styles.item}>

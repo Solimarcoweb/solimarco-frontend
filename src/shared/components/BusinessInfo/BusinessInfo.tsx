@@ -23,6 +23,8 @@ export interface BusinessInfoProps {
   hours: BusinessHours[]
   /** Optional static map image URL (lazy-loaded, no third-party script). */
   mapImageUrl?: string
+  /** Extra class for the root `<section>` (e.g. an alternating background). */
+  className?: string
 }
 
 /**
@@ -45,9 +47,19 @@ function toTelHref(phone: string): string {
  * @param props.mapImageUrl - Optional static map image URL.
  * @returns The business-info section element.
  */
-export function BusinessInfo({ address, phone, email, hours, mapImageUrl }: BusinessInfoProps) {
+export function BusinessInfo({
+  address,
+  phone,
+  email,
+  hours,
+  mapImageUrl,
+  className,
+}: BusinessInfoProps) {
   return (
-    <section className={styles.info} aria-labelledby="business-info-title">
+    <section
+      className={className ? `${styles.info} ${className}` : styles.info}
+      aria-labelledby="business-info-title"
+    >
       <h2 id="business-info-title" className={styles.title}>
         Dónde encontrarnos
       </h2>

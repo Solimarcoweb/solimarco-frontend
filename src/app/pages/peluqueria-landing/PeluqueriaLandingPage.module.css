@@ -31,7 +31,7 @@
   max-width: 80rem;
   margin-inline: auto;
   padding: var(--spacing-section) 1.25rem;
-  background: var(--color-bg-alt);
+  background: var(--color-bg);
 }
 
 .formHeading {
@@ -42,4 +42,9 @@
   color: var(--color-text);
   letter-spacing: -0.01em;
   text-align: center;
+}
+
+/* Alternating section background, for visual separation between sections. */
+.sectionAlt {
+  background: var(--color-bg-alt);
 }

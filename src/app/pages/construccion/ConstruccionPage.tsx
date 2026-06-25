@@ -144,7 +144,7 @@ export default function ConstruccionPage() {
           logoUrl={tenantConfig?.logoUrl}
         />
 
-        <ProjectGallery items={PROJECTS} />
+        <ProjectGallery className={styles.sectionAlt} items={PROJECTS} />
 
         <section id="presupuesto" className={styles.budget} aria-labelledby="budget-heading">
           <h2 id="budget-heading" className={styles.budgetHeading}>
@@ -155,6 +155,7 @@ export default function ConstruccionPage() {
       </main>
 
       <Footer
+        className={styles.sectionAlt}
         businessName={BUSINESS.name}
         address={BUSINESS.address}
         phone={BUSINESS.phone}

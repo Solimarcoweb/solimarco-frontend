@@ -54,7 +54,7 @@ export default function GenericoLandingPage() {
           backgroundImage="https://picsum.photos/seed/generico-hero/1600/900"
         />
 
-        <section id="servicios" aria-label="Servicios profesionales">
+        <section id="servicios" className={styles.sectionAlt} aria-label="Servicios profesionales">
           <ServicesList services={SERVICES} heading="Nuestros servicios" />
         </section>
 
@@ -71,6 +71,7 @@ export default function GenericoLandingPage() {
         </section>
 
         <BusinessInfo
+          className={styles.sectionAlt}
           address={BUSINESS.address}
           phone={BUSINESS.phone}
           email={BUSINESS.email}

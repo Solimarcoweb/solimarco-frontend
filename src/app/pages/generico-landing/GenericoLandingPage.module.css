@@ -26,7 +26,7 @@
 }
 
 .formSection {
-  background: var(--color-bg-alt);
+  background: var(--color-bg);
 }
 
 .formInner {
@@ -52,4 +52,9 @@
   text-align: center;
   color: var(--color-text-muted);
   font-size: 0.95rem;
+}
+
+/* Alternating section background, for visual separation between sections. */
+.sectionAlt {
+  background: var(--color-bg-alt);
 }

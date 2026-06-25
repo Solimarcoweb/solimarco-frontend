@@ -53,7 +53,7 @@ export default function MecanicoLandingPage() {
           backgroundImage="https://picsum.photos/seed/taller-el-teide/1600/900"
         />
 
-        <ServicesList services={SERVICES} />
+        <ServicesList className={styles.sectionAlt} services={SERVICES} />
 
         <section id="cita" className={styles.formSection} aria-labelledby="cita-heading">
           <h2 id="cita-heading" className={styles.formHeading}>
@@ -63,6 +63,7 @@ export default function MecanicoLandingPage() {
         </section>
 
         <BusinessInfo
+          className={styles.sectionAlt}
           address={BUSINESS.address}
           phone={BUSINESS.phone}
           email={BUSINESS.email}

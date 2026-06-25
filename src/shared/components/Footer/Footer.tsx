@@ -19,6 +19,8 @@ export interface FooterProps {
   email: string
   /** Legal pages to link (privacy, cookies, legal notice, sale terms...). */
   legalLinks: LegalLink[]
+  /** Extra class for the root `<footer>` (e.g. an alternating background). */
+  className?: string
 }
 
 /**
@@ -43,11 +45,11 @@ function toTelHref(phone: string): string {
  * @param props.legalLinks - Legal pages to link.
  * @returns The footer element.
  */
-export function Footer({ businessName, address, phone, email, legalLinks }: FooterProps) {
+export function Footer({ businessName, address, phone, email, legalLinks, className }: FooterProps) {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className={styles.footer}>
+    <footer className={className ? `${styles.footer} ${className}` : styles.footer}>
       <div className={styles.container}>
         <section className={styles.contact} aria-labelledby="footer-business-name">
           <h2 id="footer-business-name" className={styles.businessName}>

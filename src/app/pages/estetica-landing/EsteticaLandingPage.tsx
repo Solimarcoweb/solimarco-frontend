@@ -54,7 +54,7 @@ export default function EsteticaLandingPage() {
           backgroundImage="https://picsum.photos/seed/magnolia-hero/1600/900"
         />
 
-        <section id="tratamientos" aria-label="Catálogo de tratamientos">
+        <section id="tratamientos" className={styles.sectionAlt} aria-label="Catálogo de tratamientos">
           <TreatmentsList treatments={TREATMENTS} heading="Nuestros tratamientos" />
         </section>
 
@@ -66,6 +66,7 @@ export default function EsteticaLandingPage() {
         </section>
 
         <BusinessInfo
+          className={styles.sectionAlt}
           address={BUSINESS.address}
           phone={BUSINESS.phone}
           email={BUSINESS.email}
