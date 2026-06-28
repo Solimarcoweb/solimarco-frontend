@@ -27,7 +27,7 @@ export async function mockTenant(page: Page, sector = 'construccion'): Promise<v
         tenantId: 'bm-construccion',
         businessName: 'BM Construcción S.L.',
         themeName: 'clasico',
-        pageType: 'landing',
+        siteType: 'LANDING',
         sector,
         locale: 'es',
         businessDescription: 'Más de 25 años de obra nueva y reformas integrales en Tenerife.',

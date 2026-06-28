@@ -6,7 +6,7 @@ const MOCK_CONFIG: TenantConfig = {
   tenantId: 'demo-tenant',
   businessName: 'Demo Business',
   themeName: 'clasico',
-  pageType: 'landing',
+  siteType: 'LANDING',
   sector: 'generico',
   locale: 'es',
 }

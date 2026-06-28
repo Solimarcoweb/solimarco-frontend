@@ -102,13 +102,13 @@ vi.mock('../../modules/legal/components/LegalPageRoute/LegalPageRoute', () => ({
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-function config(sector: string, pageType: TenantConfig['pageType']): TenantConfig {
+function config(sector: string, siteType: TenantConfig['siteType']): TenantConfig {
   return {
     tenantId: 'test',
     businessName: 'Test',
     themeName: 'clasico',
     sector,
-    pageType,
+    siteType,
     locale: 'es',
   }
 }
@@ -127,49 +127,49 @@ function renderRouter(initialPath = '/') {
 
 describe('TenantRouter — landing pages', () => {
   it('renders ConstruccionPage for construccion + landing', async () => {
-    mockUseTenantConfig.mockReturnValue(config('construccion', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('construccion', 'LANDING'))
     renderRouter()
     await waitFor(() => expect(screen.getByTestId('page-construccion-landing')).toBeInTheDocument())
   })
 
   it('renders RestauranteLandingPage for restaurante + landing', async () => {
-    mockUseTenantConfig.mockReturnValue(config('restaurante', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('restaurante', 'LANDING'))
     renderRouter()
     await waitFor(() => expect(screen.getByTestId('page-restaurante-landing')).toBeInTheDocument())
   })
 
   it('renders MecanicoLandingPage for mecanico + landing', async () => {
-    mockUseTenantConfig.mockReturnValue(config('mecanico', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('mecanico', 'LANDING'))
     renderRouter()
     await waitFor(() => expect(screen.getByTestId('page-mecanico-landing')).toBeInTheDocument())
   })
 
   it('renders TiendaLandingPage for tienda + landing', async () => {
-    mockUseTenantConfig.mockReturnValue(config('tienda', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('tienda', 'LANDING'))
     renderRouter()
     await waitFor(() => expect(screen.getByTestId('page-tienda-landing')).toBeInTheDocument())
   })
 
   it('renders EsteticaLandingPage for estetica + landing', async () => {
-    mockUseTenantConfig.mockReturnValue(config('estetica', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('estetica', 'LANDING'))
     renderRouter()
     await waitFor(() => expect(screen.getByTestId('page-estetica-landing')).toBeInTheDocument())
   })
 
   it('renders PeluqueriaLandingPage for peluqueria + landing', async () => {
-    mockUseTenantConfig.mockReturnValue(config('peluqueria', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('peluqueria', 'LANDING'))
     renderRouter()
     await waitFor(() => expect(screen.getByTestId('page-peluqueria-landing')).toBeInTheDocument())
   })
 
   it('renders GenericoLandingPage for generico + landing', async () => {
-    mockUseTenantConfig.mockReturnValue(config('generico', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('generico', 'LANDING'))
     renderRouter()
     await waitFor(() => expect(screen.getByTestId('page-generico-landing')).toBeInTheDocument())
   })
 
   it('renders GenericoLandingPage for an unknown sector', async () => {
-    mockUseTenantConfig.mockReturnValue(config('desconocido', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('desconocido', 'LANDING'))
     renderRouter()
     await waitFor(() => expect(screen.getByTestId('page-generico-landing')).toBeInTheDocument())
   })
@@ -177,7 +177,7 @@ describe('TenantRouter — landing pages', () => {
 
 describe('TenantRouter — multi-page (layout + index route)', () => {
   it('renders ConstruccionLayout + home for construccion + multi', async () => {
-    mockUseTenantConfig.mockReturnValue(config('construccion', 'multi'))
+    mockUseTenantConfig.mockReturnValue(config('construccion', 'FULL'))
     renderRouter()
     await waitFor(() => {
       expect(screen.getByTestId('layout-construccion')).toBeInTheDocument()
@@ -186,7 +186,7 @@ describe('TenantRouter — multi-page (layout + index route)', () => {
   })
 
   it('renders RestauranteLayout + home for restaurante + multi', async () => {
-    mockUseTenantConfig.mockReturnValue(config('restaurante', 'multi'))
+    mockUseTenantConfig.mockReturnValue(config('restaurante', 'FULL'))
     renderRouter()
     await waitFor(() => {
       expect(screen.getByTestId('layout-restaurante')).toBeInTheDocument()
@@ -195,7 +195,7 @@ describe('TenantRouter — multi-page (layout + index route)', () => {
   })
 
   it('renders MecanicoLayout + home for mecanico + multi', async () => {
-    mockUseTenantConfig.mockReturnValue(config('mecanico', 'multi'))
+    mockUseTenantConfig.mockReturnValue(config('mecanico', 'FULL'))
     renderRouter()
     await waitFor(() => {
       expect(screen.getByTestId('layout-mecanico')).toBeInTheDocument()
@@ -204,7 +204,7 @@ describe('TenantRouter — multi-page (layout + index route)', () => {
   })
 
   it('renders TiendaLayout + home for tienda + multi', async () => {
-    mockUseTenantConfig.mockReturnValue(config('tienda', 'multi'))
+    mockUseTenantConfig.mockReturnValue(config('tienda', 'FULL'))
     renderRouter()
     await waitFor(() => {
       expect(screen.getByTestId('layout-tienda')).toBeInTheDocument()
@@ -213,7 +213,7 @@ describe('TenantRouter — multi-page (layout + index route)', () => {
   })
 
   it('renders EsteticaLayout + home for estetica + multi', async () => {
-    mockUseTenantConfig.mockReturnValue(config('estetica', 'multi'))
+    mockUseTenantConfig.mockReturnValue(config('estetica', 'FULL'))
     renderRouter()
     await waitFor(() => {
       expect(screen.getByTestId('layout-estetica')).toBeInTheDocument()
@@ -222,7 +222,7 @@ describe('TenantRouter — multi-page (layout + index route)', () => {
   })
 
   it('renders PeluqueriaLayout + home for peluqueria + multi', async () => {
-    mockUseTenantConfig.mockReturnValue(config('peluqueria', 'multi'))
+    mockUseTenantConfig.mockReturnValue(config('peluqueria', 'FULL'))
     renderRouter()
     await waitFor(() => {
       expect(screen.getByTestId('layout-peluqueria')).toBeInTheDocument()
@@ -231,7 +231,7 @@ describe('TenantRouter — multi-page (layout + index route)', () => {
   })
 
   it('renders GenericoLayout + home for generico + multi', async () => {
-    mockUseTenantConfig.mockReturnValue(config('generico', 'multi'))
+    mockUseTenantConfig.mockReturnValue(config('generico', 'FULL'))
     renderRouter()
     await waitFor(() => {
       expect(screen.getByTestId('layout-generico')).toBeInTheDocument()
@@ -242,14 +242,14 @@ describe('TenantRouter — multi-page (layout + index route)', () => {
 
 describe('TenantRouter — global legal route', () => {
   it('renders LegalPageRoute for /legal/:slug regardless of sector', async () => {
-    mockUseTenantConfig.mockReturnValue(config('construccion', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('construccion', 'LANDING'))
     renderRouter('/legal/privacidad')
 
     await waitFor(() => expect(screen.getByTestId('legal-route')).toBeInTheDocument())
   })
 
   it('still renders the sector page on the root path', async () => {
-    mockUseTenantConfig.mockReturnValue(config('construccion', 'landing'))
+    mockUseTenantConfig.mockReturnValue(config('construccion', 'LANDING'))
     renderRouter('/')
 
     await waitFor(() =>

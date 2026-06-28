@@ -11,7 +11,7 @@ const config: TenantConfig = {
   tenantId: 'bm-construccion',
   businessName: 'BM Construcción S.L.',
   themeName: 'clasico',
-  pageType: 'landing',
+  siteType: 'LANDING',
   sector: 'construccion',
   locale: 'es',
   businessDescription: 'Reformas y obra nueva en Tenerife.',

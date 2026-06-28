@@ -11,7 +11,7 @@ vi.mock('../core/tenant/useTenant', () => ({
       tenantId: 'demo',
       businessName: 'Demo',
       themeName: 'clasico',
-      pageType: 'landing',
+      siteType: 'LANDING',
       sector: 'generico',
       locale: 'es',
       primaryColor: '#E63946',

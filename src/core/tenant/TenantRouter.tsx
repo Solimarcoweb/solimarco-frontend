@@ -260,28 +260,28 @@ function GenericoMulti(): JSX.Element {
   )
 }
 
-function resolveContent(sector: string, pageType: TenantConfig['pageType']): JSX.Element {
+function resolveContent(sector: string, siteType: TenantConfig['siteType']): JSX.Element {
   switch (sector) {
     case 'construccion':
-      return pageType === 'multi' ? <ConstruccionMulti /> : <ConstruccionLandingPage />
+      return siteType === 'FULL' ? <ConstruccionMulti /> : <ConstruccionLandingPage />
 
     case 'restaurante':
-      return pageType === 'multi' ? <RestauranteMulti /> : <RestauranteLandingPage />
+      return siteType === 'FULL' ? <RestauranteMulti /> : <RestauranteLandingPage />
 
     case 'mecanico':
-      return pageType === 'multi' ? <MecanicoMulti /> : <MecanicoLandingPage />
+      return siteType === 'FULL' ? <MecanicoMulti /> : <MecanicoLandingPage />
 
     case 'tienda':
-      return pageType === 'multi' ? <TiendaMulti /> : <TiendaLandingPage />
+      return siteType === 'FULL' ? <TiendaMulti /> : <TiendaLandingPage />
 
     case 'estetica':
-      return pageType === 'multi' ? <EsteticaMulti /> : <EsteticaLandingPage />
+      return siteType === 'FULL' ? <EsteticaMulti /> : <EsteticaLandingPage />
 
     case 'peluqueria':
-      return pageType === 'multi' ? <PeluqueriaMulti /> : <PeluqueriaLandingPage />
+      return siteType === 'FULL' ? <PeluqueriaMulti /> : <PeluqueriaLandingPage />
 
     case 'generico':
-      return pageType === 'multi' ? <GenericoMulti /> : <GenericoLandingPage />
+      return siteType === 'FULL' ? <GenericoMulti /> : <GenericoLandingPage />
 
     default:
       return <GenericoLandingPage />
@@ -291,20 +291,20 @@ function resolveContent(sector: string, pageType: TenantConfig['pageType']): JSX
 /**
  * Reads the resolved tenant configuration from context and renders the
  * correct page tree: the global `/legal/:slug` route (shared by every sector)
- * first, then a single landing page for `pageType === 'landing'` or a nested
- * `<Routes>` layout with sub-pages for `pageType === 'multi'` as the fallback.
+ * first, then a single landing page for `siteType === 'LANDING'` or a nested
+ * `<Routes>` layout with sub-pages for `siteType === 'FULL'` as the fallback.
  *
  * Must be mounted under a splat route (`path: '/*'`) so that descendant
  * `<Routes>` can match sub-paths in the data-router context.
  */
 export default function TenantRouter(): JSX.Element {
-  const { sector, pageType } = useTenantConfig()
+  const { sector, siteType } = useTenantConfig()
 
   return (
     <Suspense fallback={<RouteFallback />}>
       <Routes>
         <Route path="legal/:slug" element={<LegalPageRoute />} />
-        <Route path="*" element={resolveContent(sector, pageType)} />
+        <Route path="*" element={resolveContent(sector, siteType)} />
       </Routes>
     </Suspense>
   )

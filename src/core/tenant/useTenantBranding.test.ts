@@ -7,7 +7,7 @@ const BASE_CONFIG: TenantConfig = {
   tenantId: 'test',
   businessName: 'Test Business',
   themeName: 'clasico',
-  pageType: 'landing',
+  siteType: 'LANDING',
   sector: 'generico',
   locale: 'es',
 }

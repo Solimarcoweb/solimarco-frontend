@@ -33,8 +33,8 @@ export interface TenantConfig {
   businessName: string
   /** CSS theme name; maps to a `theme-*.css` bundle. */
   themeName: string
-  /** Whether the site is a single landing page or a multi-page site. */
-  pageType: 'landing' | 'multi'
+  /** Whether the site is a single landing page or a full multi-page site. */
+  siteType: 'LANDING' | 'FULL'
   /** Business sector slug (e.g. `"construccion"`, `"restaurante"`). */
   sector: string
   /** Default UI locale for this tenant. */

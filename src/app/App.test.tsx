@@ -9,7 +9,7 @@ vi.mock('../core/tenant/useTenant', () => ({
       tenantId: 'demo',
       businessName: 'Demo',
       themeName: 'clasico',
-      pageType: 'landing',
+      siteType: 'LANDING',
       sector: 'generico',
       locale: 'es',
     },
@@ -24,7 +24,7 @@ describe('App', () => {
     // appears after the dynamic import resolves. Give waitFor an explicit
     // timeout rather than relying on the 1s default, which can be exceeded
     // when the full suite runs under load.
-    // TenantRouter resolves to GenericoLandingPage (sector: generico, pageType: landing).
+    // TenantRouter resolves to GenericoLandingPage (sector: generico, siteType: LANDING).
     // The hero heading is the tenant's business name rendered as h1.
     await waitFor(
       () => {
