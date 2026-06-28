@@ -4,45 +4,53 @@ import { Hero } from '../../../shared/components/Hero'
 import { ServicesList } from '../../../shared/components/ServicesList'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
-import {
-  BASE_PATH,
-  FEATURED_SERVICES,
-  MECANICO_TENANT_ID,
-  SEO_DESCRIPTION,
-  SITE_URL,
-} from './mecanicoData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useServices } from '../../../core/tenant/useServices'
+import { toServices } from '../../../core/tenant/tenantContentMappers'
+import { MECANICO_BASE_PATH } from '../mecanico-landing/mecanicoShared'
 
 /**
  * Home page of the multi-page mechanic site: hero, featured services teaser
  * and a call to action towards the appointment page.
  */
 export default function MecanicoHomePage() {
-  usePageTracking(MECANICO_TENANT_ID)
+  const config = useTenantConfig()
+  const servicesState = useServices()
+  usePageTracking(config.tenantId)
+
+  const featured =
+    servicesState.status === 'success' ? toServices(servicesState.data).slice(0, 3) : []
+
+  const canBook = config.modules?.hasCitas !== false
 
   return (
     <>
       <SharedSeo
-        title="Taller Mecánico El Teide | Mecánica en La Laguna, Tenerife"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={`${SITE_URL}/`}
+        title={`${config.businessName} | Taller mecánico`}
+        description={config.businessDescription ?? config.businessName}
+        canonicalUrl={`${window.location.origin}${MECANICO_BASE_PATH}`}
       />
 
       <Hero
-        title="Taller Mecánico El Teide"
-        subtitle="Mantenimiento, frenos, ITV y electricidad en San Cristóbal de La Laguna"
+        title={config.businessName}
+        subtitle={config.businessDescription ?? ''}
         ctaLabel="Pedir cita"
-        ctaHref={`${BASE_PATH}/cita`}
-        backgroundImage="https://picsum.photos/seed/taller-el-teide-home/1600/900"
+        ctaHref={canBook ? `${MECANICO_BASE_PATH}/cita` : `${MECANICO_BASE_PATH}/contacto`}
+        logoUrl={config.logoUrl}
       />
 
-      <section id="servicios-destacados" className={styles.highlights} aria-label="Servicios destacados">
-        <ServicesList services={FEATURED_SERVICES} heading="Lo que hacemos" />
-        <div className={styles.ctaWrap}>
-          <Link to={`${BASE_PATH}/cita`} className={styles.cta}>
-            Pedir cita previa
-          </Link>
-        </div>
-      </section>
+      {featured.length > 0 && (
+        <section id="servicios-destacados" className={styles.highlights} aria-label="Servicios destacados">
+          <ServicesList services={featured} heading="Lo que hacemos" />
+          {canBook && (
+            <div className={styles.ctaWrap}>
+              <Link to={`${MECANICO_BASE_PATH}/cita`} className={styles.cta}>
+                Pedir cita previa
+              </Link>
+            </div>
+          )}
+        </section>
+      )}
     </>
   )
 }

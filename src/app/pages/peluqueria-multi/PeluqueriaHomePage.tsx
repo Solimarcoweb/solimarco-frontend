@@ -4,42 +4,50 @@ import { Hero } from '../../../shared/components/Hero'
 import { ServicesList } from '../../../shared/components/ServicesList'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
-import {
-  BASE_PATH,
-  FEATURED_SERVICES,
-  PELUQUERIA_TENANT_ID,
-  SEO_DESCRIPTION,
-  SITE_URL,
-} from './peluqueriaData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useServices } from '../../../core/tenant/useServices'
+import { toServices } from '../../../core/tenant/tenantContentMappers'
+import { PELUQUERIA_BASE_PATH } from '../peluqueria-landing/peluqueriaShared'
 
 /** Home page of the multi-page peluqueria site: hero, featured services and a CTA. */
 export default function PeluqueriaHomePage() {
-  usePageTracking(PELUQUERIA_TENANT_ID)
+  const config = useTenantConfig()
+  const servicesState = useServices()
+  usePageTracking(config.tenantId)
+
+  const featured =
+    servicesState.status === 'success' ? toServices(servicesState.data).slice(0, 3) : []
+
+  const canBook = config.modules?.hasCitas !== false
 
   return (
     <>
       <SharedSeo
-        title="Peluquería Brisa Atlántica | Los Cristianos, Tenerife"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={`${SITE_URL}/`}
+        title={`${config.businessName} | Peluquería`}
+        description={config.businessDescription ?? config.businessName}
+        canonicalUrl={`${window.location.origin}${PELUQUERIA_BASE_PATH}`}
       />
 
       <Hero
-        title="Peluquería Brisa Atlántica"
-        subtitle="Tu peluquería de confianza en Los Cristianos, Tenerife. Corte, color y tratamientos con alma."
+        title={config.businessName}
+        subtitle={config.businessDescription ?? ''}
         ctaLabel="Ver servicios"
-        ctaHref={`${BASE_PATH}/servicios`}
-        backgroundImage="https://picsum.photos/seed/brisa-atlantica-home/1600/900"
+        ctaHref={`${PELUQUERIA_BASE_PATH}/servicios`}
+        logoUrl={config.logoUrl}
       />
 
-      <section className={styles.highlights} aria-label="Servicios destacados">
-        <ServicesList services={FEATURED_SERVICES} heading="Lo que hacemos" />
-        <div className={styles.ctaWrap}>
-          <Link to={`${BASE_PATH}/cita`} className={styles.cta}>
-            Pedir cita
-          </Link>
-        </div>
-      </section>
+      {featured.length > 0 && (
+        <section className={styles.highlights} aria-label="Servicios destacados">
+          <ServicesList services={featured} heading="Lo que hacemos" />
+          {canBook && (
+            <div className={styles.ctaWrap}>
+              <Link to={`${PELUQUERIA_BASE_PATH}/cita`} className={styles.cta}>
+                Pedir cita
+              </Link>
+            </div>
+          )}
+        </section>
+      )}
     </>
   )
 }

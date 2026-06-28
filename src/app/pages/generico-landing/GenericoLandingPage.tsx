@@ -9,85 +9,106 @@ import { BudgetForm } from '../../../modules/reservations/components/BudgetForm'
 import { SharedSeo, SharedJsonLd } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
 import { applyTheme } from '../../../themes'
-import {
-  BUSINESS,
-  GENERICO_TENANT_ID,
-  HOURS,
-  LEGAL_LINKS,
-  LOCAL_BUSINESS_SCHEMA,
-  SEO_DESCRIPTION,
-  SERVICES,
-  SITE_URL,
-} from '../generico-multi/genericoData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useServices } from '../../../core/tenant/useServices'
+import { useBusinessHours } from '../../../core/tenant/useBusinessHours'
+import { toBusinessHours, toServices } from '../../../core/tenant/tenantContentMappers'
+import { GENERICO_THEME, LEGAL_LINKS, buildLocalBusinessSchema } from './genericoShared'
 
 /**
- * Landing page for the generic / configurable business sector
- * (Servicios Profesionales Tenerife).
- * Composes Hero → ServicesList → BudgetForm → BusinessInfo → Footer
- * under the `clasico` theme. Includes LocalBusiness structured data and page tracking.
+ * Single-page (landing) generic / configurable business template, driven by
+ * tenant data: branding/contact/modules from `useTenantConfig`, services from
+ * `useServices` and hours from `useBusinessHours`.
+ * Sections: Hero → Servicios → Presupuesto → Horario+Contacto → Footer. Renders
+ * a loading/error state until the content endpoints resolve.
  */
 export default function GenericoLandingPage() {
-  useEffect(() => {
-    applyTheme('clasico')
-  }, [])
+  const config = useTenantConfig()
+  const servicesState = useServices()
+  const hoursState = useBusinessHours()
 
-  usePageTracking(GENERICO_TENANT_ID)
+  useEffect(() => {
+    applyTheme(config.themeName || GENERICO_THEME)
+  }, [config.themeName])
+
+  usePageTracking(config.tenantId)
+
+  if (servicesState.status !== 'success' || hoursState.status !== 'success') {
+    const failed = servicesState.status === 'error' || hoursState.status === 'error'
+    return (
+      <main className={styles.status}>
+        {failed ? (
+          <p role="alert">No se ha podido cargar el contenido. Inténtalo de nuevo en unos minutos.</p>
+        ) : (
+          <p role="status">Cargando…</p>
+        )}
+      </main>
+    )
+  }
+
+  const services = toServices(servicesState.data)
+  const hours = toBusinessHours(hoursState.data)
+  const canRequestBudget = config.modules?.hasBudgetForm !== false
+  const canonicalUrl = `${window.location.origin}/`
 
   return (
     <>
       <SharedSeo
-        title="Servicios Profesionales Tenerife | Santa Cruz de Tenerife"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={SITE_URL}
+        title={`${config.businessName} | Servicios profesionales`}
+        description={config.businessDescription ?? config.businessName}
+        canonicalUrl={canonicalUrl}
       />
-      <SharedJsonLd schema={LOCAL_BUSINESS_SCHEMA} />
+      <SharedJsonLd schema={buildLocalBusinessSchema(config, canonicalUrl)} />
 
       <header className={styles.header}>
-        <span className={styles.brand}>{BUSINESS.name}</span>
+        <span className={styles.brand}>{config.businessName}</span>
       </header>
 
       <main>
         <Hero
-          title="Servicios Profesionales Tenerife"
-          subtitle="Consultoría, gestión, formación y tramitaciones para empresas y particulares en Tenerife"
+          title={config.businessName}
+          subtitle={config.businessDescription ?? ''}
           ctaLabel="Ver servicios"
           ctaHref="#servicios"
-          backgroundImage="https://picsum.photos/seed/generico-hero/1600/900"
+          logoUrl={config.logoUrl}
         />
 
-        <section id="servicios" className={styles.sectionAlt} aria-label="Servicios profesionales">
-          <ServicesList services={SERVICES} heading="Nuestros servicios" />
-        </section>
-
-        <Reveal>
-          <section className={styles.formSection} aria-labelledby="presupuesto-heading">
-            <div className={styles.formInner}>
-              <h2 id="presupuesto-heading" className={styles.formHeading}>
-                Solicitar presupuesto
-              </h2>
-              <p className={styles.formIntro}>
-                Sin compromiso. Te respondemos en menos de 24 horas laborables.
-              </p>
-              <BudgetForm tenantId={GENERICO_TENANT_ID} />
-            </div>
+        {services.length > 0 && (
+          <section id="servicios" className={styles.sectionAlt} aria-label="Servicios profesionales">
+            <ServicesList services={services} heading="Nuestros servicios" />
           </section>
-        </Reveal>
+        )}
+
+        {canRequestBudget && (
+          <Reveal>
+            <section id="presupuesto" className={styles.formSection} aria-labelledby="presupuesto-heading">
+              <div className={styles.formInner}>
+                <h2 id="presupuesto-heading" className={styles.formHeading}>
+                  Solicitar presupuesto
+                </h2>
+                <p className={styles.formIntro}>
+                  Sin compromiso. Te respondemos en menos de 24 horas laborables.
+                </p>
+                <BudgetForm tenantId={config.tenantId} />
+              </div>
+            </section>
+          </Reveal>
+        )}
 
         <BusinessInfo
           className={styles.sectionAlt}
-          address={BUSINESS.address}
-          phone={BUSINESS.phone}
-          email={BUSINESS.email}
-          hours={HOURS}
-          mapImageUrl="https://picsum.photos/seed/mapa-generico/1200/450"
+          address={config.address ?? ''}
+          phone={config.phone ?? ''}
+          email={config.email ?? ''}
+          hours={hours}
         />
       </main>
 
       <Footer
-        businessName={BUSINESS.name}
-        address={BUSINESS.address}
-        phone={BUSINESS.phone}
-        email={BUSINESS.email}
+        businessName={config.businessName}
+        address={config.address ?? ''}
+        phone={config.phone ?? ''}
+        email={config.email ?? ''}
         legalLinks={LEGAL_LINKS}
       />
     </>

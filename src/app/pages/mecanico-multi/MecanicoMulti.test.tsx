@@ -3,21 +3,85 @@ import { HelmetProvider } from 'react-helmet-async'
 import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
-import { testI18n } from '../../../test-utils'
+import { createI18nInstance } from '../../../i18n'
+import type { TenantConfig } from '../../../core/tenant/tenantConfig'
 import MecanicoLayout from './MecanicoLayout'
 import MecanicoHomePage from './MecanicoHomePage'
 import MecanicoServiciosPage from './MecanicoServiciosPage'
 import MecanicoCitaPage from './MecanicoCitaPage'
 import MecanicoContactoPage from './MecanicoContactoPage'
 
-vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({
-  usePageTracking: () => {},
+const config: TenantConfig = {
+  tenantId: 'demo-el-teide',
+  businessName: 'Taller Mecánico El Teide',
+  themeName: 'urbano',
+  siteType: 'FULL',
+  sector: 'mecanico',
+  locale: 'es',
+  businessDescription: 'Mecánica, frenos, ITV y electricidad.',
+  phone: '+34 922 25 41 60',
+  email: 'taller@mecanicoelteide.es',
+  address: 'Calle Heliodoro Rodríguez López 8, La Laguna',
+  modules: { hasShop: false, hasReservations: false, hasCitas: true, hasBudgetForm: false },
+}
+
+vi.mock('../../../core/tenant/TenantContext', () => ({
+  useTenantConfig: () => config,
+  useOptionalTenantConfig: () => config,
+}))
+vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({ usePageTracking: () => {} }))
+
+const servicesData = [
+  {
+    id: 'mantenimiento',
+    name: 'Mantenimiento y revisión',
+    description: 'Revisión completa.',
+    imageUrl: 'https://example.com/m.jpg',
+    displayOrder: 1,
+  },
+  {
+    id: 'aire',
+    name: 'Aire acondicionado',
+    description: 'Recarga de gas.',
+    imageUrl: 'https://example.com/a.jpg',
+    displayOrder: 2,
+  },
+]
+
+const hoursData = {
+  weekly: [
+    {
+      dayOfWeek: 'MONDAY',
+      closed: false,
+      morningOpen: '08:00',
+      morningClose: null,
+      afternoonOpen: null,
+      afternoonClose: '18:00',
+    },
+    {
+      dayOfWeek: 'SUNDAY',
+      closed: true,
+      morningOpen: null,
+      morningClose: null,
+      afternoonOpen: null,
+      afternoonClose: null,
+    },
+  ],
+  upcomingExceptions: [],
+}
+
+vi.mock('../../../core/tenant/useServices', () => ({
+  useServices: () => ({ status: 'success', data: servicesData }),
+}))
+vi.mock('../../../core/tenant/useBusinessHours', () => ({
+  useBusinessHours: () => ({ status: 'success', data: hoursData }),
 }))
 
 function renderAt(path: string) {
+  const i18n = createI18nInstance('es')
   return render(
     <HelmetProvider>
-      <I18nextProvider i18n={testI18n}>
+      <I18nextProvider i18n={i18n}>
         <MemoryRouter initialEntries={[path]}>
           <Routes>
             <Route path="/mecanico-multi" element={<MecanicoLayout />}>

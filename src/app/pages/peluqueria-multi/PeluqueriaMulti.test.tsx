@@ -3,21 +3,85 @@ import { HelmetProvider } from 'react-helmet-async'
 import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
-import { testI18n } from '../../../test-utils'
+import { createI18nInstance } from '../../../i18n'
+import type { TenantConfig } from '../../../core/tenant/tenantConfig'
 import PeluqueriaLayout from './PeluqueriaLayout'
 import PeluqueriaHomePage from './PeluqueriaHomePage'
 import PeluqueriaServiciosPage from './PeluqueriaServiciosPage'
 import PeluqueriaCitaPage from './PeluqueriaCitaPage'
 import PeluqueriaContactoPage from './PeluqueriaContactoPage'
 
-vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({
-  usePageTracking: () => {},
+const config: TenantConfig = {
+  tenantId: 'demo-brisa-atlantica',
+  businessName: 'Peluquería Brisa Atlántica',
+  themeName: 'mediterraneo',
+  siteType: 'FULL',
+  sector: 'peluqueria',
+  locale: 'es',
+  businessDescription: 'Corte, color, mechas y tratamientos capilares.',
+  phone: '+34 922 79 05 44',
+  email: 'hola@brisaatlantica.es',
+  address: 'Avenida Juan Carlos I 23, Los Cristianos',
+  modules: { hasShop: false, hasReservations: false, hasCitas: true, hasBudgetForm: false },
+}
+
+vi.mock('../../../core/tenant/TenantContext', () => ({
+  useTenantConfig: () => config,
+  useOptionalTenantConfig: () => config,
+}))
+vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({ usePageTracking: () => {} }))
+
+const servicesData = [
+  {
+    id: 'corte-mujer',
+    name: 'Corte y peinado mujer',
+    description: 'Consulta de imagen.',
+    imageUrl: 'https://example.com/c.jpg',
+    displayOrder: 1,
+  },
+  {
+    id: 'keratina',
+    name: 'Tratamiento de keratina',
+    description: 'Alisado progresivo.',
+    imageUrl: 'https://example.com/k.jpg',
+    displayOrder: 2,
+  },
+]
+
+const hoursData = {
+  weekly: [
+    {
+      dayOfWeek: 'MONDAY',
+      closed: false,
+      morningOpen: '09:30',
+      morningClose: null,
+      afternoonOpen: null,
+      afternoonClose: '19:30',
+    },
+    {
+      dayOfWeek: 'SUNDAY',
+      closed: true,
+      morningOpen: null,
+      morningClose: null,
+      afternoonOpen: null,
+      afternoonClose: null,
+    },
+  ],
+  upcomingExceptions: [],
+}
+
+vi.mock('../../../core/tenant/useServices', () => ({
+  useServices: () => ({ status: 'success', data: servicesData }),
+}))
+vi.mock('../../../core/tenant/useBusinessHours', () => ({
+  useBusinessHours: () => ({ status: 'success', data: hoursData }),
 }))
 
 function renderAt(path: string) {
+  const i18n = createI18nInstance('es')
   return render(
     <HelmetProvider>
-      <I18nextProvider i18n={testI18n}>
+      <I18nextProvider i18n={i18n}>
         <MemoryRouter initialEntries={[path]}>
           <Routes>
             <Route path="/peluqueria-multi" element={<PeluqueriaLayout />}>
@@ -49,10 +113,7 @@ describe('Peluqueria multi-page', () => {
     renderAt('/peluqueria-multi/servicios')
 
     const nav = screen.getByRole('navigation', { name: 'Principal' })
-    expect(within(nav).getByRole('link', { name: 'Servicios' })).toHaveAttribute(
-      'aria-current',
-      'page',
-    )
+    expect(within(nav).getByRole('link', { name: 'Servicios' })).toHaveAttribute('aria-current', 'page')
     expect(within(nav).getByRole('link', { name: 'Inicio' })).not.toHaveAttribute('aria-current')
   })
 
@@ -72,8 +133,8 @@ describe('Peluqueria multi-page', () => {
     renderAt('/peluqueria-multi/servicios')
 
     expect(screen.getByRole('heading', { level: 1, name: 'Servicios' })).toBeInTheDocument()
-    expect(screen.getAllByText('Corte y peinado mujer').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Tratamiento de keratina').length).toBeGreaterThan(0)
+    expect(screen.getByText('Corte y peinado mujer')).toBeInTheDocument()
+    expect(screen.getByText('Tratamiento de keratina')).toBeInTheDocument()
   })
 
   it('renders the cita page with the appointment form', () => {
@@ -87,7 +148,7 @@ describe('Peluqueria multi-page', () => {
     renderAt('/peluqueria-multi/contacto')
 
     expect(screen.getByRole('heading', { level: 1, name: 'Dónde estamos' })).toBeInTheDocument()
-    expect(screen.getByText('Martes')).toBeInTheDocument()
-    expect(screen.getAllByText('Cerrado').length).toBeGreaterThan(0)
+    expect(screen.getByText('Lunes')).toBeInTheDocument()
+    expect(screen.getByText('Cerrado')).toBeInTheDocument()
   })
 })

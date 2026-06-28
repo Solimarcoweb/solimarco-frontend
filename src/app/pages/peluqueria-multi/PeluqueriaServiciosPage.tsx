@@ -2,18 +2,23 @@ import styles from './peluqueriaPages.module.css'
 import { ServicesList } from '../../../shared/components/ServicesList'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
-import { PELUQUERIA_TENANT_ID, SEO_DESCRIPTION, SERVICES, SITE_URL } from './peluqueriaData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useServices } from '../../../core/tenant/useServices'
+import { toServices } from '../../../core/tenant/tenantContentMappers'
+import { PELUQUERIA_BASE_PATH } from '../peluqueria-landing/peluqueriaShared'
 
-/** Full services page of the multi-page peluqueria site. */
+/** Full services catalogue page of the multi-page peluqueria site. */
 export default function PeluqueriaServiciosPage() {
-  usePageTracking(PELUQUERIA_TENANT_ID)
+  const config = useTenantConfig()
+  const servicesState = useServices()
+  usePageTracking(config.tenantId)
 
   return (
     <>
       <SharedSeo
-        title="Servicios | Peluquería Brisa Atlántica"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={`${SITE_URL}/servicios`}
+        title={`Servicios | ${config.businessName}`}
+        description={`Servicios de peluquería de ${config.businessName}.`}
+        canonicalUrl={`${window.location.origin}${PELUQUERIA_BASE_PATH}/servicios`}
       />
 
       <div className={styles.page}>
@@ -24,7 +29,22 @@ export default function PeluqueriaServiciosPage() {
         </p>
       </div>
 
-      <ServicesList services={SERVICES} heading="Todos nuestros servicios" />
+      {servicesState.status === 'loading' && (
+        <p className={styles.status} role="status">
+          Cargando…
+        </p>
+      )}
+      {servicesState.status === 'error' && (
+        <p className={styles.status} role="alert">
+          No se han podido cargar los servicios.
+        </p>
+      )}
+      {servicesState.status === 'success' && (
+        <ServicesList
+          services={toServices(servicesState.data)}
+          heading="Todos nuestros servicios"
+        />
+      )}
     </>
   )
 }

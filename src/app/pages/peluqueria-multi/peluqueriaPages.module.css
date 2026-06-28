@@ -87,3 +87,14 @@
   color: var(--color-text);
   letter-spacing: -0.01em;
 }
+
+/* Centered loading/error placeholder while content endpoints resolve. */
+.status {
+  box-sizing: border-box;
+  min-height: 40vh;
+  display: grid;
+  place-items: center;
+  padding: var(--spacing-section) 1.25rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}

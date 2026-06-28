@@ -9,77 +9,101 @@ import { Footer } from '../../../shared/components/Footer'
 import { SharedSeo, SharedJsonLd } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
 import { applyTheme } from '../../../themes'
-import {
-  AUTO_REPAIR_SCHEMA,
-  BUSINESS,
-  HOURS,
-  LEGAL_LINKS,
-  MECANICO_TENANT_ID,
-  SEO_DESCRIPTION,
-  SERVICES,
-  SITE_URL,
-} from '../mecanico-multi/mecanicoData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useServices } from '../../../core/tenant/useServices'
+import { useBusinessHours } from '../../../core/tenant/useBusinessHours'
+import { toBusinessHours, toServices } from '../../../core/tenant/tenantContentMappers'
+import { MECANICO_THEME, LEGAL_LINKS, buildAutoRepairSchema } from './mecanicoShared'
 
 /**
- * Landing page for the mechanic/workshop sector (Taller Mecánico El Teide).
- * Composes Hero → ServicesList → AppointmentForm → BusinessInfo → Footer
- * under the `urbano` theme. Includes AutoRepair structured data and page tracking.
+ * Single-page (landing) mechanic/workshop template, driven by tenant data:
+ * branding/contact from `useTenantConfig`, services from `useServices` (also
+ * feeding the appointment form) and hours from `useBusinessHours`.
+ * Sections: Hero → Servicios → Cita → Horario+Contacto → Footer. Renders a
+ * loading/error state until the content endpoints resolve.
  */
 export default function MecanicoLandingPage() {
-  useEffect(() => {
-    applyTheme('urbano')
-  }, [])
+  const config = useTenantConfig()
+  const servicesState = useServices()
+  const hoursState = useBusinessHours()
 
-  usePageTracking('demo-mecanico')
+  useEffect(() => {
+    applyTheme(config.themeName || MECANICO_THEME)
+  }, [config.themeName])
+
+  usePageTracking(config.tenantId)
+
+  if (servicesState.status !== 'success' || hoursState.status !== 'success') {
+    const failed = servicesState.status === 'error' || hoursState.status === 'error'
+    return (
+      <main className={styles.status}>
+        {failed ? (
+          <p role="alert">No se ha podido cargar el contenido. Inténtalo de nuevo en unos minutos.</p>
+        ) : (
+          <p role="status">Cargando…</p>
+        )}
+      </main>
+    )
+  }
+
+  const services = toServices(servicesState.data)
+  const hours = toBusinessHours(hoursState.data)
+  const canBook = config.modules?.hasCitas !== false
+  const canonicalUrl = `${window.location.origin}/`
 
   return (
     <>
       <SharedSeo
-        title="Taller Mecánico El Teide | Taller en La Laguna, Tenerife"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={SITE_URL}
+        title={`${config.businessName} | Taller mecánico`}
+        description={config.businessDescription ?? config.businessName}
+        canonicalUrl={canonicalUrl}
       />
-      <SharedJsonLd schema={AUTO_REPAIR_SCHEMA} />
+      <SharedJsonLd schema={buildAutoRepairSchema(config, canonicalUrl)} />
 
       <header className={styles.header}>
-        <span className={styles.brand}>{BUSINESS.name}</span>
+        <span className={styles.brand}>{config.businessName}</span>
       </header>
 
       <main>
         <Hero
-          title="Taller Mecánico El Teide"
-          subtitle="Mecánica, frenos, ITV y mucho más en San Cristóbal de La Laguna"
+          title={config.businessName}
+          subtitle={config.businessDescription ?? ''}
           ctaLabel="Pedir cita"
           ctaHref="#cita"
-          backgroundImage="https://picsum.photos/seed/taller-el-teide/1600/900"
+          logoUrl={config.logoUrl}
         />
 
-        <ServicesList className={styles.sectionAlt} services={SERVICES} />
-
-        <Reveal>
-          <section id="cita" className={styles.formSection} aria-labelledby="cita-heading">
-            <h2 id="cita-heading" className={styles.formHeading}>
-              Pide tu cita
-            </h2>
-            <AppointmentForm tenantId={MECANICO_TENANT_ID} services={SERVICES} />
+        {services.length > 0 && (
+          <section id="servicios" className={styles.sectionAlt} aria-label="Nuestros servicios">
+            <ServicesList services={services} />
           </section>
-        </Reveal>
+        )}
+
+        {canBook && services.length > 0 && (
+          <Reveal>
+            <section id="cita" className={styles.formSection} aria-labelledby="cita-heading">
+              <h2 id="cita-heading" className={styles.formHeading}>
+                Pide tu cita
+              </h2>
+              <AppointmentForm tenantId={config.tenantId} services={services} />
+            </section>
+          </Reveal>
+        )}
 
         <BusinessInfo
           className={styles.sectionAlt}
-          address={BUSINESS.address}
-          phone={BUSINESS.phone}
-          email={BUSINESS.email}
-          hours={HOURS}
-          mapImageUrl="https://picsum.photos/seed/mapa-el-teide/1200/450"
+          address={config.address ?? ''}
+          phone={config.phone ?? ''}
+          email={config.email ?? ''}
+          hours={hours}
         />
       </main>
 
       <Footer
-        businessName={BUSINESS.name}
-        address={BUSINESS.address}
-        phone={BUSINESS.phone}
-        email={BUSINESS.email}
+        businessName={config.businessName}
+        address={config.address ?? ''}
+        phone={config.phone ?? ''}
+        email={config.email ?? ''}
         legalLinks={LEGAL_LINKS}
       />
     </>

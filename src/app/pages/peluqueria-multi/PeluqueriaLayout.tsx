@@ -4,16 +4,15 @@ import styles from './PeluqueriaLayout.module.css'
 import { Footer } from '../../../shared/components/Footer'
 import { SharedJsonLd } from '../../../shared/seo'
 import { applyTheme } from '../../../themes'
-import { BASE_PATH, BUSINESS, HAIR_SALON_SCHEMA, LEGAL_LINKS } from './peluqueriaData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import {
+  PELUQUERIA_BASE_PATH,
+  PELUQUERIA_THEME,
+  LEGAL_LINKS,
+  buildHairSalonSchema,
+} from '../peluqueria-landing/peluqueriaShared'
 
-const NAV_ITEMS = [
-  { to: BASE_PATH, label: 'Inicio' },
-  { to: `${BASE_PATH}/servicios`, label: 'Servicios' },
-  { to: `${BASE_PATH}/cita`, label: 'Cita' },
-  { to: `${BASE_PATH}/contacto`, label: 'Contacto' },
-]
-
-/** Nav link that marks itself with aria-current when it matches the route exactly. */
+/** Nav link that marks itself with aria-current when it matches the route. */
 function NavItem({ to, label }: { to: string; label: string }) {
   const isActive = useMatch(to) !== null
   const className = isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink
@@ -28,28 +27,38 @@ function NavItem({ to, label }: { to: string; label: string }) {
 }
 
 /**
- * Shared layout for the multi-page peluqueria site (Peluquería Brisa Atlántica).
- * Renders the header (brand + primary nav), the routed page via `<Outlet>` and
- * the footer. Applies the `mediterraneo` theme and injects HairSalon structured
- * data shared across every page.
+ * Shared layout for the multi-page peluqueria site. Renders the header (brand +
+ * primary nav), the routed page via `<Outlet>` and the footer — all driven by
+ * tenant config. The Cita nav entry only appears when the tenant has the
+ * appointments module enabled.
  */
 export default function PeluqueriaLayout() {
+  const config = useTenantConfig()
+
   useEffect(() => {
-    applyTheme('mediterraneo')
-  }, [])
+    applyTheme(config.themeName || PELUQUERIA_THEME)
+  }, [config.themeName])
+
+  const base = PELUQUERIA_BASE_PATH
+  const navItems = [
+    { to: base, label: 'Inicio' },
+    { to: `${base}/servicios`, label: 'Servicios' },
+    ...(config.modules?.hasCitas ? [{ to: `${base}/cita`, label: 'Cita' }] : []),
+    { to: `${base}/contacto`, label: 'Contacto' },
+  ]
 
   return (
     <>
-      <SharedJsonLd schema={HAIR_SALON_SCHEMA} />
+      <SharedJsonLd schema={buildHairSalonSchema(config, `${window.location.origin}${base}`)} />
 
       <header className={styles.header}>
-        <Link to={BASE_PATH} className={styles.brand}>
-          {BUSINESS.name}
+        <Link to={base} className={styles.brand}>
+          {config.businessName}
         </Link>
 
         <nav className={styles.nav} aria-label="Principal">
           <ul className={styles.navList}>
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <NavItem key={item.to} to={item.to} label={item.label} />
             ))}
           </ul>
@@ -61,10 +70,10 @@ export default function PeluqueriaLayout() {
       </main>
 
       <Footer
-        businessName={BUSINESS.name}
-        address={BUSINESS.address}
-        phone={BUSINESS.phone}
-        email={BUSINESS.email}
+        businessName={config.businessName}
+        address={config.address ?? ''}
+        phone={config.phone ?? ''}
+        email={config.email ?? ''}
         legalLinks={LEGAL_LINKS}
       />
     </>

@@ -4,16 +4,15 @@ import styles from './GenericoLayout.module.css'
 import { Footer } from '../../../shared/components/Footer'
 import { SharedJsonLd } from '../../../shared/seo'
 import { applyTheme } from '../../../themes'
-import { BASE_PATH, BUSINESS, LEGAL_LINKS, LOCAL_BUSINESS_SCHEMA } from './genericoData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import {
+  GENERICO_BASE_PATH,
+  GENERICO_THEME,
+  LEGAL_LINKS,
+  buildLocalBusinessSchema,
+} from '../generico-landing/genericoShared'
 
-const NAV_ITEMS = [
-  { to: BASE_PATH, label: 'Inicio' },
-  { to: `${BASE_PATH}/servicios`, label: 'Servicios' },
-  { to: `${BASE_PATH}/contacto`, label: 'Contacto' },
-  { to: `${BASE_PATH}/presupuesto`, label: 'Presupuesto' },
-]
-
-/** Nav link that marks itself with aria-current when it matches the route exactly. */
+/** Nav link that marks itself with aria-current when it matches the route. */
 function NavItem({ to, label }: { to: string; label: string }) {
   const isActive = useMatch(to) !== null
   const className = isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink
@@ -28,28 +27,40 @@ function NavItem({ to, label }: { to: string; label: string }) {
 }
 
 /**
- * Shared layout for the multi-page generic business site (Servicios Profesionales Tenerife).
- * Renders the header (brand + primary nav), the routed page via `<Outlet>` and
- * the footer. Applies the `clasico` theme and injects LocalBusiness structured
- * data shared across every page.
+ * Shared layout for the multi-page generic business site. Renders the header
+ * (brand + primary nav), the routed page via `<Outlet>` and the footer — all
+ * driven by tenant config. The Presupuesto nav entry only appears when the
+ * tenant has the budget-form module enabled.
  */
 export default function GenericoLayout() {
+  const config = useTenantConfig()
+
   useEffect(() => {
-    applyTheme('clasico')
-  }, [])
+    applyTheme(config.themeName || GENERICO_THEME)
+  }, [config.themeName])
+
+  const base = GENERICO_BASE_PATH
+  const navItems = [
+    { to: base, label: 'Inicio' },
+    { to: `${base}/servicios`, label: 'Servicios' },
+    ...(config.modules?.hasBudgetForm !== false
+      ? [{ to: `${base}/presupuesto`, label: 'Presupuesto' }]
+      : []),
+    { to: `${base}/contacto`, label: 'Contacto' },
+  ]
 
   return (
     <>
-      <SharedJsonLd schema={LOCAL_BUSINESS_SCHEMA} />
+      <SharedJsonLd schema={buildLocalBusinessSchema(config, `${window.location.origin}${base}`)} />
 
       <header className={styles.header}>
-        <Link to={BASE_PATH} className={styles.brand}>
-          {BUSINESS.name}
+        <Link to={base} className={styles.brand}>
+          {config.businessName}
         </Link>
 
         <nav className={styles.nav} aria-label="Principal">
           <ul className={styles.navList}>
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <NavItem key={item.to} to={item.to} label={item.label} />
             ))}
           </ul>
@@ -61,10 +72,10 @@ export default function GenericoLayout() {
       </main>
 
       <Footer
-        businessName={BUSINESS.name}
-        address={BUSINESS.address}
-        phone={BUSINESS.phone}
-        email={BUSINESS.email}
+        businessName={config.businessName}
+        address={config.address ?? ''}
+        phone={config.phone ?? ''}
+        email={config.email ?? ''}
         legalLinks={LEGAL_LINKS}
       />
     </>
