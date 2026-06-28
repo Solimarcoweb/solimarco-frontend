@@ -3,7 +3,27 @@ import { createBrowserRouter } from 'react-router'
 import { RouteFallback } from './RouteFallback'
 import TenantRouter from '../core/tenant/TenantRouter'
 // eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
-const ConstruccionPage = lazy(() => import('./pages/construccion/ConstruccionPage'))
+const ConstruccionLandingPage = lazy(() => import('./pages/construccion/ConstruccionLandingPage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const ConstruccionLayout = lazy(() => import('./pages/construccion-multi/ConstruccionLayout'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const ConstruccionHomePage = lazy(() => import('./pages/construccion-multi/ConstruccionHomePage'))
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const ConstruccionServiciosPage = lazy(
+  () => import('./pages/construccion-multi/ConstruccionServiciosPage'),
+)
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const ConstruccionProyectosPage = lazy(
+  () => import('./pages/construccion-multi/ConstruccionProyectosPage'),
+)
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const ConstruccionShowroomPage = lazy(
+  () => import('./pages/construccion-multi/ConstruccionShowroomPage'),
+)
+// eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
+const ConstruccionContactoPage = lazy(
+  () => import('./pages/construccion-multi/ConstruccionContactoPage'),
+)
 // eslint-disable-next-line react-refresh/only-export-components -- this module exports the router config, not a component
 const RestauranteLandingPage = lazy(
   () => import('./pages/restaurante-landing/RestauranteLandingPage'),
@@ -104,7 +124,18 @@ export const router = createBrowserRouter([
   },
   {
     path: '/construccion',
-    element: withSuspense(ConstruccionPage),
+    element: withSuspense(ConstruccionLandingPage),
+  },
+  {
+    path: '/construccion-multi',
+    element: withSuspense(ConstruccionLayout),
+    children: [
+      { index: true, element: withSuspense(ConstruccionHomePage) },
+      { path: 'servicios', element: withSuspense(ConstruccionServiciosPage) },
+      { path: 'proyectos', element: withSuspense(ConstruccionProyectosPage) },
+      { path: 'showroom', element: withSuspense(ConstruccionShowroomPage) },
+      { path: 'contacto', element: withSuspense(ConstruccionContactoPage) },
+    ],
   },
   {
     path: '/restaurante',

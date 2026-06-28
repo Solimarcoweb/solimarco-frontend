@@ -17,7 +17,7 @@ vi.mock('./TenantContext', () => ({
 
 // ── Landing page stubs ───────────────────────────────────────────────────────
 
-vi.mock('../../app/pages/construccion/ConstruccionPage', () => ({
+vi.mock('../../app/pages/construccion/ConstruccionLandingPage', () => ({
   default: () => <div data-testid="page-construccion-landing" />,
 }))
 vi.mock('../../app/pages/restaurante-landing/RestauranteLandingPage', () => ({
@@ -41,6 +41,10 @@ vi.mock('../../app/pages/generico-landing/GenericoLandingPage', () => ({
 
 // ── Multi-page layout stubs (must render <Outlet> for index routes) ──────────
 
+vi.mock('../../app/pages/construccion-multi/ConstruccionLayout', async () => {
+  const { Outlet } = await import('react-router')
+  return { default: () => <div data-testid="layout-construccion"><Outlet /></div> }
+})
 vi.mock('../../app/pages/restaurante-multi/RestauranteLayout', async () => {
   const { Outlet } = await import('react-router')
   return { default: () => <div data-testid="layout-restaurante"><Outlet /></div> }
@@ -68,6 +72,9 @@ vi.mock('../../app/pages/generico-multi/GenericoLayout', async () => {
 
 // ── Index (home) page stubs for each multi-page sector ───────────────────────
 
+vi.mock('../../app/pages/construccion-multi/ConstruccionHomePage', () => ({
+  default: () => <div data-testid="page-construccion-home" />,
+}))
 vi.mock('../../app/pages/restaurante-multi/RestauranteHomePage', () => ({
   default: () => <div data-testid="page-restaurante-home" />,
 }))
@@ -169,6 +176,15 @@ describe('TenantRouter — landing pages', () => {
 })
 
 describe('TenantRouter — multi-page (layout + index route)', () => {
+  it('renders ConstruccionLayout + home for construccion + multi', async () => {
+    mockUseTenantConfig.mockReturnValue(config('construccion', 'multi'))
+    renderRouter()
+    await waitFor(() => {
+      expect(screen.getByTestId('layout-construccion')).toBeInTheDocument()
+      expect(screen.getByTestId('page-construccion-home')).toBeInTheDocument()
+    })
+  })
+
   it('renders RestauranteLayout + home for restaurante + multi', async () => {
     mockUseTenantConfig.mockReturnValue(config('restaurante', 'multi'))
     renderRouter()

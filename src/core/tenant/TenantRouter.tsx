@@ -6,7 +6,31 @@ import type { TenantConfig } from './tenantConfig'
 
 // ─── Construcción ────────────────────────────────────────────────────────────
 // eslint-disable-next-line react-refresh/only-export-components
-const ConstruccionPage = lazy(() => import('../../app/pages/construccion/ConstruccionPage'))
+const ConstruccionLandingPage = lazy(
+  () => import('../../app/pages/construccion/ConstruccionLandingPage'),
+)
+// eslint-disable-next-line react-refresh/only-export-components
+const ConstruccionLayout = lazy(() => import('../../app/pages/construccion-multi/ConstruccionLayout'))
+// eslint-disable-next-line react-refresh/only-export-components
+const ConstruccionHomePage = lazy(
+  () => import('../../app/pages/construccion-multi/ConstruccionHomePage'),
+)
+// eslint-disable-next-line react-refresh/only-export-components
+const ConstruccionServiciosPage = lazy(
+  () => import('../../app/pages/construccion-multi/ConstruccionServiciosPage'),
+)
+// eslint-disable-next-line react-refresh/only-export-components
+const ConstruccionProyectosPage = lazy(
+  () => import('../../app/pages/construccion-multi/ConstruccionProyectosPage'),
+)
+// eslint-disable-next-line react-refresh/only-export-components
+const ConstruccionShowroomPage = lazy(
+  () => import('../../app/pages/construccion-multi/ConstruccionShowroomPage'),
+)
+// eslint-disable-next-line react-refresh/only-export-components
+const ConstruccionContactoPage = lazy(
+  () => import('../../app/pages/construccion-multi/ConstruccionContactoPage'),
+)
 
 // ─── Restaurante ─────────────────────────────────────────────────────────────
 // eslint-disable-next-line react-refresh/only-export-components
@@ -144,6 +168,20 @@ const LegalPageRoute = lazy(
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Inline Routes element for each multi-page sector. */
+function ConstruccionMulti(): JSX.Element {
+  return (
+    <Routes>
+      <Route element={<ConstruccionLayout />}>
+        <Route index element={<ConstruccionHomePage />} />
+        <Route path="servicios" element={<ConstruccionServiciosPage />} />
+        <Route path="proyectos" element={<ConstruccionProyectosPage />} />
+        <Route path="showroom" element={<ConstruccionShowroomPage />} />
+        <Route path="contacto" element={<ConstruccionContactoPage />} />
+      </Route>
+    </Routes>
+  )
+}
+
 function RestauranteMulti(): JSX.Element {
   return (
     <Routes>
@@ -225,7 +263,7 @@ function GenericoMulti(): JSX.Element {
 function resolveContent(sector: string, pageType: TenantConfig['pageType']): JSX.Element {
   switch (sector) {
     case 'construccion':
-      return <ConstruccionPage />
+      return pageType === 'multi' ? <ConstruccionMulti /> : <ConstruccionLandingPage />
 
     case 'restaurante':
       return pageType === 'multi' ? <RestauranteMulti /> : <RestauranteLandingPage />

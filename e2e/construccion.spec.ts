@@ -17,10 +17,8 @@ test.describe('Construcción — budget request flow', () => {
 
     await page.goto(`${BASE}/`)
 
-    // Hero loads with the expected headline.
-    await expect(
-      page.getByRole('heading', { level: 1, name: 'Construcción y Reformas en Tenerife' }),
-    ).toBeVisible()
+    // Hero loads with the tenant's business name as the headline.
+    await expect(page.getByRole('heading', { level: 1, name: 'BM Construcción S.L.' })).toBeVisible()
 
     // Budget section heading exists further down the page.
     await expect(page.getByRole('heading', { name: 'Solicita tu presupuesto' })).toBeVisible()
