@@ -2,11 +2,13 @@ import type { Service } from '../../shared/components/ServicesList'
 import type { ProjectItem } from '../../shared/components/ProjectGallery'
 import type { BusinessHours } from '../../shared/components/BusinessInfo'
 import type { MenuCategory } from '../../shared/components/Menu'
+import type { Treatment } from '../../shared/components/TreatmentsList'
 import type {
   TenantHours,
   TenantMenuCategory,
   TenantProject,
   TenantService,
+  TreatmentCategory,
 } from './tenantResources'
 
 /**
@@ -87,4 +89,51 @@ export function toMenu(categories: TenantMenuCategory[]): MenuCategory[] {
           allergens,
         })),
     }))
+}
+
+/**
+ * Maps backend treatment categories to the flat `TreatmentsList` `Treatment[]`
+ * props (the component groups them again by `category`). Categories and items
+ * are sorted by `displayOrder`, unavailable items dropped, and the numeric
+ * `price`/`durationMinutes` formatted into the display strings the component
+ * expects (e.g. `"55 €"`, `"60 min"`).
+ *
+ * @param categories - Raw backend treatment categories.
+ * @returns Flat treatments ready for `TreatmentsList`.
+ */
+export function toTreatments(categories: TreatmentCategory[]): Treatment[] {
+  return [...categories]
+    .sort((a, b) => a.displayOrder - b.displayOrder)
+    .flatMap((category) =>
+      [...category.items]
+        .filter((item) => item.available)
+        .sort((a, b) => a.displayOrder - b.displayOrder)
+        .map((item) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          price: `${item.price} €`,
+          duration: `${item.durationMinutes} min`,
+          category: category.name,
+          imageUrl: item.imageUrl,
+        })),
+    )
+}
+
+/**
+ * Derives the `AppointmentForm` service options from treatments, mirroring the
+ * previous hardcoded mapping (`name — duration`).
+ *
+ * @param treatments - Treatments (already mapped via {@link toTreatments}).
+ * @returns Services ready for `AppointmentForm`.
+ */
+export function toAppointmentServices(treatments: Treatment[]): Service[] {
+  return treatments.map((treatment) => ({
+    id: treatment.id,
+    name: `${treatment.name} — ${treatment.duration}`,
+    description: treatment.description,
+    price: treatment.price,
+    duration: treatment.duration,
+    imageUrl: treatment.imageUrl,
+  }))
 }

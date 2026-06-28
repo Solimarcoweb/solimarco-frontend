@@ -73,3 +73,14 @@
 .formWrap {
   margin-top: 2rem;
 }
+
+/* Loading / error state while the tenant content endpoints resolve. */
+.status {
+  box-sizing: border-box;
+  min-height: 40vh;
+  display: grid;
+  place-items: center;
+  padding: var(--spacing-section) 1.25rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}

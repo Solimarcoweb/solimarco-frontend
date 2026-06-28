@@ -1,10 +1,18 @@
 import { describe, expect, it } from 'vitest'
-import { toBusinessHours, toMenu, toProjects, toServices } from './tenantContentMappers'
+import {
+  toAppointmentServices,
+  toBusinessHours,
+  toMenu,
+  toProjects,
+  toServices,
+  toTreatments,
+} from './tenantContentMappers'
 import type {
   TenantHours,
   TenantMenuCategory,
   TenantProject,
   TenantService,
+  TreatmentCategory,
 } from './tenantResources'
 
 describe('toServices', () => {
@@ -140,5 +148,92 @@ describe('toMenu', () => {
         allergens: ['gluten'],
       },
     ])
+  })
+})
+
+describe('toTreatments', () => {
+  const categories: TreatmentCategory[] = [
+    {
+      id: 'depilacion',
+      name: 'Depilación',
+      displayOrder: 2,
+      items: [
+        {
+          id: 'laser',
+          name: 'Depilación láser',
+          description: 'Diodo.',
+          price: 30,
+          durationMinutes: 30,
+          imageUrl: 'l.jpg',
+          available: true,
+          displayOrder: 1,
+        },
+      ],
+    },
+    {
+      id: 'faciales',
+      name: 'Tratamientos faciales',
+      displayOrder: 1,
+      items: [
+        {
+          id: 'agotado',
+          name: 'Agotado',
+          description: 'No disponible.',
+          price: 50,
+          durationMinutes: 60,
+          imageUrl: 'a.jpg',
+          available: false,
+          displayOrder: 1,
+        },
+        {
+          id: 'hidratacion',
+          name: 'Hidratación facial',
+          description: 'Intensiva.',
+          price: 55,
+          durationMinutes: 60,
+          imageUrl: 'f.jpg',
+          available: true,
+          displayOrder: 2,
+        },
+      ],
+    },
+  ]
+
+  it('flattens categories (by displayOrder), drops unavailable items and formats price/duration', () => {
+    const treatments = toTreatments(categories)
+
+    expect(treatments).toEqual([
+      {
+        id: 'hidratacion',
+        name: 'Hidratación facial',
+        description: 'Intensiva.',
+        price: '55 €',
+        duration: '60 min',
+        category: 'Tratamientos faciales',
+        imageUrl: 'f.jpg',
+      },
+      {
+        id: 'laser',
+        name: 'Depilación láser',
+        description: 'Diodo.',
+        price: '30 €',
+        duration: '30 min',
+        category: 'Depilación',
+        imageUrl: 'l.jpg',
+      },
+    ])
+  })
+
+  it('toAppointmentServices derives services with "name — duration" labels', () => {
+    const services = toAppointmentServices(toTreatments(categories))
+
+    expect(services[0]).toEqual({
+      id: 'hidratacion',
+      name: 'Hidratación facial — 60 min',
+      description: 'Intensiva.',
+      price: '55 €',
+      duration: '60 min',
+      imageUrl: 'f.jpg',
+    })
   })
 })

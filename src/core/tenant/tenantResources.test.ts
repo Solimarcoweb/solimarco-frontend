@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { getBusinessHours, getMenu, getProjects, getServices } from './tenantResources'
+import {
+  getBusinessHours,
+  getMenu,
+  getProjects,
+  getServices,
+  getTreatments,
+} from './tenantResources'
 
 // Mock the HTTP layer to assert the exact path requested for each resource.
 vi.mock('../http/apiClient', () => ({
@@ -38,6 +44,13 @@ describe('tenant resource services', () => {
   it('getMenu requests GET /api/tenants/{slug}/menu', async () => {
     await getMenu('demo-el-drago')
     expect(apiClientMock).toHaveBeenCalledWith('/api/tenants/demo-el-drago/menu', {
+      method: 'GET',
+    })
+  })
+
+  it('getTreatments requests GET /api/tenants/{slug}/treatments', async () => {
+    await getTreatments('demo-magnolia')
+    expect(apiClientMock).toHaveBeenCalledWith('/api/tenants/demo-magnolia/treatments', {
       method: 'GET',
     })
   })

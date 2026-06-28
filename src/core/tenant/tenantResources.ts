@@ -86,6 +86,31 @@ export interface TenantMenuCategory {
   items: TenantMenuItem[]
 }
 
+/** A single treatment (`GET /api/tenants/{slug}/treatments` → category items). */
+export interface TreatmentItem {
+  id: string
+  name: string
+  description: string
+  /** Price in euros. */
+  price: number
+  /** Session duration in minutes. */
+  durationMinutes: number
+  imageUrl: string
+  /** Whether the treatment is currently offered. */
+  available: boolean
+  /** Sort order within the category. */
+  displayOrder: number
+}
+
+/** A treatment category with its treatments (`GET /api/tenants/{slug}/treatments`). */
+export interface TreatmentCategory {
+  id: string
+  name: string
+  /** Sort order within the catalogue. */
+  displayOrder: number
+  items: TreatmentItem[]
+}
+
 /**
  * Fetches the services offered by a tenant.
  *
@@ -128,4 +153,15 @@ export function getBusinessHours(tenantSlug: string): Promise<TenantHours> {
  */
 export function getMenu(tenantSlug: string): Promise<TenantMenuCategory[]> {
   return apiClient<TenantMenuCategory[]>(`/api/tenants/${tenantSlug}/menu`, { method: 'GET' })
+}
+
+/**
+ * Fetches the treatments (categories with items) of a tenant.
+ *
+ * @param tenantSlug - Tenant slug (not a UUID).
+ * @returns `GET /api/tenants/{slug}/treatments`.
+ * @throws {import('../http/apiClient').ApiError} On a non-2xx response.
+ */
+export function getTreatments(tenantSlug: string): Promise<TreatmentCategory[]> {
+  return apiClient<TreatmentCategory[]>(`/api/tenants/${tenantSlug}/treatments`, { method: 'GET' })
 }

@@ -4,42 +4,51 @@ import { Hero } from '../../../shared/components/Hero'
 import { TreatmentsList } from '../../../shared/components/TreatmentsList'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
-import {
-  BASE_PATH,
-  ESTETICA_TENANT_ID,
-  FEATURED_TREATMENTS,
-  SEO_DESCRIPTION,
-  SITE_URL,
-} from './esteticaData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useTreatments } from '../../../core/tenant/useTreatments'
+import { toTreatments } from '../../../core/tenant/tenantContentMappers'
+import { ESTETICA_BASE_PATH } from '../estetica-landing/esteticaShared'
 
 /** Home page of the multi-page estetica site: hero, featured treatments and a CTA. */
 export default function EsteticaHomePage() {
-  usePageTracking(ESTETICA_TENANT_ID)
+  const config = useTenantConfig()
+  const treatmentsState = useTreatments()
+  usePageTracking(config.tenantId)
+
+  // Up to four treatments in display order, as a teaser.
+  const featured =
+    treatmentsState.status === 'success' ? toTreatments(treatmentsState.data).slice(0, 4) : []
+
+  const canBook = config.modules?.hasCitas !== false
 
   return (
     <>
       <SharedSeo
-        title="Centro Estético Magnolia | Puerto de la Cruz, Tenerife"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={`${SITE_URL}/`}
+        title={`${config.businessName} | Centro estético`}
+        description={config.businessDescription ?? config.businessName}
+        canonicalUrl={`${window.location.origin}${ESTETICA_BASE_PATH}`}
       />
 
       <Hero
-        title="Centro Estético Magnolia"
-        subtitle="Cuídate con tratamientos de autor en un espacio tranquilo, en el corazón de Puerto de la Cruz"
+        title={config.businessName}
+        subtitle={config.businessDescription ?? ''}
         ctaLabel="Ver tratamientos"
-        ctaHref={`${BASE_PATH}/tratamientos`}
-        backgroundImage="https://picsum.photos/seed/magnolia-home/1600/900"
+        ctaHref={`${ESTETICA_BASE_PATH}/tratamientos`}
+        logoUrl={config.logoUrl}
       />
 
-      <section className={styles.highlights} aria-label="Tratamientos destacados">
-        <TreatmentsList treatments={FEATURED_TREATMENTS} heading="Tratamientos destacados" />
-        <div className={styles.ctaWrap}>
-          <Link to={`${BASE_PATH}/cita`} className={styles.cta}>
-            Pedir cita previa →
-          </Link>
-        </div>
-      </section>
+      {featured.length > 0 && (
+        <section className={styles.highlights} aria-label="Tratamientos destacados">
+          <TreatmentsList treatments={featured} heading="Tratamientos destacados" />
+          {canBook && (
+            <div className={styles.ctaWrap}>
+              <Link to={`${ESTETICA_BASE_PATH}/cita`} className={styles.cta}>
+                Pedir cita previa →
+              </Link>
+            </div>
+          )}
+        </section>
+      )}
     </>
   )
 }

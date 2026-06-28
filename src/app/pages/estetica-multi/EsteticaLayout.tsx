@@ -4,14 +4,13 @@ import styles from './EsteticaLayout.module.css'
 import { Footer } from '../../../shared/components/Footer'
 import { SharedJsonLd } from '../../../shared/seo'
 import { applyTheme } from '../../../themes'
-import { BASE_PATH, BEAUTY_SALON_SCHEMA, BUSINESS, LEGAL_LINKS } from './esteticaData'
-
-const NAV_ITEMS = [
-  { to: BASE_PATH, label: 'Inicio' },
-  { to: `${BASE_PATH}/tratamientos`, label: 'Tratamientos' },
-  { to: `${BASE_PATH}/cita`, label: 'Cita' },
-  { to: `${BASE_PATH}/contacto`, label: 'Contacto' },
-]
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import {
+  ESTETICA_BASE_PATH,
+  ESTETICA_THEME,
+  LEGAL_LINKS,
+  buildBeautySalonSchema,
+} from '../estetica-landing/esteticaShared'
 
 /** Nav link that marks itself with aria-current when it matches the route exactly. */
 function NavItem({ to, label }: { to: string; label: string }) {
@@ -28,28 +27,38 @@ function NavItem({ to, label }: { to: string; label: string }) {
 }
 
 /**
- * Shared layout for the multi-page estetica site (Centro Estético Magnolia).
- * Renders the header (brand + primary nav), the routed page via `<Outlet>` and
- * the footer. Applies the `editorial` theme and injects BeautySalon structured
- * data shared across every page.
+ * Shared layout for the multi-page estetica site. Renders the header (brand +
+ * primary nav), the routed page via `<Outlet>` and the footer — all driven by
+ * tenant config. The Cita nav entry only appears when the tenant has the
+ * appointments module enabled.
  */
 export default function EsteticaLayout() {
+  const config = useTenantConfig()
+
   useEffect(() => {
-    applyTheme('editorial')
-  }, [])
+    applyTheme(config.themeName || ESTETICA_THEME)
+  }, [config.themeName])
+
+  const base = ESTETICA_BASE_PATH
+  const navItems = [
+    { to: base, label: 'Inicio' },
+    { to: `${base}/tratamientos`, label: 'Tratamientos' },
+    ...(config.modules?.hasCitas ? [{ to: `${base}/cita`, label: 'Cita' }] : []),
+    { to: `${base}/contacto`, label: 'Contacto' },
+  ]
 
   return (
     <>
-      <SharedJsonLd schema={BEAUTY_SALON_SCHEMA} />
+      <SharedJsonLd schema={buildBeautySalonSchema(config, `${window.location.origin}${base}`)} />
 
       <header className={styles.header}>
-        <Link to={BASE_PATH} className={styles.brand}>
-          {BUSINESS.name}
+        <Link to={base} className={styles.brand}>
+          {config.businessName}
         </Link>
 
         <nav className={styles.nav} aria-label="Principal">
           <ul className={styles.navList}>
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <NavItem key={item.to} to={item.to} label={item.label} />
             ))}
           </ul>
@@ -61,10 +70,10 @@ export default function EsteticaLayout() {
       </main>
 
       <Footer
-        businessName={BUSINESS.name}
-        address={BUSINESS.address}
-        phone={BUSINESS.phone}
-        email={BUSINESS.email}
+        businessName={config.businessName}
+        address={config.address ?? ''}
+        phone={config.phone ?? ''}
+        email={config.email ?? ''}
         legalLinks={LEGAL_LINKS}
       />
     </>

@@ -2,18 +2,23 @@ import styles from './esteticaPages.module.css'
 import { TreatmentsList } from '../../../shared/components/TreatmentsList'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
-import { ESTETICA_TENANT_ID, SEO_DESCRIPTION, SITE_URL, TREATMENTS } from './esteticaData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useTreatments } from '../../../core/tenant/useTreatments'
+import { toTreatments } from '../../../core/tenant/tenantContentMappers'
+import { ESTETICA_BASE_PATH } from '../estetica-landing/esteticaShared'
 
 /** Full treatments catalogue page of the multi-page estetica site. */
 export default function EsteticaTratamientosPage() {
-  usePageTracking(ESTETICA_TENANT_ID)
+  const config = useTenantConfig()
+  const treatmentsState = useTreatments()
+  usePageTracking(config.tenantId)
 
   return (
     <>
       <SharedSeo
-        title="Tratamientos | Centro Estético Magnolia"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={`${SITE_URL}/tratamientos`}
+        title={`Tratamientos | ${config.businessName}`}
+        description={`Catálogo de tratamientos de ${config.businessName}.`}
+        canonicalUrl={`${window.location.origin}${ESTETICA_BASE_PATH}/tratamientos`}
       />
 
       <div className={styles.page}>
@@ -24,7 +29,22 @@ export default function EsteticaTratamientosPage() {
         </p>
       </div>
 
-      <TreatmentsList treatments={TREATMENTS} heading="Todos los tratamientos" />
+      {treatmentsState.status === 'loading' && (
+        <p className={styles.status} role="status">
+          Cargando…
+        </p>
+      )}
+      {treatmentsState.status === 'error' && (
+        <p className={styles.status} role="alert">
+          No se han podido cargar los tratamientos.
+        </p>
+      )}
+      {treatmentsState.status === 'success' && (
+        <TreatmentsList
+          treatments={toTreatments(treatmentsState.data)}
+          heading="Todos los tratamientos"
+        />
+      )}
     </>
   )
 }
