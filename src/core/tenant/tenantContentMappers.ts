@@ -1,7 +1,13 @@
 import type { Service } from '../../shared/components/ServicesList'
 import type { ProjectItem } from '../../shared/components/ProjectGallery'
 import type { BusinessHours } from '../../shared/components/BusinessInfo'
-import type { TenantHours, TenantProject, TenantService } from './tenantResources'
+import type { MenuCategory } from '../../shared/components/Menu'
+import type {
+  TenantHours,
+  TenantMenuCategory,
+  TenantProject,
+  TenantService,
+} from './tenantResources'
 
 /**
  * Maps backend services to the `ServicesList` `Service[]` props, sorted by
@@ -54,4 +60,31 @@ export function toBusinessHours(hours: TenantHours): BusinessHours[] {
     close: day.afternoonClose ?? day.morningClose ?? '',
     closed: day.closed,
   }))
+}
+
+/**
+ * Maps backend menu categories to the `Menu` `MenuCategory[]` props. Categories
+ * and dishes are sorted by `displayOrder`; unavailable dishes are dropped.
+ *
+ * @param categories - Raw backend menu categories.
+ * @returns Menu categories ready for the `Menu` component.
+ */
+export function toMenu(categories: TenantMenuCategory[]): MenuCategory[] {
+  return [...categories]
+    .sort((a, b) => a.displayOrder - b.displayOrder)
+    .map((category) => ({
+      id: category.id,
+      name: category.name,
+      items: [...category.items]
+        .filter((item) => item.available)
+        .sort((a, b) => a.displayOrder - b.displayOrder)
+        .map(({ id, name, description, price, imageUrl, allergens }) => ({
+          id,
+          name,
+          description,
+          price,
+          imageUrl,
+          allergens,
+        })),
+    }))
 }

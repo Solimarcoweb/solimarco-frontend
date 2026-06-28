@@ -2,18 +2,25 @@ import styles from './restaurantePages.module.css'
 import { BusinessInfo } from '../../../shared/components/BusinessInfo'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
-import { BUSINESS, HOURS, RESTAURANT_TENANT_ID, SITE_URL } from './restauranteData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useBusinessHours } from '../../../core/tenant/useBusinessHours'
+import { toBusinessHours } from '../../../core/tenant/tenantContentMappers'
+import { RESTAURANTE_BASE_PATH } from '../restaurante-landing/restauranteShared'
 
-/** Contact page of the multi-page restaurant site: hours, contact and map. */
+/** Contact page of the multi-page restaurant site: hours and contact details. */
 export default function RestauranteContactoPage() {
-  usePageTracking(RESTAURANT_TENANT_ID)
+  const config = useTenantConfig()
+  const hoursState = useBusinessHours()
+  usePageTracking(config.tenantId)
+
+  const hours = hoursState.status === 'success' ? toBusinessHours(hoursState.data) : []
 
   return (
     <>
       <SharedSeo
-        title="Contacto y horario | Restaurante El Drago"
-        description="Horario, dirección y contacto de Restaurante El Drago en el Puerto de la Cruz, Tenerife."
-        canonicalUrl={`${SITE_URL}/contacto`}
+        title={`Contacto y horario | ${config.businessName}`}
+        description={`Horario, dirección y contacto de ${config.businessName}.`}
+        canonicalUrl={`${window.location.origin}${RESTAURANTE_BASE_PATH}/contacto`}
       />
 
       <div className={styles.pageHead}>
@@ -21,11 +28,10 @@ export default function RestauranteContactoPage() {
       </div>
 
       <BusinessInfo
-        address={BUSINESS.address}
-        phone={BUSINESS.phone}
-        email={BUSINESS.email}
-        hours={HOURS}
-        mapImageUrl="https://picsum.photos/seed/mapa-el-drago/1200/450"
+        address={config.address ?? ''}
+        phone={config.phone ?? ''}
+        email={config.email ?? ''}
+        hours={hours}
       />
     </>
   )

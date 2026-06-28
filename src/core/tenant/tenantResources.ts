@@ -62,6 +62,30 @@ export interface TenantHours {
   upcomingExceptions: HoursException[]
 }
 
+/** A single menu dish (`GET /api/tenants/{slug}/menu` → category items). */
+export interface TenantMenuItem {
+  id: string
+  name: string
+  description: string
+  /** Price in euros. */
+  price: number
+  imageUrl: string
+  allergens: string[]
+  /** Whether the dish is currently offered. */
+  available: boolean
+  /** Sort order within the category. */
+  displayOrder: number
+}
+
+/** A menu category with its dishes (`GET /api/tenants/{slug}/menu`). */
+export interface TenantMenuCategory {
+  id: string
+  name: string
+  /** Sort order within the menu. */
+  displayOrder: number
+  items: TenantMenuItem[]
+}
+
 /**
  * Fetches the services offered by a tenant.
  *
@@ -93,4 +117,15 @@ export function getProjects(tenantSlug: string): Promise<TenantProject[]> {
  */
 export function getBusinessHours(tenantSlug: string): Promise<TenantHours> {
   return apiClient<TenantHours>(`/api/tenants/${tenantSlug}/hours`, { method: 'GET' })
+}
+
+/**
+ * Fetches the menu (categories with dishes) of a tenant.
+ *
+ * @param tenantSlug - Tenant slug (not a UUID).
+ * @returns `GET /api/tenants/{slug}/menu`.
+ * @throws {import('../http/apiClient').ApiError} On a non-2xx response.
+ */
+export function getMenu(tenantSlug: string): Promise<TenantMenuCategory[]> {
+  return apiClient<TenantMenuCategory[]>(`/api/tenants/${tenantSlug}/menu`, { method: 'GET' })
 }

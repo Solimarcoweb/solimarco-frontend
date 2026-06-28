@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { toBusinessHours, toProjects, toServices } from './tenantContentMappers'
-import type { TenantHours, TenantProject, TenantService } from './tenantResources'
+import { toBusinessHours, toMenu, toProjects, toServices } from './tenantContentMappers'
+import type {
+  TenantHours,
+  TenantMenuCategory,
+  TenantProject,
+  TenantService,
+} from './tenantResources'
 
 describe('toServices', () => {
   it('sorts by displayOrder and drops backend-only fields', () => {
@@ -69,5 +74,71 @@ describe('toBusinessHours', () => {
       close: '',
       closed: true,
     })
+  })
+})
+
+describe('toMenu', () => {
+  const categories: TenantMenuCategory[] = [
+    {
+      id: 'postres',
+      name: 'Postres',
+      displayOrder: 2,
+      items: [
+        {
+          id: 'quesillo',
+          name: 'Quesillo',
+          description: 'Flan.',
+          price: 5,
+          imageUrl: 'q.jpg',
+          allergens: ['lactosa'],
+          available: true,
+          displayOrder: 1,
+        },
+      ],
+    },
+    {
+      id: 'entrantes',
+      name: 'Entrantes',
+      displayOrder: 1,
+      items: [
+        {
+          id: 'agotado',
+          name: 'Plato agotado',
+          description: 'No disponible.',
+          price: 9,
+          imageUrl: 'a.jpg',
+          allergens: [],
+          available: false,
+          displayOrder: 1,
+        },
+        {
+          id: 'croquetas',
+          name: 'Croquetas',
+          description: 'Cremosas.',
+          price: 9.5,
+          imageUrl: 'c.jpg',
+          allergens: ['gluten'],
+          available: true,
+          displayOrder: 2,
+        },
+      ],
+    },
+  ]
+
+  it('sorts categories and items by displayOrder and drops unavailable items', () => {
+    const menu = toMenu(categories)
+
+    expect(menu.map((c) => c.name)).toEqual(['Entrantes', 'Postres'])
+    // The unavailable item is filtered out; only the available dish remains.
+    expect(menu[0].items).toEqual([
+      {
+        id: 'croquetas',
+        name: 'Croquetas',
+        description: 'Cremosas.',
+        price: 9.5,
+        imageUrl: 'c.jpg',
+        allergens: ['gluten'],
+      },
+    ])
   })
 })

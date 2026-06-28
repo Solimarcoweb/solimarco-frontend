@@ -4,39 +4,58 @@ import { Hero } from '../../../shared/components/Hero'
 import { Menu } from '../../../shared/components/Menu'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
-import { BASE_PATH, FEATURED, RESTAURANT_TENANT_ID, SEO_DESCRIPTION, SITE_URL } from './restauranteData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useMenu } from '../../../core/tenant/useMenu'
+import { toMenu } from '../../../core/tenant/tenantContentMappers'
+import { RESTAURANTE_BASE_PATH } from '../restaurante-landing/restauranteShared'
 
 /**
  * Home page of the multi-page restaurant site: hero, a few highlighted dishes
  * and a call to action towards the reservations page.
  */
 export default function RestauranteHomePage() {
-  usePageTracking(RESTAURANT_TENANT_ID)
+  const config = useTenantConfig()
+  const menuState = useMenu()
+  usePageTracking(config.tenantId)
+
+  // Up to four dishes flattened from the menu, in display order.
+  const featured =
+    menuState.status === 'success'
+      ? toMenu(menuState.data)
+          .flatMap((category) => category.items)
+          .slice(0, 4)
+      : []
+
+  const canReserve = config.modules?.hasReservations !== false
 
   return (
     <>
       <SharedSeo
-        title="Restaurante El Drago | Cocina canaria en el Puerto de la Cruz"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={`${SITE_URL}/`}
+        title={`${config.businessName} | Restaurante`}
+        description={config.businessDescription ?? config.businessName}
+        canonicalUrl={`${window.location.origin}${RESTAURANTE_BASE_PATH}`}
       />
 
       <Hero
-        title="Restaurante El Drago"
-        subtitle="Cocina canaria de mercado en el corazón del Puerto de la Cruz"
+        title={config.businessName}
+        subtitle={config.businessDescription ?? ''}
         ctaLabel="Ver los destacados"
         ctaHref="#destacados"
-        backgroundImage="https://picsum.photos/seed/el-drago-hero/1600/900"
+        logoUrl={config.logoUrl}
       />
 
-      <section id="destacados" className={styles.featured} aria-label="Platos destacados">
-        <Menu categories={[{ id: 'destacados', name: 'Nuestros destacados', items: FEATURED }]} />
-        <div className={styles.ctaWrap}>
-          <Link to={`${BASE_PATH}/reservas`} className={styles.cta}>
-            Reservar mesa
-          </Link>
-        </div>
-      </section>
+      {featured.length > 0 && (
+        <section id="destacados" className={styles.featured} aria-label="Platos destacados">
+          <Menu categories={[{ id: 'destacados', name: 'Nuestros destacados', items: featured }]} />
+          {canReserve && (
+            <div className={styles.ctaWrap}>
+              <Link to={`${RESTAURANTE_BASE_PATH}/reservas`} className={styles.cta}>
+                Reservar mesa
+              </Link>
+            </div>
+          )}
+        </section>
+      )}
     </>
   )
 }

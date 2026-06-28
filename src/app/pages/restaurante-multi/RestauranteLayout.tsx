@@ -7,19 +7,16 @@ import { Footer } from '../../../shared/components/Footer'
 import { SharedJsonLd } from '../../../shared/seo'
 import { SUPPORTED_LOCALES } from '../../../i18n'
 import { applyTheme } from '../../../themes'
-import { BASE_PATH, BUSINESS, LEGAL_LINKS, RESTAURANT_SCHEMA } from './restauranteData'
-
-const NAV_ITEMS = [
-  { to: BASE_PATH, label: 'Inicio' },
-  { to: `${BASE_PATH}/carta`, label: 'Carta' },
-  { to: `${BASE_PATH}/reservas`, label: 'Reservas' },
-  { to: `${BASE_PATH}/contacto`, label: 'Contacto' },
-]
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import {
+  RESTAURANTE_BASE_PATH,
+  RESTAURANTE_THEME,
+  LEGAL_LINKS,
+  buildRestaurantSchema,
+} from '../restaurante-landing/restauranteShared'
 
 /** A single nav link that marks itself with aria-current when it matches the route. */
 function NavItem({ to, label }: { to: string; label: string }) {
-  // useMatch matches the whole pathname, so the index link only activates on
-  // the exact base path, not on its child routes.
   const isActive = useMatch(to) !== null
   const className = isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink
 
@@ -33,30 +30,39 @@ function NavItem({ to, label }: { to: string; label: string }) {
 }
 
 /**
- * Shared layout for the multi-page restaurant site (Restaurante El Drago).
- * Renders the header (brand, primary nav and language selector), the routed
- * page via `<Outlet>` and the footer. Applies the `calido` theme and injects
- * the Restaurant structured data shared across every page.
+ * Shared layout for the multi-page restaurant site. Renders the header (brand,
+ * primary nav and language selector), the routed page via `<Outlet>` and the
+ * footer — all driven by tenant config. The Reservas nav entry only appears
+ * when the tenant has the reservations module enabled.
  */
 export default function RestauranteLayout() {
   const { i18n } = useTranslation()
+  const config = useTenantConfig()
 
   useEffect(() => {
-    applyTheme('calido')
-  }, [])
+    applyTheme(config.themeName || RESTAURANTE_THEME)
+  }, [config.themeName])
+
+  const base = RESTAURANTE_BASE_PATH
+  const navItems = [
+    { to: base, label: 'Inicio' },
+    { to: `${base}/carta`, label: 'Carta' },
+    ...(config.modules?.hasReservations ? [{ to: `${base}/reservas`, label: 'Reservas' }] : []),
+    { to: `${base}/contacto`, label: 'Contacto' },
+  ]
 
   return (
     <>
-      <SharedJsonLd schema={RESTAURANT_SCHEMA} />
+      <SharedJsonLd schema={buildRestaurantSchema(config, `${window.location.origin}${base}`)} />
 
       <header className={styles.header}>
-        <Link to={BASE_PATH} className={styles.brand}>
-          {BUSINESS.name}
+        <Link to={base} className={styles.brand}>
+          {config.businessName}
         </Link>
 
         <nav className={styles.nav} aria-label="Principal">
           <ul className={styles.navList}>
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <NavItem key={item.to} to={item.to} label={item.label} />
             ))}
           </ul>
@@ -70,10 +76,10 @@ export default function RestauranteLayout() {
       </main>
 
       <Footer
-        businessName={BUSINESS.name}
-        address={BUSINESS.address}
-        phone={BUSINESS.phone}
-        email={BUSINESS.email}
+        businessName={config.businessName}
+        address={config.address ?? ''}
+        phone={config.phone ?? ''}
+        email={config.email ?? ''}
         legalLinks={LEGAL_LINKS}
       />
     </>
