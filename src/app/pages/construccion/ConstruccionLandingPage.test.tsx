@@ -18,6 +18,8 @@ const config: TenantConfig = {
   phone: '+34 922 65 41 30',
   email: 'info@bmconstruccionsl.com',
   address: 'Calle La Hornera 48, La Laguna',
+  primaryColor: '#c9973a',
+  socialLinks: { instagram: 'https://instagram.com/bm' },
   modules: { hasShop: false, hasReservations: false, hasCitas: false, hasBudgetForm: true },
 }
 
@@ -62,14 +64,14 @@ describe('ConstruccionLandingPage', () => {
   it('shows an error state when a resource fails', () => {
     services.mockReturnValue({ status: 'error', message: 'boom' })
     projects.mockReturnValue({ status: 'success', data: [] })
-    hours.mockReturnValue({ status: 'success', data: [] })
+    hours.mockReturnValue({ status: 'success', data: { weekly: [], upcomingExceptions: [] } })
 
     renderPage()
 
     expect(screen.getByRole('alert')).toHaveTextContent(/no se ha podido cargar/i)
   })
 
-  it('renders the tenant-driven content on success', () => {
+  it('renders the redesigned tenant-driven landing on success', () => {
     services.mockReturnValue({
       status: 'success',
       data: [
@@ -107,6 +109,14 @@ describe('ConstruccionLandingPage', () => {
             afternoonOpen: '16:00',
             afternoonClose: '18:00',
           },
+          {
+            dayOfWeek: 'SUNDAY',
+            closed: true,
+            morningOpen: null,
+            morningClose: null,
+            afternoonOpen: null,
+            afternoonClose: null,
+          },
         ],
         upcomingExceptions: [],
       },
@@ -114,9 +124,19 @@ describe('ConstruccionLandingPage', () => {
 
     renderPage()
 
-    expect(screen.getByRole('heading', { level: 1, name: 'BM Construcción S.L.' })).toBeInTheDocument()
+    // Hero H1 is the i18n tagline, not the business name.
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Construimos tu sueño' }),
+    ).toBeInTheDocument()
+    // Business name appears in header logo, hero eyebrow and footer.
+    expect(screen.getAllByText(/BM Construcción/).length).toBeGreaterThan(0)
+    // Tenant-driven services and projects.
     expect(screen.getByText('Reformas integrales')).toBeInTheDocument()
     expect(screen.getByText('Baño en La Laguna')).toBeInTheDocument()
+    // Schedule from hours (weekday localized + closed label).
+    expect(screen.getByText('Lunes')).toBeInTheDocument()
+    expect(screen.getByText('Cerrado')).toBeInTheDocument()
+    // Budget form (gated on hasBudgetForm) and footer.
     expect(screen.getByRole('form', { name: /presupuesto/i })).toBeInTheDocument()
     expect(screen.getByRole('contentinfo')).toHaveTextContent('BM Construcción S.L.')
   })

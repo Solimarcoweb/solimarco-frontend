@@ -44,7 +44,29 @@
     "showroomUnavailable": "Der Showroom ist für dieses Unternehmen nicht verfügbar.",
     "showroomError": "Der Katalog konnte nicht geladen werden.",
     "loading": "Wird geladen…",
-    "loadError": "Der Inhalt konnte nicht geladen werden. Bitte versuche es in ein paar Minuten erneut."
+    "loadError": "Der Inhalt konnte nicht geladen werden. Bitte versuche es in ein paar Minuten erneut.",
+    "heroEyebrow": "Bau & Renovierung",
+    "heroTitle": "Wir bauen deinen Traum",
+    "heroViewProjects": "Projekte ansehen",
+    "stats": {
+      "years": "Jahre",
+      "projects": "Projekte",
+      "satisfaction": "Zufriedenheit"
+    },
+    "materialsEyebrow": "Marken",
+    "materialsHeading": "Premium-Materialien",
+    "materialsNote": "Wir arbeiten mit großformatigem Feinsteinzeug, italienischer Designkeramik, hochbelastbaren SPC/PVC-Böden und exklusiven Dekorelementen. Wir beraten dich, damit jedes Material zu deinem Projekt, Budget und Stil passt.",
+    "testimonialsEyebrow": "Referenzen",
+    "testimonialsHeading": "Das Vertrauen unserer Kunden",
+    "ctaText": "Dein Projekt, mit Präzision umgesetzt und pünktlich übergeben.",
+    "ctaButton": "Sprich mit uns",
+    "contactEyebrow": "Kontakt",
+    "scheduleHeading": "Öffnungszeiten",
+    "footerFollow": "Folge uns",
+    "footerRights": "Alle Rechte vorbehalten",
+    "formProjectType": "Projektart",
+    "formMessage": "Nachricht",
+    "formSubmit": "Anfrage senden"
   },
   "forms": {
     "common": {

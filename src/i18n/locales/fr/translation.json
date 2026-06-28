@@ -44,7 +44,29 @@
     "showroomUnavailable": "Le showroom n'est pas disponible pour cette entreprise.",
     "showroomError": "Impossible de charger le catalogue.",
     "loading": "Chargement…",
-    "loadError": "Impossible de charger le contenu. Veuillez réessayer dans quelques minutes."
+    "loadError": "Impossible de charger le contenu. Veuillez réessayer dans quelques minutes.",
+    "heroEyebrow": "Construction & rénovation",
+    "heroTitle": "Nous construisons votre rêve",
+    "heroViewProjects": "Voir les projets",
+    "stats": {
+      "years": "Ans",
+      "projects": "Projets",
+      "satisfaction": "Satisfaction"
+    },
+    "materialsEyebrow": "Marques",
+    "materialsHeading": "Matériaux premium",
+    "materialsNote": "Nous travaillons avec du grès cérame grand format, de la céramique design italienne, des sols SPC/PVC haute résistance et des pièces décoratives exclusives. Nous vous conseillons pour que chaque matériau s'accorde à votre projet, votre budget et votre style.",
+    "testimonialsEyebrow": "Témoignages",
+    "testimonialsHeading": "La confiance de nos clients",
+    "ctaText": "Votre projet, réalisé avec précision et livré à temps.",
+    "ctaButton": "Parlons-en",
+    "contactEyebrow": "Contact",
+    "scheduleHeading": "Horaires",
+    "footerFollow": "Suivez-nous",
+    "footerRights": "Tous droits réservés",
+    "formProjectType": "Type de projet",
+    "formMessage": "Message",
+    "formSubmit": "Envoyer la demande"
   },
   "forms": {
     "common": {

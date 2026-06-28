@@ -1,44 +1,68 @@
-import { useEffect } from 'react'
+import { useEffect, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from './ConstruccionPage.module.css'
-import { Hero } from '../../../shared/components/Hero'
-import { LanguageSelector } from '../../../shared/components/LanguageSelector'
-import { ServicesList } from '../../../shared/components/ServicesList'
-import { ProjectGallery } from '../../../shared/components/ProjectGallery'
-import { BusinessInfo } from '../../../shared/components/BusinessInfo'
-import { Footer } from '../../../shared/components/Footer'
-import { Reveal } from '../../../shared/components/Reveal'
-import { BudgetForm } from '../../../modules/reservations/components/BudgetForm'
-import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
+import ConstruccionHeader from './components/ConstruccionHeader'
+import ConstruccionHero from './components/ConstruccionHero'
+import ConstruccionServices from './components/ConstruccionServices'
+import ConstruccionProjects from './components/ConstruccionProjects'
+import ConstruccionMaterials from './components/ConstruccionMaterials'
+import ConstruccionTestimonials from './components/ConstruccionTestimonials'
+import ConstruccionContact from './components/ConstruccionContact'
+import ConstruccionCta from './components/ConstruccionCta'
+import ConstruccionFooter from './components/ConstruccionFooter'
 import { SharedSeo, SharedJsonLd } from '../../../shared/seo'
-import { SUPPORTED_LOCALES } from '../../../i18n'
+import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
 import { applyTheme } from '../../../themes'
 import { useTenantConfig } from '../../../core/tenant/TenantContext'
 import { useServices } from '../../../core/tenant/useServices'
 import { useProjects } from '../../../core/tenant/useProjects'
 import { useBusinessHours } from '../../../core/tenant/useBusinessHours'
 import { toBusinessHours, toProjects, toServices } from '../../../core/tenant/tenantContentMappers'
-import { CONSTRUCCION_THEME, LEGAL_LINKS, buildBusinessSchema } from './construccionShared'
+import { CONSTRUCCION_THEME, buildBusinessSchema } from './construccionShared'
 
 /**
- * Single-page (landing) construction template, driven entirely by tenant data:
- * branding/contact/modules from `useTenantConfig`, and services / projects /
- * hours from their dedicated endpoints. Sections: Hero → Servicios → Proyectos
- * → Horario+Contacto → Presupuesto. Renders a loading/error state until the
- * content endpoints resolve.
+ * Redesigned single-page (landing) construction template. Dark/gold sector look
+ * built from sector-local components (no shared component edits). Data still
+ * comes from the multi-tenant layer: branding/contact/modules from
+ * `useTenantConfig`, and services / projects / hours from their endpoints.
+ *
+ * Sections: Header → Hero → Servicios → Proyectos → Showroom → Testimonios →
+ * Contacto (+ BudgetForm) → CTA → Footer. Renders a loading/error state until
+ * the content endpoints resolve.
  */
 export default function ConstruccionLandingPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const config = useTenantConfig()
   const servicesState = useServices()
   const projectsState = useProjects()
   const hoursState = useBusinessHours()
 
+  // Keep the app theme baseline in sync (token fallback outside the landing).
   useEffect(() => {
     applyTheme(config.themeName || CONSTRUCCION_THEME)
   }, [config.themeName])
 
+  // The sector owns a dark palette via local CSS vars on `.page` (they win by
+  // cascade for everything inside). `applyTheme` paints `<html>` with the light
+  // theme background, so repaint it dark here and enable smooth in-page scroll;
+  // both are restored on unmount.
+  useEffect(() => {
+    const html = document.documentElement
+    const prevBg = html.style.backgroundColor
+    const prevScroll = html.style.scrollBehavior
+    html.style.backgroundColor = '#0d0c09'
+    html.style.scrollBehavior = 'smooth'
+    return () => {
+      html.style.backgroundColor = prevBg
+      html.style.scrollBehavior = prevScroll
+    }
+  }, [])
+
   usePageTracking(config.tenantId)
+
+  const accentStyle = config.primaryColor
+    ? ({ '--accent': config.primaryColor } as CSSProperties)
+    : undefined
 
   if (
     servicesState.status !== 'success' ||
@@ -50,13 +74,15 @@ export default function ConstruccionLandingPage() {
       projectsState.status === 'error' ||
       hoursState.status === 'error'
     return (
-      <main className={styles.status}>
-        {failed ? (
-          <p role="alert">{t('construccion.loadError')}</p>
-        ) : (
-          <p role="status">{t('construccion.loading')}</p>
-        )}
-      </main>
+      <div className={styles.page} style={accentStyle}>
+        <main className={styles.status}>
+          {failed ? (
+            <p role="alert">{t('construccion.loadError')}</p>
+          ) : (
+            <p role="status">{t('construccion.loading')}</p>
+          )}
+        </main>
+      </div>
     )
   }
 
@@ -66,7 +92,7 @@ export default function ConstruccionLandingPage() {
   const canonicalUrl = `${window.location.origin}/`
 
   return (
-    <>
+    <div className={styles.page} style={accentStyle}>
       <SharedSeo
         title={`${config.businessName} | Construcción y reformas`}
         description={config.businessDescription ?? config.businessName}
@@ -74,52 +100,19 @@ export default function ConstruccionLandingPage() {
       />
       <SharedJsonLd schema={buildBusinessSchema(config, canonicalUrl)} />
 
-      <header className={styles.header}>
-        <span className={styles.brand}>{config.businessName}</span>
-        <LanguageSelector availableLocales={[...SUPPORTED_LOCALES]} currentLocale={i18n.language} />
-      </header>
+      <ConstruccionHeader businessName={config.businessName} />
 
       <main>
-        <Hero
-          title={config.businessName}
-          subtitle={config.businessDescription ?? ''}
-          ctaLabel={t('construccion.ctaRequestQuote')}
-          ctaHref="#presupuesto"
-          logoUrl={config.logoUrl}
-        />
-
-        {services.length > 0 && <ServicesList className={styles.sectionAlt} services={services} />}
-
-        {projects.length > 0 && <ProjectGallery items={projects} />}
-
-        <BusinessInfo
-          className={styles.sectionAlt}
-          address={config.address ?? ''}
-          phone={config.phone ?? ''}
-          email={config.email ?? ''}
-          hours={hours}
-        />
-
-        {config.modules?.hasBudgetForm !== false && (
-          <Reveal>
-            <section id="presupuesto" className={styles.budget} aria-labelledby="budget-heading">
-              <h2 id="budget-heading" className={styles.budgetHeading}>
-                {t('construccion.budgetHeading')}
-              </h2>
-              <BudgetForm tenantId={config.tenantId} />
-            </section>
-          </Reveal>
-        )}
+        <ConstruccionHero config={config} />
+        <ConstruccionServices services={services} />
+        <ConstruccionProjects projects={projects} />
+        <ConstruccionMaterials />
+        <ConstruccionTestimonials />
+        <ConstruccionContact config={config} hours={hours} />
+        <ConstruccionCta />
       </main>
 
-      <Footer
-        className={styles.sectionAlt}
-        businessName={config.businessName}
-        address={config.address ?? ''}
-        phone={config.phone ?? ''}
-        email={config.email ?? ''}
-        legalLinks={LEGAL_LINKS}
-      />
-    </>
+      <ConstruccionFooter config={config} />
+    </div>
   )
 }

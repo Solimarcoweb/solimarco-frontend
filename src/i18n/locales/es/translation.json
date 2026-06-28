@@ -44,7 +44,29 @@
     "showroomUnavailable": "El showroom no está disponible para este negocio.",
     "showroomError": "No se ha podido cargar el catálogo.",
     "loading": "Cargando…",
-    "loadError": "No se ha podido cargar el contenido. Inténtalo de nuevo en unos minutos."
+    "loadError": "No se ha podido cargar el contenido. Inténtalo de nuevo en unos minutos.",
+    "heroEyebrow": "Construcción y reformas",
+    "heroTitle": "Construimos tu sueño",
+    "heroViewProjects": "Ver proyectos",
+    "stats": {
+      "years": "Años",
+      "projects": "Proyectos",
+      "satisfaction": "Satisfacción"
+    },
+    "materialsEyebrow": "Marcas",
+    "materialsHeading": "Materiales premium",
+    "materialsNote": "Trabajamos con porcelánico de gran formato, cerámica de diseño italiano, suelos SPC/PVC de alta resistencia y piezas decorativas exclusivas. Te asesoramos para que cada material encaje con tu proyecto, presupuesto y estilo.",
+    "testimonialsEyebrow": "Testimonios",
+    "testimonialsHeading": "La confianza de nuestros clientes",
+    "ctaText": "Tu proyecto, elaborado con precisión y entregado a tiempo.",
+    "ctaButton": "Hablar con nosotros",
+    "contactEyebrow": "Contacto",
+    "scheduleHeading": "Horario",
+    "footerFollow": "Síguenos",
+    "footerRights": "Todos los derechos reservados",
+    "formProjectType": "Tipo de proyecto",
+    "formMessage": "Mensaje",
+    "formSubmit": "Enviar solicitud"
   },
   "forms": {
     "common": {

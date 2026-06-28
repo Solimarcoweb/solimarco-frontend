@@ -1,61 +1,42 @@
-/* Construction pilot page shell. Mobile-first; consumes the active theme
-   tokens (clasico) so the header and budget section stay on-brand. */
+/* Construccion landing shell + sector palette.
+ *
+ * The whole dark/gold palette is declared here as custom properties on `.page`.
+ * Because custom properties resolve from the nearest defining ancestor, every
+ * descendant of `.page` reads THESE values, never the active theme's `:root`
+ * tokens — so `applyTheme(...)` cannot override the sector look. `--accent` is
+ * additionally overridden inline from `config.primaryColor` for personalization.
+ */
 
-/* Overlaid on top of the full-height Hero so it does not push the hero down
-   and break its vertical centering. The hero is light here (no background
-   image), so the header keeps the theme's dark text colors. */
-.header {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 80rem;
-  margin-inline: auto;
-  padding: 1rem 1.25rem;
+.page {
+  --accent: #c9973a;
+  --accent-soft: #d9ab52;
+  --ink: #0d0c09; /* text/icon colour on top of the accent */
+  --bg: #0d0c09;
+  --bg-alt: #0a0908;
+  --surface: #111009;
+  --surface-2: #14110a;
+  --text: #f2ede6;
+  --line: rgba(201, 151, 58, 0.16);
+  --line-strong: rgba(201, 151, 58, 0.28);
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-serif: 'DM Serif Display', Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+  overflow-x: hidden;
 }
 
-/* Serif brand mark, trust-first per SKILL-tema-clasico.md. */
-.brand {
-  font-family: var(--font-heading);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--color-primary);
-}
-
-.budget {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 48rem;
-  margin-inline: auto;
-  padding: var(--spacing-section) 1.25rem;
-}
-
-.budgetHeading {
-  margin: 0 0 1.5rem;
-  font-family: var(--font-heading);
-  font-size: clamp(1.6rem, 4vw, 2.25rem);
-  font-weight: 600;
-  color: var(--color-primary);
-}
-
-/* Alternating section background, for visual separation between sections. */
-.sectionAlt {
-  background: var(--color-bg-alt);
-}
-
-/* Loading / error state while the tenant content endpoints resolve. */
+/* Loading / error placeholder shown while the tenant content endpoints resolve. */
 .status {
   box-sizing: border-box;
-  min-height: 60vh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: var(--spacing-section) 1.25rem;
+  padding: 6rem 1.5rem;
   text-align: center;
-  color: var(--color-text-muted);
+  color: rgba(242, 237, 230, 0.6);
 }

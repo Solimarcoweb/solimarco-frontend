@@ -1,0 +1,82 @@
+/* Testimonials grid for the construccion landing. */
+
+.section {
+  background: var(--bg);
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 4.5rem 3rem;
+}
+
+.eyebrow {
+  font-size: 0.66rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.title {
+  margin: 0 0 2rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+
+.card {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 2px solid var(--accent);
+  padding: 1.8rem;
+}
+
+.quote {
+  margin: 0 0 1.2rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: rgba(242, 237, 230, 0.82);
+}
+
+.name {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.role {
+  margin-top: 0.15rem;
+  font-size: 0.68rem;
+  color: rgba(242, 237, 230, 0.38);
+}
+
+@media (max-width: 1024px) {
+  .inner {
+    padding: 3.5rem 2rem;
+  }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .inner {
+    padding: 2.5rem 1.25rem;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

@@ -44,7 +44,29 @@
     "showroomUnavailable": "The showroom is not available for this business.",
     "showroomError": "We couldn't load the catalog.",
     "loading": "Loading…",
-    "loadError": "We couldn't load the content. Please try again in a few minutes."
+    "loadError": "We couldn't load the content. Please try again in a few minutes.",
+    "heroEyebrow": "Construction & renovation",
+    "heroTitle": "We build your dream",
+    "heroViewProjects": "View projects",
+    "stats": {
+      "years": "Years",
+      "projects": "Projects",
+      "satisfaction": "Satisfaction"
+    },
+    "materialsEyebrow": "Brands",
+    "materialsHeading": "Premium materials",
+    "materialsNote": "We work with large-format porcelain, Italian designer ceramics, high-resistance SPC/PVC flooring and exclusive decorative pieces. We advise you so every material fits your project, budget and style.",
+    "testimonialsEyebrow": "Testimonials",
+    "testimonialsHeading": "The trust of our clients",
+    "ctaText": "Your project, crafted with precision and delivered on time.",
+    "ctaButton": "Talk to us",
+    "contactEyebrow": "Contact",
+    "scheduleHeading": "Opening hours",
+    "footerFollow": "Follow us",
+    "footerRights": "All rights reserved",
+    "formProjectType": "Project type",
+    "formMessage": "Message",
+    "formSubmit": "Send request"
   },
   "forms": {
     "common": {
