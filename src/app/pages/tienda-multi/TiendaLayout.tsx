@@ -5,7 +5,8 @@ import { Footer } from '../../../shared/components/Footer'
 import { SharedJsonLd } from '../../../shared/seo'
 import { useCart } from '../../../modules/sales/shared/useCart'
 import { applyTheme } from '../../../themes'
-import { BASE_PATH, BUSINESS, LEGAL_LINKS, STORE_SCHEMA } from './tiendaData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { TIENDA_BASE_PATH, TIENDA_THEME, LEGAL_LINKS, buildStoreSchema } from '../tienda-landing/tiendaShared'
 import type { CartItem, ProductItem } from '../../../modules/sales/models/product'
 
 /** Shape of the context passed to child pages via React Router's Outlet. */
@@ -15,13 +16,6 @@ export interface TiendaOutletContext {
   updateQuantity: (id: string, quantity: number) => void
   removeItem: (id: string) => void
 }
-
-const NAV_ITEMS = [
-  { to: BASE_PATH, label: 'Inicio' },
-  { to: `${BASE_PATH}/productos`, label: 'Tienda' },
-  { to: `${BASE_PATH}/carrito`, label: 'Carrito' },
-  { to: `${BASE_PATH}/contacto`, label: 'Contacto' },
-]
 
 /** Nav link that marks itself with aria-current when it matches the route. */
 function NavItem({ to, label }: { to: string; label: string }) {
@@ -38,32 +32,40 @@ function NavItem({ to, label }: { to: string; label: string }) {
 }
 
 /**
- * Shared layout for the multi-page tienda site (El Rincón Canario).
- * Owns the cart state and exposes it to child pages via Outlet context.
- * Applies the `fresco` theme and injects Store structured data shared across
- * every page.
+ * Shared layout for the multi-page tienda site. Owns the cart state and exposes
+ * it to child pages via Outlet context — all driven by tenant config. The
+ * Carrito nav entry only appears when the tenant has the shop module enabled.
  */
 export default function TiendaLayout() {
+  const config = useTenantConfig()
   const { items, addToCart, updateQuantity, removeItem } = useCart()
 
   useEffect(() => {
-    applyTheme('fresco')
-  }, [])
+    applyTheme(config.themeName || TIENDA_THEME)
+  }, [config.themeName])
+
+  const base = TIENDA_BASE_PATH
+  const navItems = [
+    { to: base, label: 'Inicio' },
+    { to: `${base}/productos`, label: 'Tienda' },
+    ...(config.modules?.hasShop ? [{ to: `${base}/carrito`, label: 'Carrito' }] : []),
+    { to: `${base}/contacto`, label: 'Contacto' },
+  ]
 
   const context: TiendaOutletContext = { items, addToCart, updateQuantity, removeItem }
 
   return (
     <>
-      <SharedJsonLd schema={STORE_SCHEMA} />
+      <SharedJsonLd schema={buildStoreSchema(config, `${window.location.origin}${base}`)} />
 
       <header className={styles.header}>
-        <Link to={BASE_PATH} className={styles.brand}>
-          {BUSINESS.name}
+        <Link to={base} className={styles.brand}>
+          {config.businessName}
         </Link>
 
         <nav className={styles.nav} aria-label="Principal">
           <ul className={styles.navList}>
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <NavItem key={item.to} to={item.to} label={item.label} />
             ))}
           </ul>
@@ -75,10 +77,10 @@ export default function TiendaLayout() {
       </main>
 
       <Footer
-        businessName={BUSINESS.name}
-        address={BUSINESS.address}
-        phone={BUSINESS.phone}
-        email={BUSINESS.email}
+        businessName={config.businessName}
+        address={config.address ?? ''}
+        phone={config.phone ?? ''}
+        email={config.email ?? ''}
         legalLinks={LEGAL_LINKS}
       />
     </>

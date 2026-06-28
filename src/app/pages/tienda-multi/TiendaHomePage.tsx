@@ -4,39 +4,46 @@ import { Hero } from '../../../shared/components/Hero'
 import { ProductCatalog } from '../../../modules/sales/components/ProductCatalog'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
-import { BASE_PATH, FEATURED_PRODUCTS, SEO_DESCRIPTION, SITE_URL, TIENDA_TENANT_ID } from './tiendaData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useProducts } from '../../../core/tenant/useProducts'
+import { TIENDA_BASE_PATH } from '../tienda-landing/tiendaShared'
 import type { TiendaOutletContext } from './TiendaLayout'
 
 /** Home page of the multi-page tienda site: hero, featured products and a CTA. */
 export default function TiendaHomePage() {
+  const config = useTenantConfig()
+  const productsState = useProducts()
   const { addToCart } = useOutletContext<TiendaOutletContext>()
+  usePageTracking(config.tenantId)
 
-  usePageTracking(TIENDA_TENANT_ID)
+  const featured = productsState.status === 'success' ? productsState.data.slice(0, 4) : []
 
   return (
     <>
       <SharedSeo
-        title="El Rincón Canario | Tienda de productos canarios en Santa Cruz"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={`${SITE_URL}/`}
+        title={`${config.businessName} | Tienda`}
+        description={config.businessDescription ?? config.businessName}
+        canonicalUrl={`${window.location.origin}${TIENDA_BASE_PATH}`}
       />
 
       <Hero
-        title="El Rincón Canario"
-        subtitle="Los sabores de las Islas, a un paso de ti. Mojos, gofio, quesos DOP, vinos y artesanía local."
+        title={config.businessName}
+        subtitle={config.businessDescription ?? ''}
         ctaLabel="Ir a la tienda"
-        ctaHref={`${BASE_PATH}/productos`}
-        backgroundImage="https://picsum.photos/seed/rincon-canario-home/1600/900"
+        ctaHref={`${TIENDA_BASE_PATH}/productos`}
+        logoUrl={config.logoUrl}
       />
 
-      <section className={styles.highlights} aria-label="Productos destacados">
-        <ProductCatalog products={FEATURED_PRODUCTS} onAddToCart={addToCart} />
-        <div className={styles.ctaWrap}>
-          <Link to={`${BASE_PATH}/productos`} className={styles.cta}>
-            Ver todo el catálogo
-          </Link>
-        </div>
-      </section>
+      {featured.length > 0 && (
+        <section className={styles.highlights} aria-label="Productos destacados">
+          <ProductCatalog products={featured} onAddToCart={addToCart} />
+          <div className={styles.ctaWrap}>
+            <Link to={`${TIENDA_BASE_PATH}/productos`} className={styles.cta}>
+              Ver todo el catálogo
+            </Link>
+          </div>
+        </section>
+      )}
     </>
   )
 }

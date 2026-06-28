@@ -4,14 +4,83 @@ import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
 import { testI18n } from '../../../test-utils'
+import type { TenantConfig } from '../../../core/tenant/tenantConfig'
 import TiendaLayout from './TiendaLayout'
 import TiendaHomePage from './TiendaHomePage'
 import TiendaProductosPage from './TiendaProductosPage'
 import TiendaCarritoPage from './TiendaCarritoPage'
 import TiendaContactoPage from './TiendaContactoPage'
 
-vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({
-  usePageTracking: () => {},
+const config: TenantConfig = {
+  tenantId: 'demo-rincon-canario',
+  businessName: 'El Rincón Canario',
+  themeName: 'fresco',
+  siteType: 'FULL',
+  sector: 'tienda',
+  locale: 'es',
+  businessDescription: 'Productos típicos canarios.',
+  phone: '+34 922 24 07 13',
+  email: 'hola@elrinconcanario.es',
+  address: 'Calle del Castillo 58, Santa Cruz de Tenerife',
+  modules: { hasShop: true, hasReservations: false, hasCitas: false, hasBudgetForm: false },
+}
+
+vi.mock('../../../core/tenant/TenantContext', () => ({
+  useTenantConfig: () => config,
+  useOptionalTenantConfig: () => config,
+}))
+vi.mock('../../../modules/tracking/hooks/usePageTracking', () => ({ usePageTracking: () => {} }))
+
+const productsData = [
+  {
+    id: 'mojo-rojo',
+    name: 'Mojo rojo',
+    description: 'Picón.',
+    price: 4.5,
+    unit: 'tarro 200 g',
+    category: 'Salsas y mojos',
+    imageUrl: 'https://example.com/m.jpg',
+    stock: 10,
+  },
+  {
+    id: 'queso-majorero',
+    name: 'Queso majorero',
+    description: 'DOP.',
+    price: 9.8,
+    unit: 'pieza',
+    category: 'Quesos',
+    imageUrl: 'https://example.com/q.jpg',
+    stock: 5,
+  },
+]
+
+const hoursData = {
+  weekly: [
+    {
+      dayOfWeek: 'MONDAY',
+      closed: false,
+      morningOpen: '09:30',
+      morningClose: null,
+      afternoonOpen: null,
+      afternoonClose: '20:00',
+    },
+    {
+      dayOfWeek: 'SUNDAY',
+      closed: true,
+      morningOpen: null,
+      morningClose: null,
+      afternoonOpen: null,
+      afternoonClose: null,
+    },
+  ],
+  upcomingExceptions: [],
+}
+
+vi.mock('../../../core/tenant/useProducts', () => ({
+  useProducts: () => ({ status: 'success', data: productsData }),
+}))
+vi.mock('../../../core/tenant/useBusinessHours', () => ({
+  useBusinessHours: () => ({ status: 'success', data: hoursData }),
 }))
 
 function renderAt(path: string) {

@@ -3,32 +3,43 @@ import styles from './tiendaPages.module.css'
 import { ProductCatalog } from '../../../modules/sales/components/ProductCatalog'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
-import { PRODUCTS, SEO_DESCRIPTION, SITE_URL, TIENDA_TENANT_ID } from './tiendaData'
+import { useTenantConfig } from '../../../core/tenant/TenantContext'
+import { useProducts } from '../../../core/tenant/useProducts'
+import { TIENDA_BASE_PATH } from '../tienda-landing/tiendaShared'
 import type { TiendaOutletContext } from './TiendaLayout'
 
 /** Full product catalogue page of the multi-page tienda site. */
 export default function TiendaProductosPage() {
+  const config = useTenantConfig()
+  const productsState = useProducts()
   const { addToCart } = useOutletContext<TiendaOutletContext>()
-
-  usePageTracking(TIENDA_TENANT_ID)
+  usePageTracking(config.tenantId)
 
   return (
     <>
       <SharedSeo
-        title="Tienda | El Rincón Canario"
-        description={SEO_DESCRIPTION}
-        canonicalUrl={`${SITE_URL}/productos`}
+        title={`Tienda | ${config.businessName}`}
+        description={`Catálogo de productos de ${config.businessName}.`}
+        canonicalUrl={`${window.location.origin}${TIENDA_BASE_PATH}/productos`}
       />
 
       <div className={styles.page}>
         <h1 className={styles.title}>Nuestra tienda</h1>
-        <p className={styles.intro}>
-          Selección de productos típicos canarios: mojos artesanos, gofio de molino, quesos con
-          denominación de origen, vinos de la tierra y artesanía elaborada a mano en las Islas.
-        </p>
       </div>
 
-      <ProductCatalog products={PRODUCTS} onAddToCart={addToCart} />
+      {productsState.status === 'loading' && (
+        <p className={styles.status} role="status">
+          Cargando…
+        </p>
+      )}
+      {productsState.status === 'error' && (
+        <p className={styles.status} role="alert">
+          No se ha podido cargar el catálogo.
+        </p>
+      )}
+      {productsState.status === 'success' && (
+        <ProductCatalog products={productsState.data} onAddToCart={addToCart} />
+      )}
     </>
   )
 }
