@@ -66,7 +66,12 @@
     "footerRights": "Alle Rechte vorbehalten",
     "formProjectType": "Projektart",
     "formMessage": "Nachricht",
-    "formSubmit": "Anfrage senden"
+    "formSubmit": "Anfrage senden",
+    "projectsEyebrow": "Portfolio",
+    "servicesIntro": "Vier Disziplinen, ein Qualitätsstandard. Vom ersten Entwurf bis zur Schlüsselübergabe.",
+    "projectsIntro": "Eine Auswahl unserer aktuellen Arbeiten auf Teneriffa.",
+    "showroomIntro": "Entdecke die besten Marken für Beläge und Böden.",
+    "contactIntro": "Erzähl uns von deinem Projekt und wir antworten innerhalb von 24 Stunden mit einem unverbindlichen Angebot."
   },
   "forms": {
     "common": {

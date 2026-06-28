@@ -1,21 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import styles from './ConstruccionFooter.module.css'
+import { CONSTRUCCION_NAV, joinBase, useConstruccionRouteBase } from './construccionRouteBase'
 import type { TenantConfig } from '../../../../core/tenant/tenantConfig'
 import { LEGAL_LINKS } from '../construccionShared'
 
 interface ConstruccionFooterProps {
   /** Resolved tenant config (brand, contact, socials). */
   config: TenantConfig
+  /** `scroll` (in-page anchors, landing) or `route` (router links, multi-page). */
+  variant?: 'scroll' | 'route'
 }
-
-const NAV = [
-  { id: 'top', key: 'construccion.nav.home' },
-  { id: 'servicios', key: 'construccion.nav.services' },
-  { id: 'proyectos', key: 'construccion.nav.projects' },
-  { id: 'showroom', key: 'construccion.nav.showroom' },
-  { id: 'contacto', key: 'construccion.nav.contact' },
-] as const
 
 /** Short social labels, in display order. */
 const SOCIAL_ORDER: { key: keyof NonNullable<TenantConfig['socialLinks']>; label: string }[] = [
@@ -34,8 +29,13 @@ const SOCIAL_ORDER: { key: keyof NonNullable<TenantConfig['socialLinks']>; label
  *
  * @param props.config - Tenant config.
  */
-export default function ConstruccionFooter({ config }: ConstruccionFooterProps) {
+export default function ConstruccionFooter({
+  config,
+  variant = 'scroll',
+}: ConstruccionFooterProps) {
   const { t } = useTranslation()
+  const isRoute = variant === 'route'
+  const base = useConstruccionRouteBase() ?? ''
   const [firstWord, ...restWords] = config.businessName.split(' ')
   const rest = restWords.join(' ')
   const socials = SOCIAL_ORDER.filter((s) => config.socialLinks?.[s.key])
@@ -76,11 +76,21 @@ export default function ConstruccionFooter({ config }: ConstruccionFooterProps) 
 
         <div className={styles.col}>
           <h4 className={styles.colTitle}>{t('construccion.nav.home')}</h4>
-          {NAV.map((n) => (
-            <a key={n.id} className={styles.link} href={`#${n.id}`}>
-              {t(n.key)}
-            </a>
-          ))}
+          {CONSTRUCCION_NAV.map((n) =>
+            isRoute ? (
+              <Link
+                key={n.anchorId}
+                className={styles.link}
+                to={n.seg ? joinBase(base, n.seg) : base}
+              >
+                {t(n.labelKey)}
+              </Link>
+            ) : (
+              <a key={n.anchorId} className={styles.link} href={`#${n.anchorId}`}>
+                {t(n.labelKey)}
+              </a>
+            ),
+          )}
         </div>
 
         <div className={styles.col}>

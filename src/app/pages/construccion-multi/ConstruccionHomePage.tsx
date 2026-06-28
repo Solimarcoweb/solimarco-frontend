@@ -1,24 +1,37 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 import styles from './construccionPages.module.css'
-import { Hero } from '../../../shared/components/Hero'
-import { ServicesList } from '../../../shared/components/ServicesList'
+import ConstruccionHero from '../construccion/components/ConstruccionHero'
+import ConstruccionServices from '../construccion/components/ConstruccionServices'
+import ConstruccionProjects from '../construccion/components/ConstruccionProjects'
+import ConstruccionMaterials from '../construccion/components/ConstruccionMaterials'
+import ConstruccionCta from '../construccion/components/ConstruccionCta'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
 import { useTenantConfig } from '../../../core/tenant/TenantContext'
 import { useServices } from '../../../core/tenant/useServices'
-import { toServices } from '../../../core/tenant/tenantContentMappers'
+import { useProjects } from '../../../core/tenant/useProjects'
+import { toProjects, toServices } from '../../../core/tenant/tenantContentMappers'
 import { CONSTRUCCION_BASE_PATH } from '../construccion/construccionShared'
 
-/** Home page of the multi-page construction site: hero + featured services. */
+/** Home page of the redesigned multi-page construccion site. */
 export default function ConstruccionHomePage() {
   const { t } = useTranslation()
   const config = useTenantConfig()
   const servicesState = useServices()
+  const projectsState = useProjects()
   usePageTracking(config.tenantId)
 
-  const featured =
-    servicesState.status === 'success' ? toServices(servicesState.data).slice(0, 3) : []
+  if (servicesState.status !== 'success' || projectsState.status !== 'success') {
+    const failed = servicesState.status === 'error' || projectsState.status === 'error'
+    return (
+      <p className={styles.status} role={failed ? 'alert' : 'status'}>
+        {failed ? t('construccion.loadError') : t('construccion.loading')}
+      </p>
+    )
+  }
+
+  const services = toServices(servicesState.data)
+  const projects = toProjects(projectsState.data)
 
   return (
     <>
@@ -28,24 +41,11 @@ export default function ConstruccionHomePage() {
         canonicalUrl={`${window.location.origin}${CONSTRUCCION_BASE_PATH}`}
       />
 
-      <Hero
-        title={config.businessName}
-        subtitle={config.businessDescription ?? ''}
-        ctaLabel={t('construccion.ctaRequestQuote')}
-        ctaHref={`${CONSTRUCCION_BASE_PATH}/contacto`}
-        logoUrl={config.logoUrl}
-      />
-
-      {featured.length > 0 && (
-        <section aria-label="Servicios destacados">
-          <ServicesList services={featured} heading={t('construccion.servicesFeatured')} />
-          <div className={styles.ctaWrap}>
-            <Link to={`${CONSTRUCCION_BASE_PATH}/servicios`} className={styles.cta}>
-              {t('construccion.servicesViewAll')}
-            </Link>
-          </div>
-        </section>
-      )}
+      <ConstruccionHero config={config} quoteTo="contacto" projectsTo="proyectos" />
+      <ConstruccionServices services={services} limit={4} viewAllTo="servicios" />
+      <ConstruccionProjects projects={projects} limit={3} viewAllTo="proyectos" />
+      <ConstruccionMaterials />
+      <ConstruccionCta to="contacto" />
     </>
   )
 }

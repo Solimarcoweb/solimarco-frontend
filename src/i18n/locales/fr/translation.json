@@ -66,7 +66,12 @@
     "footerRights": "Tous droits réservés",
     "formProjectType": "Type de projet",
     "formMessage": "Message",
-    "formSubmit": "Envoyer la demande"
+    "formSubmit": "Envoyer la demande",
+    "projectsEyebrow": "Portfolio",
+    "servicesIntro": "Quatre disciplines, un même standard de qualité. Du premier plan à la remise des clés.",
+    "projectsIntro": "Une sélection de nos travaux récents à Tenerife.",
+    "showroomIntro": "Découvrez les meilleures marques de revêtements et de sols.",
+    "contactIntro": "Parlez-nous de votre projet et nous vous répondons sous 24 heures avec une proposition sans engagement."
   },
   "forms": {
     "common": {

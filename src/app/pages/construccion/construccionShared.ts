@@ -95,6 +95,17 @@ export const CONSTRUCCION_HERO_IMAGE =
   'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80'
 
 /**
+ * SAMPLE - temporal hasta endpoint/personalización.
+ * Background photos for the multi-page section headers (ConstruccionPageHero).
+ */
+export const CONSTRUCCION_PAGE_IMAGES = {
+  services: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=80',
+  projects: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1200&q=80',
+  showroom: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80',
+  contact: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
+} as const
+
+/**
  * Builds schema.org `GeneralContractor` structured data from the tenant config.
  *
  * @param config - Resolved tenant configuration.

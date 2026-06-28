@@ -1,15 +1,14 @@
 import { useTranslation } from 'react-i18next'
-import styles from './construccionPages.module.css'
-import { BusinessInfo } from '../../../shared/components/BusinessInfo'
-import { BudgetForm } from '../../../modules/reservations/components/BudgetForm'
+import ConstruccionPageHero from '../construccion/components/ConstruccionPageHero'
+import ConstruccionContact from '../construccion/components/ConstruccionContact'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
 import { useTenantConfig } from '../../../core/tenant/TenantContext'
 import { useBusinessHours } from '../../../core/tenant/useBusinessHours'
 import { toBusinessHours } from '../../../core/tenant/tenantContentMappers'
-import { CONSTRUCCION_BASE_PATH } from '../construccion/construccionShared'
+import { CONSTRUCCION_BASE_PATH, CONSTRUCCION_PAGE_IMAGES } from '../construccion/construccionShared'
 
-/** Contact page of the multi-page construction site: location, hours + budget form. */
+/** Contact page of the redesigned multi-page construccion site. */
 export default function ConstruccionContactoPage() {
   const { t } = useTranslation()
   const config = useTenantConfig()
@@ -21,30 +20,19 @@ export default function ConstruccionContactoPage() {
   return (
     <>
       <SharedSeo
-        title={`Contacto | ${config.businessName}`}
-        description={`Contacta con ${config.businessName}. Llámanos o solicita presupuesto sin compromiso.`}
+        title={`${t('construccion.nav.contact')} | ${config.businessName}`}
+        description={`${t('construccion.contactIntro')}`}
         canonicalUrl={`${window.location.origin}${CONSTRUCCION_BASE_PATH}/contacto`}
       />
 
-      <div className={styles.page}>
-        <h1 className={styles.title}>{t('construccion.contactHeading')}</h1>
-      </div>
-
-      <BusinessInfo
-        address={config.address ?? ''}
-        phone={config.phone ?? ''}
-        email={config.email ?? ''}
-        hours={hours}
+      <ConstruccionPageHero
+        eyebrow={t('construccion.contactEyebrow')}
+        title={t('construccion.contactHeading')}
+        subtitle={t('construccion.contactIntro')}
+        image={CONSTRUCCION_PAGE_IMAGES.contact}
       />
 
-      {config.modules?.hasBudgetForm !== false && (
-        <section id="presupuesto" className={styles.budget} aria-labelledby="budget-heading">
-          <h2 id="budget-heading" className={styles.budgetHeading}>
-            {t('construccion.budgetHeading')}
-          </h2>
-          <BudgetForm tenantId={config.tenantId} />
-        </section>
-      )}
+      <ConstruccionContact config={config} hours={hours} />
     </>
   )
 }

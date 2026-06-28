@@ -1,14 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import styles from './construccionPages.module.css'
-import { ProjectGallery } from '../../../shared/components/ProjectGallery'
+import ConstruccionPageHero from '../construccion/components/ConstruccionPageHero'
+import ConstruccionProjects from '../construccion/components/ConstruccionProjects'
+import ConstruccionCta from '../construccion/components/ConstruccionCta'
 import { SharedSeo } from '../../../shared/seo'
 import { usePageTracking } from '../../../modules/tracking/hooks/usePageTracking'
 import { useTenantConfig } from '../../../core/tenant/TenantContext'
 import { useProjects } from '../../../core/tenant/useProjects'
 import { toProjects } from '../../../core/tenant/tenantContentMappers'
-import { CONSTRUCCION_BASE_PATH } from '../construccion/construccionShared'
+import { CONSTRUCCION_BASE_PATH, CONSTRUCCION_PAGE_IMAGES } from '../construccion/construccionShared'
 
-/** Projects/portfolio page of the multi-page construction site. */
+/** Projects page of the redesigned multi-page construccion site. */
 export default function ConstruccionProyectosPage() {
   const { t } = useTranslation()
   const config = useTenantConfig()
@@ -18,14 +20,17 @@ export default function ConstruccionProyectosPage() {
   return (
     <>
       <SharedSeo
-        title={`Proyectos | ${config.businessName}`}
-        description={`Obras y reformas realizadas por ${config.businessName}.`}
+        title={`${t('construccion.nav.projects')} | ${config.businessName}`}
+        description={`${t('construccion.projectsIntro')}`}
         canonicalUrl={`${window.location.origin}${CONSTRUCCION_BASE_PATH}/proyectos`}
       />
 
-      <div className={styles.page}>
-        <h1 className={styles.title}>{t('construccion.projectsHeading')}</h1>
-      </div>
+      <ConstruccionPageHero
+        eyebrow={t('construccion.projectsEyebrow')}
+        title={t('construccion.projectsHeading')}
+        subtitle={t('construccion.projectsIntro')}
+        image={CONSTRUCCION_PAGE_IMAGES.projects}
+      />
 
       {projectsState.status === 'loading' && (
         <p className={styles.status} role="status">
@@ -38,8 +43,10 @@ export default function ConstruccionProyectosPage() {
         </p>
       )}
       {projectsState.status === 'success' && (
-        <ProjectGallery items={toProjects(projectsState.data)} />
+        <ConstruccionProjects projects={toProjects(projectsState.data)} showHead={false} />
       )}
+
+      <ConstruccionCta to="contacto" />
     </>
   )
 }

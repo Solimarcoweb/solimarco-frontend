@@ -66,7 +66,12 @@
     "footerRights": "All rights reserved",
     "formProjectType": "Project type",
     "formMessage": "Message",
-    "formSubmit": "Send request"
+    "formSubmit": "Send request",
+    "projectsEyebrow": "Portfolio",
+    "servicesIntro": "Four disciplines, one standard of quality. From the first sketch to handing over the keys.",
+    "projectsIntro": "A selection of our recent work in Tenerife.",
+    "showroomIntro": "Discover the finest brands of coverings and flooring.",
+    "contactIntro": "Tell us about your project and we'll reply within 24 hours with a no-obligation proposal."
   },
   "forms": {
     "common": {

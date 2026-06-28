@@ -32,6 +32,20 @@
   line-height: 1.05;
 }
 
+.viewAll {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(242, 237, 230, 0.5);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.viewAll:hover {
+  color: var(--accent);
+}
+
 .mosaic {
   display: grid;
   grid-template-columns: 1.7fr 1fr 1fr;

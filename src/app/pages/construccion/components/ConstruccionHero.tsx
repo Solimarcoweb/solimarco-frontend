@@ -1,11 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import styles from './ConstruccionHero.module.css'
+import ConstruccionLink from './ConstruccionLink'
 import type { TenantConfig } from '../../../../core/tenant/tenantConfig'
 import { CONSTRUCCION_HERO_IMAGE, CONSTRUCCION_STATS } from '../construccionShared'
 
 interface ConstruccionHeroProps {
   /** Resolved tenant config (brand name, description, hero image override). */
   config: TenantConfig
+  /** Quote CTA target: anchor (`#contacto`, landing) or route (`contacto`, multi). */
+  quoteTo?: string
+  /** Projects CTA target: anchor (`#proyectos`, landing) or route (`proyectos`, multi). */
+  projectsTo?: string
 }
 
 /**
@@ -16,7 +21,11 @@ interface ConstruccionHeroProps {
  * @param props.config - Tenant config; `logoUrl`-less hero falls back to the
  *   sample sector image.
  */
-export default function ConstruccionHero({ config }: ConstruccionHeroProps) {
+export default function ConstruccionHero({
+  config,
+  quoteTo = '#contacto',
+  projectsTo = '#proyectos',
+}: ConstruccionHeroProps) {
   const { t } = useTranslation()
   // SAMPLE - temporal hasta endpoint/personalización: no hay foto de hero por tenant todavía.
   const heroImage = CONSTRUCCION_HERO_IMAGE
@@ -39,12 +48,12 @@ export default function ConstruccionHero({ config }: ConstruccionHeroProps) {
         </h1>
         {config.businessDescription && <p className={styles.sub}>{config.businessDescription}</p>}
         <div className={styles.actions}>
-          <a className={styles.btnGold} href="#contacto">
+          <ConstruccionLink className={styles.btnGold} to={quoteTo}>
             {t('construccion.ctaRequestQuote')} <span className={styles.btnCircle}>→</span>
-          </a>
-          <a className={styles.btnOut} href="#proyectos">
+          </ConstruccionLink>
+          <ConstruccionLink className={styles.btnOut} to={projectsTo}>
             {t('construccion.heroViewProjects')} →
-          </a>
+          </ConstruccionLink>
         </div>
       </div>
 

@@ -1,86 +1,76 @@
-import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Link, Outlet, useMatch } from 'react-router'
-import styles from './ConstruccionLayout.module.css'
-import { Footer } from '../../../shared/components/Footer'
+import { useEffect, type CSSProperties } from 'react'
+import { Outlet, useLocation } from 'react-router'
+import styles from '../construccion/ConstruccionPage.module.css'
+import ConstruccionHeader from '../construccion/components/ConstruccionHeader'
+import ConstruccionFooter from '../construccion/components/ConstruccionFooter'
+import {
+  ConstruccionRouteBaseContext,
+  computeBase,
+} from '../construccion/components/construccionRouteBase'
 import { SharedJsonLd } from '../../../shared/seo'
 import { applyTheme } from '../../../themes'
 import { useTenantConfig } from '../../../core/tenant/TenantContext'
 import {
   CONSTRUCCION_BASE_PATH,
   CONSTRUCCION_THEME,
-  LEGAL_LINKS,
   buildBusinessSchema,
 } from '../construccion/construccionShared'
 
-/** Nav link that marks itself with aria-current when it matches the route. */
-function NavItem({ to, label }: { to: string; label: string }) {
-  const isActive = useMatch(to) !== null
-  const className = isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink
-
-  return (
-    <li>
-      <Link to={to} className={className} aria-current={isActive ? 'page' : undefined}>
-        {label}
-      </Link>
-    </li>
-  )
-}
-
 /**
- * Shared layout for the multi-page construction site. Renders the header
- * (brand + primary nav) and footer from tenant config, the routed page via
- * `<Outlet>`, and injects the business structured data. The Showroom nav entry
- * only appears when the tenant has the shop module enabled.
+ * Shell for the redesigned multi-page construccion site. Reuses the sector
+ * header (route variant, with active highlighting) and footer, wraps the routed
+ * page via `<Outlet>` and applies the dark/gold sector palette. Branding/contact
+ * come from `useTenantConfig`; per-page content is fetched in each child page.
  */
 export default function ConstruccionLayout() {
-  const { t } = useTranslation()
   const config = useTenantConfig()
+  const location = useLocation()
+  // Where this layout is mounted, derived from the current pathname (leaf-aware).
+  // `/construccion-multi` in the dev preview, `/` for a production tenant.
+  // NOTE: not `useResolvedPath('.')` — that returns the leaf (not the base) when
+  // the layout route is pathless inside descendant <Routes> (production mount).
+  const base = computeBase(location.pathname)
 
+  // Keep the app theme baseline in sync (token fallback outside the sector).
   useEffect(() => {
     applyTheme(config.themeName || CONSTRUCCION_THEME)
   }, [config.themeName])
 
-  const base = CONSTRUCCION_BASE_PATH
-  const navItems = [
-    { to: base, label: t('construccion.nav.home') },
-    { to: `${base}/servicios`, label: t('construccion.nav.services') },
-    { to: `${base}/proyectos`, label: t('construccion.nav.projects') },
-    ...(config.modules?.hasShop
-      ? [{ to: `${base}/showroom`, label: t('construccion.nav.showroom') }]
-      : []),
-    { to: `${base}/contacto`, label: t('construccion.nav.contact') },
-  ]
+  // The sector owns a dark palette via local CSS vars on `.page`. `applyTheme`
+  // paints `<html>` with the light theme background, so repaint it dark here.
+  useEffect(() => {
+    const html = document.documentElement
+    const prev = html.style.backgroundColor
+    html.style.backgroundColor = '#0d0c09'
+    return () => {
+      html.style.backgroundColor = prev
+    }
+  }, [])
+
+  // Scroll to top on route change (multi-page navigation).
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' })
+  }, [location.pathname])
+
+  const accentStyle = config.primaryColor
+    ? ({ '--accent': config.primaryColor } as CSSProperties)
+    : undefined
 
   return (
-    <>
-      <SharedJsonLd schema={buildBusinessSchema(config, `${window.location.origin}${base}`)} />
+    <ConstruccionRouteBaseContext.Provider value={base}>
+      <div className={styles.page} style={accentStyle}>
+        <SharedJsonLd
+          schema={buildBusinessSchema(config, `${window.location.origin}${CONSTRUCCION_BASE_PATH}`)}
+        />
 
-      <header className={styles.header}>
-        <Link to={base} className={styles.brand}>
-          {config.businessName}
-        </Link>
+        <ConstruccionHeader businessName={config.businessName} variant="route" />
 
-        <nav className={styles.nav} aria-label="Principal">
-          <ul className={styles.navList}>
-            {navItems.map((item) => (
-              <NavItem key={item.to} to={item.to} label={item.label} />
-            ))}
-          </ul>
-        </nav>
-      </header>
+        <main>
+          <Outlet />
+        </main>
 
-      <main>
-        <Outlet />
-      </main>
-
-      <Footer
-        businessName={config.businessName}
-        address={config.address ?? ''}
-        phone={config.phone ?? ''}
-        email={config.email ?? ''}
-        legalLinks={LEGAL_LINKS}
-      />
-    </>
+        <ConstruccionFooter config={config} variant="route" />
+      </div>
+    </ConstruccionRouteBaseContext.Provider>
   )
 }
