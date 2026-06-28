@@ -7,6 +7,45 @@
     "home": "Startseite",
     "contact": "Kontakt"
   },
+  "weekdays": {
+    "MONDAY": "Montag",
+    "TUESDAY": "Dienstag",
+    "WEDNESDAY": "Mittwoch",
+    "THURSDAY": "Donnerstag",
+    "FRIDAY": "Freitag",
+    "SATURDAY": "Samstag",
+    "SUNDAY": "Sonntag"
+  },
+  "businessInfo": {
+    "title": "So finden Sie uns",
+    "hours": "Öffnungszeiten",
+    "contact": "Kontakt",
+    "closed": "Geschlossen",
+    "mapAlt": "Karte mit dem Standort von {{address}}"
+  },
+  "construccion": {
+    "nav": {
+      "home": "Startseite",
+      "services": "Leistungen",
+      "projects": "Projekte",
+      "showroom": "Showroom",
+      "contact": "Kontakt"
+    },
+    "ctaRequestQuote": "Angebot anfordern",
+    "budgetHeading": "Fordern Sie Ihr Angebot an",
+    "servicesHeading": "Unsere Leistungen",
+    "servicesFeatured": "Was wir tun",
+    "servicesViewAll": "Alle Leistungen ansehen",
+    "servicesError": "Die Leistungen konnten nicht geladen werden.",
+    "projectsHeading": "Unsere Projekte",
+    "projectsError": "Die Projekte konnten nicht geladen werden.",
+    "contactHeading": "Kontakt",
+    "showroomHeading": "Showroom",
+    "showroomUnavailable": "Der Showroom ist für dieses Unternehmen nicht verfügbar.",
+    "showroomError": "Der Katalog konnte nicht geladen werden.",
+    "loading": "Wird geladen…",
+    "loadError": "Der Inhalt konnte nicht geladen werden. Bitte versuche es in ein paar Minuten erneut."
+  },
   "forms": {
     "common": {
       "optional": "(optional)",

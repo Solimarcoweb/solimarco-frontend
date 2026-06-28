@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import styles from './construccionPages.module.css'
 import { BusinessInfo } from '../../../shared/components/BusinessInfo'
 import { BudgetForm } from '../../../modules/reservations/components/BudgetForm'
@@ -10,6 +11,7 @@ import { CONSTRUCCION_BASE_PATH } from '../construccion/construccionShared'
 
 /** Contact page of the multi-page construction site: location, hours + budget form. */
 export default function ConstruccionContactoPage() {
+  const { t } = useTranslation()
   const config = useTenantConfig()
   const hoursState = useBusinessHours()
   usePageTracking(config.tenantId)
@@ -25,7 +27,7 @@ export default function ConstruccionContactoPage() {
       />
 
       <div className={styles.page}>
-        <h1 className={styles.title}>Contacto</h1>
+        <h1 className={styles.title}>{t('construccion.contactHeading')}</h1>
       </div>
 
       <BusinessInfo
@@ -38,7 +40,7 @@ export default function ConstruccionContactoPage() {
       {config.modules?.hasBudgetForm !== false && (
         <section id="presupuesto" className={styles.budget} aria-labelledby="budget-heading">
           <h2 id="budget-heading" className={styles.budgetHeading}>
-            Solicita tu presupuesto
+            {t('construccion.budgetHeading')}
           </h2>
           <BudgetForm tenantId={config.tenantId} />
         </section>

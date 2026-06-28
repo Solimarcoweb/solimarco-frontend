@@ -3,9 +3,6 @@ import type { ProjectItem } from '../../shared/components/ProjectGallery'
 import type { BusinessHours } from '../../shared/components/BusinessInfo'
 import type { TenantHours, TenantProject, TenantService } from './tenantResources'
 
-/** Spanish weekday names indexed by ISO day of week (1 = Monday … 7 = Sunday). */
-const DAY_NAMES = ['', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
-
 /**
  * Maps backend services to the `ServicesList` `Service[]` props, sorted by
  * `displayOrder`. Price/duration are not part of the backend contract.
@@ -40,6 +37,8 @@ export function toProjects(projects: TenantProject[]): ProjectItem[] {
 
 /**
  * Maps the backend weekly schedule to the `BusinessInfo` `BusinessHours[]` props.
+ * The `day` field carries the backend weekday enum (e.g. `"MONDAY"`);
+ * `BusinessInfo` localizes it via i18n (`weekdays.*`) at render time.
  *
  * NOTE: `BusinessInfo` shows a single open–close range per day, so a midday
  * break (morning + afternoon) is collapsed to first-open → last-close. The
@@ -50,7 +49,7 @@ export function toProjects(projects: TenantProject[]): ProjectItem[] {
  */
 export function toBusinessHours(hours: TenantHours): BusinessHours[] {
   return hours.weekly.map((day) => ({
-    day: DAY_NAMES[day.dayOfWeek] ?? `Día ${day.dayOfWeek}`,
+    day: day.dayOfWeek,
     open: day.morningOpen ?? day.afternoonOpen ?? '',
     close: day.afternoonClose ?? day.morningClose ?? '',
     closed: day.closed,

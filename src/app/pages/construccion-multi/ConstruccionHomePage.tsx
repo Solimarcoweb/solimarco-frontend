@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import styles from './construccionPages.module.css'
 import { Hero } from '../../../shared/components/Hero'
@@ -11,6 +12,7 @@ import { CONSTRUCCION_BASE_PATH } from '../construccion/construccionShared'
 
 /** Home page of the multi-page construction site: hero + featured services. */
 export default function ConstruccionHomePage() {
+  const { t } = useTranslation()
   const config = useTenantConfig()
   const servicesState = useServices()
   usePageTracking(config.tenantId)
@@ -29,17 +31,17 @@ export default function ConstruccionHomePage() {
       <Hero
         title={config.businessName}
         subtitle={config.businessDescription ?? ''}
-        ctaLabel="Solicitar presupuesto"
+        ctaLabel={t('construccion.ctaRequestQuote')}
         ctaHref={`${CONSTRUCCION_BASE_PATH}/contacto`}
         logoUrl={config.logoUrl}
       />
 
       {featured.length > 0 && (
         <section aria-label="Servicios destacados">
-          <ServicesList services={featured} heading="Lo que hacemos" />
+          <ServicesList services={featured} heading={t('construccion.servicesFeatured')} />
           <div className={styles.ctaWrap}>
             <Link to={`${CONSTRUCCION_BASE_PATH}/servicios`} className={styles.cta}>
-              Ver todos los servicios
+              {t('construccion.servicesViewAll')}
             </Link>
           </div>
         </section>

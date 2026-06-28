@@ -28,7 +28,7 @@ import { CONSTRUCCION_THEME, LEGAL_LINKS, buildBusinessSchema } from './construc
  * content endpoints resolve.
  */
 export default function ConstruccionLandingPage() {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const config = useTenantConfig()
   const servicesState = useServices()
   const projectsState = useProjects()
@@ -52,9 +52,9 @@ export default function ConstruccionLandingPage() {
     return (
       <main className={styles.status}>
         {failed ? (
-          <p role="alert">No se ha podido cargar el contenido. Inténtalo de nuevo en unos minutos.</p>
+          <p role="alert">{t('construccion.loadError')}</p>
         ) : (
-          <p role="status">Cargando…</p>
+          <p role="status">{t('construccion.loading')}</p>
         )}
       </main>
     )
@@ -83,7 +83,7 @@ export default function ConstruccionLandingPage() {
         <Hero
           title={config.businessName}
           subtitle={config.businessDescription ?? ''}
-          ctaLabel="Solicitar presupuesto"
+          ctaLabel={t('construccion.ctaRequestQuote')}
           ctaHref="#presupuesto"
           logoUrl={config.logoUrl}
         />
@@ -104,7 +104,7 @@ export default function ConstruccionLandingPage() {
           <Reveal>
             <section id="presupuesto" className={styles.budget} aria-labelledby="budget-heading">
               <h2 id="budget-heading" className={styles.budgetHeading}>
-                Solicita tu presupuesto
+                {t('construccion.budgetHeading')}
               </h2>
               <BudgetForm tenantId={config.tenantId} />
             </section>

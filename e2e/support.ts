@@ -80,7 +80,7 @@ export async function mockTenant(page: Page, sector = 'construccion'): Promise<v
       json({
         weekly: [
           {
-            dayOfWeek: 1,
+            dayOfWeek: 'MONDAY',
             closed: false,
             morningOpen: '08:00',
             morningClose: '13:00',

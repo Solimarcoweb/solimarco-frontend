@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useMatch } from 'react-router'
 import styles from './ConstruccionLayout.module.css'
 import { Footer } from '../../../shared/components/Footer'
@@ -33,6 +34,7 @@ function NavItem({ to, label }: { to: string; label: string }) {
  * only appears when the tenant has the shop module enabled.
  */
 export default function ConstruccionLayout() {
+  const { t } = useTranslation()
   const config = useTenantConfig()
 
   useEffect(() => {
@@ -41,11 +43,13 @@ export default function ConstruccionLayout() {
 
   const base = CONSTRUCCION_BASE_PATH
   const navItems = [
-    { to: base, label: 'Inicio' },
-    { to: `${base}/servicios`, label: 'Servicios' },
-    { to: `${base}/proyectos`, label: 'Proyectos' },
-    ...(config.modules?.hasShop ? [{ to: `${base}/showroom`, label: 'Showroom' }] : []),
-    { to: `${base}/contacto`, label: 'Contacto' },
+    { to: base, label: t('construccion.nav.home') },
+    { to: `${base}/servicios`, label: t('construccion.nav.services') },
+    { to: `${base}/proyectos`, label: t('construccion.nav.projects') },
+    ...(config.modules?.hasShop
+      ? [{ to: `${base}/showroom`, label: t('construccion.nav.showroom') }]
+      : []),
+    { to: `${base}/contacto`, label: t('construccion.nav.contact') },
   ]
 
   return (

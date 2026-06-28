@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import styles from './construccionPages.module.css'
 import { ServicesList } from '../../../shared/components/ServicesList'
 import { SharedSeo } from '../../../shared/seo'
@@ -9,6 +10,7 @@ import { CONSTRUCCION_BASE_PATH } from '../construccion/construccionShared'
 
 /** Services page of the multi-page construction site. */
 export default function ConstruccionServiciosPage() {
+  const { t } = useTranslation()
   const config = useTenantConfig()
   const servicesState = useServices()
   usePageTracking(config.tenantId)
@@ -23,16 +25,19 @@ export default function ConstruccionServiciosPage() {
 
       {servicesState.status === 'loading' && (
         <p className={styles.status} role="status">
-          Cargando…
+          {t('construccion.loading')}
         </p>
       )}
       {servicesState.status === 'error' && (
         <p className={styles.status} role="alert">
-          No se han podido cargar los servicios.
+          {t('construccion.servicesError')}
         </p>
       )}
       {servicesState.status === 'success' && (
-        <ServicesList services={toServices(servicesState.data)} heading="Nuestros servicios" />
+        <ServicesList
+          services={toServices(servicesState.data)}
+          heading={t('construccion.servicesHeading')}
+        />
       )}
     </>
   )

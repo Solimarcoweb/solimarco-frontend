@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import styles from './construccionPages.module.css'
 import { ProjectGallery } from '../../../shared/components/ProjectGallery'
 import { SharedSeo } from '../../../shared/seo'
@@ -9,6 +10,7 @@ import { CONSTRUCCION_BASE_PATH } from '../construccion/construccionShared'
 
 /** Projects/portfolio page of the multi-page construction site. */
 export default function ConstruccionProyectosPage() {
+  const { t } = useTranslation()
   const config = useTenantConfig()
   const projectsState = useProjects()
   usePageTracking(config.tenantId)
@@ -22,17 +24,17 @@ export default function ConstruccionProyectosPage() {
       />
 
       <div className={styles.page}>
-        <h1 className={styles.title}>Nuestros proyectos</h1>
+        <h1 className={styles.title}>{t('construccion.projectsHeading')}</h1>
       </div>
 
       {projectsState.status === 'loading' && (
         <p className={styles.status} role="status">
-          Cargando…
+          {t('construccion.loading')}
         </p>
       )}
       {projectsState.status === 'error' && (
         <p className={styles.status} role="alert">
-          No se han podido cargar los proyectos.
+          {t('construccion.projectsError')}
         </p>
       )}
       {projectsState.status === 'success' && (

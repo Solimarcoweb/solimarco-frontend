@@ -7,6 +7,45 @@
     "home": "Accueil",
     "contact": "Contact"
   },
+  "weekdays": {
+    "MONDAY": "Lundi",
+    "TUESDAY": "Mardi",
+    "WEDNESDAY": "Mercredi",
+    "THURSDAY": "Jeudi",
+    "FRIDAY": "Vendredi",
+    "SATURDAY": "Samedi",
+    "SUNDAY": "Dimanche"
+  },
+  "businessInfo": {
+    "title": "Où nous trouver",
+    "hours": "Horaires",
+    "contact": "Contact",
+    "closed": "Fermé",
+    "mapAlt": "Carte indiquant l'emplacement de {{address}}"
+  },
+  "construccion": {
+    "nav": {
+      "home": "Accueil",
+      "services": "Services",
+      "projects": "Projets",
+      "showroom": "Showroom",
+      "contact": "Contact"
+    },
+    "ctaRequestQuote": "Demander un devis",
+    "budgetHeading": "Demandez votre devis",
+    "servicesHeading": "Nos services",
+    "servicesFeatured": "Ce que nous faisons",
+    "servicesViewAll": "Voir tous les services",
+    "servicesError": "Impossible de charger les services.",
+    "projectsHeading": "Nos projets",
+    "projectsError": "Impossible de charger les projets.",
+    "contactHeading": "Contact",
+    "showroomHeading": "Showroom",
+    "showroomUnavailable": "Le showroom n'est pas disponible pour cette entreprise.",
+    "showroomError": "Impossible de charger le catalogue.",
+    "loading": "Chargement…",
+    "loadError": "Impossible de charger le contenu. Veuillez réessayer dans quelques minutes."
+  },
   "forms": {
     "common": {
       "optional": "(optional)",

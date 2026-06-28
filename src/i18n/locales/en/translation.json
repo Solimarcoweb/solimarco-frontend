@@ -7,6 +7,45 @@
     "home": "Home",
     "contact": "Contact"
   },
+  "weekdays": {
+    "MONDAY": "Monday",
+    "TUESDAY": "Tuesday",
+    "WEDNESDAY": "Wednesday",
+    "THURSDAY": "Thursday",
+    "FRIDAY": "Friday",
+    "SATURDAY": "Saturday",
+    "SUNDAY": "Sunday"
+  },
+  "businessInfo": {
+    "title": "Where to find us",
+    "hours": "Opening hours",
+    "contact": "Contact",
+    "closed": "Closed",
+    "mapAlt": "Map showing the location of {{address}}"
+  },
+  "construccion": {
+    "nav": {
+      "home": "Home",
+      "services": "Services",
+      "projects": "Projects",
+      "showroom": "Showroom",
+      "contact": "Contact"
+    },
+    "ctaRequestQuote": "Request a quote",
+    "budgetHeading": "Request your quote",
+    "servicesHeading": "Our services",
+    "servicesFeatured": "What we do",
+    "servicesViewAll": "See all services",
+    "servicesError": "We couldn't load the services.",
+    "projectsHeading": "Our projects",
+    "projectsError": "We couldn't load the projects.",
+    "contactHeading": "Contact",
+    "showroomHeading": "Showroom",
+    "showroomUnavailable": "The showroom is not available for this business.",
+    "showroomError": "We couldn't load the catalog.",
+    "loading": "Loading…",
+    "loadError": "We couldn't load the content. Please try again in a few minutes."
+  },
   "forms": {
     "common": {
       "optional": "(optional)",

@@ -100,7 +100,7 @@ describe('ConstruccionLandingPage', () => {
       data: {
         weekly: [
           {
-            dayOfWeek: 1,
+            dayOfWeek: 'MONDAY',
             closed: false,
             morningOpen: '08:00',
             morningClose: '13:00',

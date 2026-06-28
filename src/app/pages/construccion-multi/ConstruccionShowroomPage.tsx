@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import styles from './construccionPages.module.css'
 import { ProductCatalog } from '../../../modules/sales/components/ProductCatalog'
 import { Cart } from '../../../modules/sales/components/Cart'
@@ -15,6 +16,7 @@ import { CONSTRUCCION_BASE_PATH } from '../construccion/construccionShared'
  * a "not available" notice.
  */
 export default function ConstruccionShowroomPage() {
+  const { t } = useTranslation()
   const config = useTenantConfig()
   const { items, addToCart, updateQuantity, removeItem } = useCart()
   const productsState = useTenantResource('shop-products', getProducts)
@@ -33,7 +35,7 @@ export default function ConstruccionShowroomPage() {
       <>
         {seo}
         <p className={styles.status} role="status">
-          El showroom no está disponible para este negocio.
+          {t('construccion.showroomUnavailable')}
         </p>
       </>
     )
@@ -44,17 +46,17 @@ export default function ConstruccionShowroomPage() {
       {seo}
 
       <div className={styles.page}>
-        <h1 className={styles.title}>Showroom</h1>
+        <h1 className={styles.title}>{t('construccion.showroomHeading')}</h1>
       </div>
 
       {productsState.status === 'loading' && (
         <p className={styles.status} role="status">
-          Cargando…
+          {t('construccion.loading')}
         </p>
       )}
       {productsState.status === 'error' && (
         <p className={styles.status} role="alert">
-          No se ha podido cargar el catálogo.
+          {t('construccion.showroomError')}
         </p>
       )}
       {productsState.status === 'success' && (

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import styles from './BusinessInfo.module.css'
 
 /** Opening hours for a single day. */
@@ -55,24 +56,30 @@ export function BusinessInfo({
   mapImageUrl,
   className,
 }: BusinessInfoProps) {
+  const { t } = useTranslation()
+
   return (
     <section
       className={className ? `${styles.info} ${className}` : styles.info}
       aria-labelledby="business-info-title"
     >
       <h2 id="business-info-title" className={styles.title}>
-        Dónde encontrarnos
+        {t('businessInfo.title')}
       </h2>
 
       <div className={styles.grid}>
         <div className={styles.col}>
-          <h3 className={styles.colTitle}>Horario</h3>
+          <h3 className={styles.colTitle}>{t('businessInfo.hours')}</h3>
           <ul className={styles.hours}>
             {hours.map((entry) => (
               <li key={entry.day} className={styles.hoursRow}>
-                <span className={styles.day}>{entry.day}</span>
+                {/* `entry.day` may be a backend weekday enum (MONDAY…) or an
+                    already-localized string; translate when a key exists. */}
+                <span className={styles.day}>
+                  {t(`weekdays.${entry.day}`, { defaultValue: entry.day })}
+                </span>
                 {entry.closed ? (
-                  <span className={styles.closed}>Cerrado</span>
+                  <span className={styles.closed}>{t('businessInfo.closed')}</span>
                 ) : (
                   <span className={styles.range}>
                     <time dateTime={entry.open}>{entry.open}</time>
@@ -86,7 +93,7 @@ export function BusinessInfo({
         </div>
 
         <div className={styles.col}>
-          <h3 className={styles.colTitle}>Contacto</h3>
+          <h3 className={styles.colTitle}>{t('businessInfo.contact')}</h3>
           {/* Semantic contact details of the business itself. */}
           <address className={styles.address}>
             <p className={styles.addressLine}>{address}</p>
@@ -105,7 +112,7 @@ export function BusinessInfo({
           <img
             className={styles.map}
             src={mapImageUrl}
-            alt={`Mapa de la ubicación de ${address}`}
+            alt={t('businessInfo.mapAlt', { address })}
             loading="lazy"
             decoding="async"
           />

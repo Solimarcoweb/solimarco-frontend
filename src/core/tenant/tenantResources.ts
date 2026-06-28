@@ -26,10 +26,20 @@ export interface TenantProject {
   displayOrder: number
 }
 
+/** Day-of-week enum as returned by the backend. */
+export type Weekday =
+  | 'MONDAY'
+  | 'TUESDAY'
+  | 'WEDNESDAY'
+  | 'THURSDAY'
+  | 'FRIDAY'
+  | 'SATURDAY'
+  | 'SUNDAY'
+
 /** Opening hours for a single weekday, with an optional midday break. */
 export interface WeeklyHours {
-  /** Day of week as returned by the backend (ISO: 1 = Monday … 7 = Sunday). */
-  dayOfWeek: number
+  /** Day of week as returned by the backend, e.g. `"MONDAY"`. */
+  dayOfWeek: Weekday
   closed: boolean
   morningOpen: string | null
   morningClose: string | null

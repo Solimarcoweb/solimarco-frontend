@@ -34,7 +34,7 @@ describe('toBusinessHours', () => {
   const hours: TenantHours = {
     weekly: [
       {
-        dayOfWeek: 1,
+        dayOfWeek: 'MONDAY',
         closed: false,
         morningOpen: '08:00',
         morningClose: '13:00',
@@ -42,7 +42,7 @@ describe('toBusinessHours', () => {
         afternoonClose: '19:00',
       },
       {
-        dayOfWeek: 7,
+        dayOfWeek: 'SUNDAY',
         closed: true,
         morningOpen: null,
         morningClose: null,
@@ -53,9 +53,9 @@ describe('toBusinessHours', () => {
     upcomingExceptions: [],
   }
 
-  it('collapses a split day to first-open → last-close and names the weekday', () => {
+  it('collapses a split day to first-open → last-close and keeps the weekday enum', () => {
     expect(toBusinessHours(hours)[0]).toEqual({
-      day: 'Lunes',
+      day: 'MONDAY',
       open: '08:00',
       close: '19:00',
       closed: false,
@@ -64,7 +64,7 @@ describe('toBusinessHours', () => {
 
   it('marks closed days', () => {
     expect(toBusinessHours(hours)[1]).toEqual({
-      day: 'Domingo',
+      day: 'SUNDAY',
       open: '',
       close: '',
       closed: true,
