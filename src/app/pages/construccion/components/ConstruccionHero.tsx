@@ -49,7 +49,21 @@ export default function ConstruccionHero({
         {config.businessDescription && <p className={styles.sub}>{config.businessDescription}</p>}
         <div className={styles.actions}>
           <ConstruccionLink className={styles.btnGold} to={quoteTo}>
-            {t('construccion.ctaRequestQuote')} <span className={styles.btnCircle}>→</span>
+            {t('construccion.ctaRequestQuote')}
+            <span className={styles.btnCircle} aria-hidden="true">
+              <svg
+                className={styles.btnCircleIcon}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <polyline points="14 6 20 12 14 18" />
+              </svg>
+            </span>
           </ConstruccionLink>
           <ConstruccionLink className={styles.btnOut} to={projectsTo}>
             {t('construccion.heroViewProjects')} →

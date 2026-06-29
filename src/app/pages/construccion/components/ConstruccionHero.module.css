@@ -128,8 +128,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
   flex: 0 0 auto;
+}
+
+.btnCircleIcon {
+  width: 11px;
+  height: 11px;
+  display: block;
 }
 
 .btnOut {
