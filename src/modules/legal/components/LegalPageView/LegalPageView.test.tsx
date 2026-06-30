@@ -1,5 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react'
+import { I18nextProvider } from 'react-i18next'
+import { MemoryRouter } from 'react-router'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { createI18nInstance } from '../../../../i18n'
 import type { LegalPage } from '../../models/legal'
 import { getLegalPage } from '../../services/legalService'
 import { LegalPageView } from './LegalPageView'
@@ -20,24 +23,35 @@ const page: LegalPage = {
   active: true,
 }
 
+function renderView(type: LegalPage['type'] = 'POLITICA_PRIVACIDAD') {
+  const i18n = createI18nInstance('es')
+  return render(
+    <I18nextProvider i18n={i18n}>
+      <MemoryRouter>
+        <LegalPageView tenantSlug="bm-construccion" type={type} />
+      </MemoryRouter>
+    </I18nextProvider>,
+  )
+}
+
 afterEach(() => {
   vi.clearAllMocks()
 })
 
 describe('LegalPageView', () => {
-  it('shows a loading status while the page is being fetched', () => {
-    // A never-resolving promise keeps the component in the loading state.
+  it('shows a labelled loading skeleton while the page is being fetched', () => {
     getLegalPageMock.mockReturnValue(new Promise<LegalPage>(() => {}))
 
-    render(<LegalPageView tenantSlug="bm-construccion" type="POLITICA_PRIVACIDAD" />)
+    renderView()
 
-    expect(screen.getByRole('status')).toHaveTextContent(/cargando/i)
+    // The skeleton has no visible text; it is announced via its accessible name.
+    expect(screen.getByRole('status', { name: /cargando/i })).toBeInTheDocument()
   })
 
   it('renders the title as the main heading on success', async () => {
     getLegalPageMock.mockResolvedValue(page)
 
-    render(<LegalPageView tenantSlug="bm-construccion" type="POLITICA_PRIVACIDAD" />)
+    renderView()
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Política de privacidad' }),
@@ -48,9 +62,37 @@ describe('LegalPageView', () => {
   it('renders the trusted HTML content on success', async () => {
     getLegalPageMock.mockResolvedValue(page)
 
-    render(<LegalPageView tenantSlug="bm-construccion" type="POLITICA_PRIVACIDAD" />)
+    renderView()
 
     expect(await screen.findByText('BM Construcción S.L.')).toBeInTheDocument()
+  })
+
+  it('formats plain-text content into paragraphs and lifts the leading disclaimer', async () => {
+    getLegalPageMock.mockResolvedValue({
+      ...page,
+      content: '[Plantilla base de prueba]\n\nPrimer párrafo.\n\nSegundo párrafo.',
+    })
+
+    const { container } = renderView()
+
+    // Disclaimer shown as a separate callout (role note), not inline in the body.
+    const note = await screen.findByRole('note')
+    expect(note).toHaveTextContent('Plantilla base de prueba')
+    expect(note.textContent).not.toContain('[')
+
+    // Two real paragraphs in the content body.
+    const texts = Array.from(container.querySelectorAll('p')).map((p) => p.textContent)
+    expect(texts).toContain('Primer párrafo.')
+    expect(texts).toContain('Segundo párrafo.')
+  })
+
+  it('renders the back actions on success', async () => {
+    getLegalPageMock.mockResolvedValue(page)
+
+    renderView()
+
+    expect(await screen.findByRole('link', { name: 'Volver al inicio' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('button', { name: 'Volver atrás' })).toBeInTheDocument()
   })
 
   it('strips <script> tags from the HTML before rendering', async () => {
@@ -59,7 +101,7 @@ describe('LegalPageView', () => {
       content: '<p>Texto seguro</p><script>window.__pwned = true</script>',
     })
 
-    const { container } = render(<LegalPageView tenantSlug="bm-construccion" type="POLITICA_PRIVACIDAD" />)
+    const { container } = renderView()
 
     await screen.findByText('Texto seguro')
     expect(container.querySelector('script')).toBeNull()
@@ -72,7 +114,7 @@ describe('LegalPageView', () => {
       content: '<p onclick="alert(1)">Pulsa aquí</p>',
     })
 
-    render(<LegalPageView tenantSlug="bm-construccion" type="POLITICA_PRIVACIDAD" />)
+    renderView()
 
     const paragraph = await screen.findByText('Pulsa aquí')
     expect(paragraph).not.toHaveAttribute('onclick')
@@ -84,17 +126,17 @@ describe('LegalPageView', () => {
       content: '<p>Ver <a href="https://example.com">aviso</a> y <strong>condiciones</strong>.</p>',
     })
 
-    render(<LegalPageView tenantSlug="bm-construccion" type="POLITICA_PRIVACIDAD" />)
+    const { container } = renderView()
 
     const link = await screen.findByRole('link', { name: 'aviso' })
     expect(link).toHaveAttribute('href', 'https://example.com')
-    expect(screen.getByText('condiciones').tagName).toBe('STRONG')
+    expect(container.querySelector('strong')?.textContent).toBe('condiciones')
   })
 
   it('shows an error alert when the fetch fails', async () => {
     getLegalPageMock.mockRejectedValue(new Error('network down'))
 
-    render(<LegalPageView tenantSlug="bm-construccion" type="POLITICA_PRIVACIDAD" />)
+    renderView()
 
     await waitFor(() => {
       expect(screen.getByRole('alert')).toHaveTextContent(/no se ha podido cargar/i)

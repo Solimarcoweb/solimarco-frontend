@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { applyTheme, FALLBACK_THEME, THEME_NAMES, themeLoaders } from './index'
+import { applyTheme, FALLBACK_THEME, THEME_BACKGROUNDS, THEME_NAMES, themeLoaders } from './index'
 
 describe('applyTheme', () => {
   beforeEach(() => {
@@ -27,6 +27,20 @@ describe('applyTheme', () => {
     expect(themeLoaders.urbano).toHaveBeenCalledTimes(1)
     expect(themeLoaders.editorial).not.toHaveBeenCalled()
     expect(themeLoaders.clasico).not.toHaveBeenCalled()
+  })
+
+  it('loads the dark obsidiana theme and marks the document', () => {
+    applyTheme('obsidiana')
+
+    expect(themeLoaders.obsidiana).toHaveBeenCalledTimes(1)
+    expect(document.documentElement.getAttribute('data-theme')).toBe('obsidiana')
+    expect(document.documentElement.style.backgroundColor).toBe('rgb(13, 12, 9)')
+  })
+
+  it('has a background colour mirrored for every theme name', () => {
+    for (const name of THEME_NAMES) {
+      expect(THEME_BACKGROUNDS[name]).toMatch(/^#[0-9a-f]{6}$/i)
+    }
   })
 
   it('falls back to clasico when the theme is unknown', () => {

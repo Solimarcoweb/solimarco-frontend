@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, type ReactNode } from 'react'
 import styles from './TenantContext.module.css'
 import { applyTheme } from '../../themes'
 import type { TenantConfig } from './tenantConfig'
+import { resolveTenantTheme } from './tenantTheme'
 import { useTenant } from './useTenant'
 import { useTenantBranding } from './useTenantBranding'
 
@@ -51,7 +52,7 @@ export function TenantProvider({ children }: TenantProviderProps) {
 
   useEffect(() => {
     if (state.status === 'success') {
-      applyTheme(state.config.themeName)
+      applyTheme(resolveTenantTheme(state.config))
     }
   }, [state])
 

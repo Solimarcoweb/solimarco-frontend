@@ -1,0 +1,1 @@
+export { LegalSkeleton } from './LegalSkeleton'

@@ -73,6 +73,13 @@
     "showroomIntro": "Discover the finest brands of coverings and flooring.",
     "contactIntro": "Tell us about your project and we'll reply within 24 hours with a no-obligation proposal."
   },
+  "legal": {
+    "loading": "Loading…",
+    "error": "We couldn't load this page. Please try again in a few minutes.",
+    "updated": "Last updated",
+    "backHome": "Back to home",
+    "backPrev": "Go back"
+  },
   "forms": {
     "common": {
       "optional": "(optional)",

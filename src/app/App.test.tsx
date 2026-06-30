@@ -7,13 +7,22 @@ vi.mock('../core/tenant/useTenant', () => ({
     status: 'success',
     config: {
       tenantId: 'demo',
-      businessName: 'Demo',
+      businessName: 'Servicios Profesionales Tenerife',
       themeName: 'clasico',
       siteType: 'LANDING',
       sector: 'generico',
       locale: 'es',
     },
   }),
+}))
+
+// The generico landing is data-driven (loading gate on services + hours); stub
+// the resource hooks so the hero renders in this integration smoke test.
+vi.mock('../core/tenant/useServices', () => ({
+  useServices: () => ({ status: 'success', data: [] }),
+}))
+vi.mock('../core/tenant/useBusinessHours', () => ({
+  useBusinessHours: () => ({ status: 'success', data: { weekly: [], upcomingExceptions: [] } }),
 }))
 
 describe('App', () => {

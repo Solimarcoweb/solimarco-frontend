@@ -21,6 +21,7 @@ export const THEME_NAMES = [
   'fresco',
   'clasico',
   'mediterraneo',
+  'obsidiana',
 ] as const
 
 export type ThemeName = (typeof THEME_NAMES)[number]
@@ -41,6 +42,7 @@ export const themeLoaders: Record<ThemeName, () => Promise<unknown>> = {
   fresco: () => import('./theme-fresco.css'),
   clasico: () => import('./theme-clasico.css'),
   mediterraneo: () => import('./theme-mediterraneo.css'),
+  obsidiana: () => import('./theme-obsidiana.css'),
 }
 
 /**
@@ -58,6 +60,7 @@ export const THEME_BACKGROUNDS: Record<ThemeName, string> = {
   fresco: '#f6fffb',
   clasico: '#f8f6f1',
   mediterraneo: '#f4fbff',
+  obsidiana: '#0d0c09',
 }
 
 /** Type guard: narrows an arbitrary string to a known `ThemeName`. */

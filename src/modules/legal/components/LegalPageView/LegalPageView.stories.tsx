@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { MemoryRouter } from 'react-router'
 import type { LegalPage } from '../../models/legal'
 import { LegalPageView } from './LegalPageView'
 
@@ -83,6 +84,14 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
+  // The view uses react-router (Link / useNavigate for the back actions).
+  decorators: [
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 } satisfies Meta<typeof LegalPageView>
 
 export default meta

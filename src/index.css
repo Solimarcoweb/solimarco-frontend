@@ -22,7 +22,9 @@ body {
   margin: 0;
   font-family: var(--font-body);
   color: var(--color-text);
-  background: var(--color-bg);
+  /* Neutral dark fallback until a theme defines --color-bg, so app startup
+     (before the tenant/sector is known) is not a harsh white flash. */
+  background: var(--color-bg, #121212);
 }
 
 h1,

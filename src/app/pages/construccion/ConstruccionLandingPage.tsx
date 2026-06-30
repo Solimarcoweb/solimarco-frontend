@@ -37,23 +37,19 @@ export default function ConstruccionLandingPage() {
   const projectsState = useProjects()
   const hoursState = useBusinessHours()
 
-  // Keep the app theme baseline in sync (token fallback outside the landing).
+  // The construccion sector is dark by theme (obsidiana); apply it so the
+  // document is dark from the first paint (no light → dark flash). No <html>
+  // repaint needed anymore — the theme owns the surface.
   useEffect(() => {
-    applyTheme(config.themeName || CONSTRUCCION_THEME)
-  }, [config.themeName])
+    applyTheme(CONSTRUCCION_THEME)
+  }, [])
 
-  // The sector owns a dark palette via local CSS vars on `.page` (they win by
-  // cascade for everything inside). `applyTheme` paints `<html>` with the light
-  // theme background, so repaint it dark here and enable smooth in-page scroll;
-  // both are restored on unmount.
+  // Smooth in-page scrolling for the landing's anchor navigation; restored on unmount.
   useEffect(() => {
     const html = document.documentElement
-    const prevBg = html.style.backgroundColor
     const prevScroll = html.style.scrollBehavior
-    html.style.backgroundColor = '#0d0c09'
     html.style.scrollBehavior = 'smooth'
     return () => {
-      html.style.backgroundColor = prevBg
       html.style.scrollBehavior = prevScroll
     }
   }, [])

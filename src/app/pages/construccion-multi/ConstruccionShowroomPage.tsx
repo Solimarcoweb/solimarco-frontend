@@ -45,7 +45,7 @@ export default function ConstruccionShowroomPage() {
       />
 
       {hasShop ? (
-        <div className={styles.shop}>
+        <>
           {productsState.status === 'loading' && (
             <p className={styles.status} role="status">
               {t('construccion.loading')}
@@ -67,7 +67,7 @@ export default function ConstruccionShowroomPage() {
               />
             </>
           )}
-        </div>
+        </>
       ) : (
         <ConstruccionMaterials showHead={false} />
       )}

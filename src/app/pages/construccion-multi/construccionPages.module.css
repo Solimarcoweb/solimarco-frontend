@@ -1,6 +1,7 @@
 /* Shared helpers for the redesigned multi-page construccion child pages.
    The rich styling lives in the sector components; pages only need the loading
-   placeholder and the re-themed shop wrapper. */
+   placeholder. The shared sales components (ProductCatalog, Cart) now inherit
+   the dark/gold look from the active obsidiana theme — no re-scoping wrapper. */
 
 .status {
   box-sizing: border-box;
@@ -10,19 +11,4 @@
   padding: var(--spacing-section, 4rem) 1.25rem;
   text-align: center;
   color: rgba(242, 237, 230, 0.6);
-}
-
-/* Re-map the theme tokens the shared sales components (ProductCatalog, Cart)
-   consume to the sector's dark/gold palette, so the showroom shop matches the
-   sector aesthetic without modifying those shared components. */
-.shop {
-  --color-accent: var(--accent);
-  --color-accent-text: var(--ink);
-  --color-bg: var(--bg);
-  --color-bg-alt: var(--surface);
-  --color-text: var(--text);
-  --color-text-muted: rgba(242, 237, 230, 0.55);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --radius-sm: 4px;
-  --radius-md: 8px;
 }

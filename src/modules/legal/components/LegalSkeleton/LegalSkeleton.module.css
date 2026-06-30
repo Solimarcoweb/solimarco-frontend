@@ -1,0 +1,70 @@
+/* Legal loading skeleton. Same reading column as the real document, so there is
+   no layout shift on load. Block colour derives from `--color-text` (subtle
+   light tint on dark surfaces, light grey on light ones); the shimmer tint can
+   be overridden per surface via `--legal-skeleton-shimmer`. */
+
+.column {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 42rem;
+  margin-inline: auto;
+  text-align: left;
+}
+
+.sk {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--color-text) 9%, transparent);
+}
+
+.sk::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--legal-skeleton-shimmer, color-mix(in srgb, var(--color-text) 16%, transparent)),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: legalShimmer 1.4s ease-in-out infinite;
+}
+
+.skTitle {
+  height: clamp(1.6rem, 4vw, 2.25rem);
+  width: 62%;
+  margin-bottom: 0.9rem;
+}
+
+.skMeta {
+  height: 0.9rem;
+  width: 34%;
+  margin-bottom: 2rem;
+}
+
+.skPara {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-bottom: 1.6rem;
+}
+
+.skLine {
+  height: 0.85rem;
+}
+
+@keyframes legalShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Static blocks only, no moving shimmer, when reduced motion is requested. */
+@media (prefers-reduced-motion: reduce) {
+  .sk::after {
+    display: none;
+  }
+}

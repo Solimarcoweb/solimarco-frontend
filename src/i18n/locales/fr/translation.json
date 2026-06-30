@@ -73,6 +73,13 @@
     "showroomIntro": "Découvrez les meilleures marques de revêtements et de sols.",
     "contactIntro": "Parlez-nous de votre projet et nous vous répondons sous 24 heures avec une proposition sans engagement."
   },
+  "legal": {
+    "loading": "Chargement…",
+    "error": "Impossible de charger cette page. Veuillez réessayer dans quelques minutes.",
+    "updated": "Dernière mise à jour",
+    "backHome": "Retour à l'accueil",
+    "backPrev": "Revenir en arrière"
+  },
   "forms": {
     "common": {
       "optional": "(optional)",

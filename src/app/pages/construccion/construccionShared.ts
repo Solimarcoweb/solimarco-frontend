@@ -1,8 +1,8 @@
 import type { LegalLink } from '../../../shared/components/Footer'
 import type { TenantConfig } from '../../../core/tenant/tenantConfig'
 
-/** Multi-tenant theme for the construction sector. */
-export const CONSTRUCCION_THEME = 'clasico'
+/** Multi-tenant theme for the construction sector (dark, gold-accented). */
+export const CONSTRUCCION_THEME = 'obsidiana'
 
 /** Base path of the multi-page construction site. */
 export const CONSTRUCCION_BASE_PATH = '/construccion-multi'

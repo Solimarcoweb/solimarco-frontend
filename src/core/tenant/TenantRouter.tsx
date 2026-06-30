@@ -1,6 +1,7 @@
 import { lazy, Suspense, type JSX } from 'react'
 import { Route, Routes } from 'react-router'
 import { RouteFallback } from '../../app/RouteFallback'
+import LegalRoute from '../../app/pages/legal/LegalRoute'
 import { useTenantConfig } from './TenantContext'
 import type { TenantConfig } from './tenantConfig'
 
@@ -160,10 +161,10 @@ const GenericoContactoPage = lazy(
   () => import('../../app/pages/generico-multi/GenericoContactoPage'),
 )
 
-// Global legal route, shared by every sector (not sector-specific).
-const LegalPageRoute = lazy(
-  () => import('../../modules/legal/components/LegalPageRoute/LegalPageRoute'),
-)
+// Global legal route, shared by every sector. LegalRoute (imported at the top)
+// is a tiny non-lazy wrapper that renders the active sector's chrome (lazy
+// LegalChrome) behind a sector-coherent loading surface, so legal pages are
+// integrated into the site without a light → dark flash while the chunk loads.
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -303,7 +304,7 @@ export default function TenantRouter(): JSX.Element {
   return (
     <Suspense fallback={<RouteFallback />}>
       <Routes>
-        <Route path="legal/:slug" element={<LegalPageRoute />} />
+        <Route path="legal/:slug" element={<LegalRoute />} />
         <Route path="*" element={resolveContent(sector, siteType)} />
       </Routes>
     </Suspense>

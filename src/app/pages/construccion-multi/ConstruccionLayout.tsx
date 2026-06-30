@@ -31,20 +31,11 @@ export default function ConstruccionLayout() {
   // the layout route is pathless inside descendant <Routes> (production mount).
   const base = computeBase(location.pathname)
 
-  // Keep the app theme baseline in sync (token fallback outside the sector).
+  // The construccion sector is dark by theme (obsidiana); apply it so the
+  // document is dark from the first paint. No <html> repaint needed — the theme
+  // owns the surface.
   useEffect(() => {
-    applyTheme(config.themeName || CONSTRUCCION_THEME)
-  }, [config.themeName])
-
-  // The sector owns a dark palette via local CSS vars on `.page`. `applyTheme`
-  // paints `<html>` with the light theme background, so repaint it dark here.
-  useEffect(() => {
-    const html = document.documentElement
-    const prev = html.style.backgroundColor
-    html.style.backgroundColor = '#0d0c09'
-    return () => {
-      html.style.backgroundColor = prev
-    }
+    applyTheme(CONSTRUCCION_THEME)
   }, [])
 
   // Scroll to top on route change (multi-page navigation).

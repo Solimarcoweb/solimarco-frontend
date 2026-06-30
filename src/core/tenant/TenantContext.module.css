@@ -1,10 +1,15 @@
+/* Neutral dark surface during app startup: the tenant/sector (and therefore the
+   theme) is not known yet, so a plain white screen would be a harsh flash before
+   the dark sectors paint. A neutral dark avoids that without committing to a
+   sector palette. */
 .loader {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100dvh;
+  background: #121212;
   font-family: sans-serif;
-  color: #666;
+  color: rgba(255, 255, 255, 0.55);
   font-size: 0.95rem;
 }
 

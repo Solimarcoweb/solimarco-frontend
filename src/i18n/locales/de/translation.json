@@ -73,6 +73,13 @@
     "showroomIntro": "Entdecke die besten Marken für Beläge und Böden.",
     "contactIntro": "Erzähl uns von deinem Projekt und wir antworten innerhalb von 24 Stunden mit einem unverbindlichen Angebot."
   },
+  "legal": {
+    "loading": "Wird geladen…",
+    "error": "Diese Seite konnte nicht geladen werden. Bitte versuche es in ein paar Minuten erneut.",
+    "updated": "Zuletzt aktualisiert",
+    "backHome": "Zur Startseite",
+    "backPrev": "Zurück"
+  },
   "forms": {
     "common": {
       "optional": "(optional)",

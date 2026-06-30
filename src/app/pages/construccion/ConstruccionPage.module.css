@@ -1,27 +1,31 @@
 /* Construccion landing shell + sector palette.
  *
- * The whole dark/gold palette is declared here as custom properties on `.page`.
- * Because custom properties resolve from the nearest defining ancestor, every
- * descendant of `.page` reads THESE values, never the active theme's `:root`
- * tokens — so `applyTheme(...)` cannot override the sector look. `--accent` is
+ * The sector is theme-driven: the core palette/fonts come from the active theme
+ * (the `obsidiana` dark theme) via its `--color-*` / `--font-*` tokens, aliased
+ * here to the sector's shorter names so the component CSS keeps working. The
+ * fallbacks (= obsidiana's values) keep the sector correct even before the theme
+ * CSS bundle has resolved. Tokens the theme contract doesn't cover (extra
+ * surfaces, the Bebas display font, hairline colours) stay local. `--accent` is
  * additionally overridden inline from `config.primaryColor` for personalization.
  */
 
 .page {
-  --accent: #c9973a;
+  /* Derived from the active theme (obsidiana), with the theme's values as fallback. */
+  --accent: var(--color-accent, #c9973a);
+  --ink: var(--color-accent-text, #0d0c09); /* text/icon colour on top of the accent */
+  --bg: var(--color-bg, #0d0c09);
+  --surface: var(--color-bg-alt, #111009);
+  --text: var(--color-text, #f2ede6);
+  --font-serif: var(--font-heading, 'DM Serif Display', Georgia, serif);
+  --font-sans: var(--font-body, 'DM Sans', system-ui, sans-serif);
+
+  /* Sector-only tokens (not part of the theme contract). */
   --accent-soft: #d9ab52;
-  --ink: #0d0c09; /* text/icon colour on top of the accent */
-  --bg: #0d0c09;
   --bg-alt: #0a0908;
-  --surface: #111009;
   --surface-2: #14110a;
-  --text: #f2ede6;
   --line: rgba(201, 151, 58, 0.16);
   --line-strong: rgba(201, 151, 58, 0.28);
-
   --font-display: 'Bebas Neue', sans-serif;
-  --font-serif: 'DM Serif Display', Georgia, serif;
-  --font-sans: 'DM Sans', system-ui, sans-serif;
 
   background: var(--bg);
   color: var(--text);

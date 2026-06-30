@@ -73,6 +73,13 @@
     "showroomIntro": "Descubre las mejores marcas de revestimientos y suelos.",
     "contactIntro": "Cuéntanos tu proyecto y te respondemos en menos de 24 horas con una propuesta sin compromiso."
   },
+  "legal": {
+    "loading": "Cargando…",
+    "error": "No se ha podido cargar esta página. Inténtalo de nuevo en unos minutos.",
+    "updated": "Última actualización",
+    "backHome": "Volver al inicio",
+    "backPrev": "Volver atrás"
+  },
   "forms": {
     "common": {
       "optional": "(opcional)",

@@ -1,0 +1,98 @@
+/* Chrome wrappers for the global /legal/:slug pages, per active sector. */
+
+/* ── Suspense fallback surface (while the lazy LegalChrome chunk loads) ───────
+   Full-viewport so the document background never shows through. Theme-driven:
+   `var(--color-bg)` is the active theme's surface (dark for construccion's
+   obsidiana, light for other sectors), so it matches the page without a
+   per-sector variant. Hosts the SAME LegalSkeleton as the in-view loading state
+   (which reads the theme's `--color-text` / `--legal-skeleton-shimmer`), giving
+   one continuous skeleton across chunk-load and content-fetch. Top padding
+   matches LegalPageView's `.page`, so the skeleton column lines up. */
+.fallback {
+  min-height: 100dvh;
+  padding: 2.5rem 1.25rem 4rem;
+  background: var(--color-bg, #121212);
+}
+
+/* Clears the fixed ConstruccionHeader on FULL sites. */
+.construccionMain {
+  padding-top: 4.5rem;
+}
+
+/* Minimal header/footer for LANDING tenants (no multi-page routes to link to). */
+.miniHeader {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.miniBrand {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.miniBrand span {
+  color: var(--accent);
+}
+
+.miniFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-sizing: border-box;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.miniLegal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+}
+
+.miniLegalLink {
+  font-size: 0.82rem;
+  color: rgba(242, 237, 230, 0.5);
+  text-decoration: none;
+}
+
+.miniLegalLink:hover {
+  color: var(--accent);
+}
+
+/* ── Generic fallback (sectors not yet redesigned) ───────────────────────────
+   Uses the active theme tokens (light) so it stays coherent with that sector. */
+.generic {
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.genericHeader {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--color-bg-alt);
+}
+
+.genericBrand {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
