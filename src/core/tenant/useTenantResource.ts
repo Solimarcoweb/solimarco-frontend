@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getCurrentTenantId } from './tenantResolver'
 
 /** Loading / success / error state of a tenant resource request. */
@@ -47,7 +47,9 @@ export function useTenantResource<T>(
   resource: string,
   fetcher: (tenantSlug: string) => Promise<T>,
 ): ResourceState<T> {
-  const tenantId = useRef(getCurrentTenantId()).current
+  // Derived during render: the tenant slug is a pure function of the current
+  // hostname, stable for the whole page lifecycle. No ref/state needed.
+  const tenantId = getCurrentTenantId()
   const key = `${tenantId}/${resource}`
 
   const [state, setState] = useState<ResourceState<T>>(() =>

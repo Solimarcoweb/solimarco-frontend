@@ -21,14 +21,25 @@ export function useProducts(): ResourceState<ProductItem[]> {
     cache.has(tenantId) ? { status: 'success', data: cache.get(tenantId)! } : { status: 'loading' },
   )
 
+  // Re-sync during render when the tenant changes (the lazy initializer above
+  // only runs on mount). Adjusting state in render avoids the cascading
+  // "setState synchronously in an effect" re-render for the cache-hit path.
+  const [prevTenant, setPrevTenant] = useState(tenantId)
+  if (prevTenant !== tenantId) {
+    setPrevTenant(tenantId)
+    setState(
+      cache.has(tenantId)
+        ? { status: 'success', data: cache.get(tenantId)! }
+        : { status: 'loading' },
+    )
+  }
+
   useEffect(() => {
-    if (cache.has(tenantId)) {
-      setState({ status: 'success', data: cache.get(tenantId)! })
-      return
-    }
+    // Cache hit is already reflected in state (initializer on mount, render-phase
+    // sync on tenant change), so only the miss path needs to fetch.
+    if (cache.has(tenantId)) return
 
     let cancelled = false
-    setState({ status: 'loading' })
 
     getProducts(tenantId)
       .then((data) => {

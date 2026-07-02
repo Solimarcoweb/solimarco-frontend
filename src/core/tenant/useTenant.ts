@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { apiClient } from '../http/apiClient'
 import type { TenantConfig } from './tenantConfig'
 import { getCurrentTenantId } from './tenantResolver'
@@ -19,14 +19,18 @@ const cache = new Map<string, TenantConfig>()
  * @returns The current loading / success / error state of the tenant config.
  */
 export function useTenant(): TenantState {
-  const tenantId = useRef(getCurrentTenantId()).current
+  // Derived during render: the tenant slug is a pure function of the current
+  // hostname, stable for the whole page lifecycle. No ref/state needed.
+  const tenantId = getCurrentTenantId()
+
   const [state, setState] = useState<TenantState>(() => {
     const cached = cache.get(tenantId)
     return cached ? { status: 'success', config: cached } : { status: 'loading' }
   })
 
   useEffect(() => {
-    if (state.status !== 'loading') return
+    // Fetch only when there is no resolved config yet for this tenant.
+    if (cache.has(tenantId)) return
 
     let cancelled = false
 
@@ -45,9 +49,7 @@ export function useTenant(): TenantState {
     return () => {
       cancelled = true
     }
-  // Only run once per mount; tenantId is stable (ref).
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [tenantId])
 
   return state
 }
